@@ -1,0 +1,5 @@
+bcftools (1.2-1) UNRELEASED; urgency=low
+
+  * Initial release (Closes: #804007)
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Tue, 03 Nov 2015 17:55:40 -0800

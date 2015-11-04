@@ -1,0 +1,15 @@
+Description: Set installation prefix
+Author: Afif Elghraoui <afif@ghraoui.name>
+Forwarded: not-needed
+Last-Update: 2015-11-03
+--- bcftools.orig/Makefile
++++ bcftools/Makefile
+@@ -54,7 +54,7 @@
+ 
+ LDLIBS += $(LDFLAGS)
+ 
+-prefix      = /usr/local
++prefix      = /usr
+ exec_prefix = $(prefix)
+ bindir      = $(exec_prefix)/bin
+ mandir      = $(prefix)/share/man
