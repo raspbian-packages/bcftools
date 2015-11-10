@@ -11,6 +11,13 @@ CFLAGS := $(CPPFLAGS) $(CFLAGS)
 
 export HTSDIR=/usr/include
 export USE_GPL=1
+export pluginpath=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
 
 %:
 	dh $@ --parallel
+
+override_dh_auto_install:
+	mkdir -p debian/bcftools/$(pluginpath)
+	mv plugins/*.so \
+	   debian/bcftools/$(pluginpath)
+	dh_auto_install
