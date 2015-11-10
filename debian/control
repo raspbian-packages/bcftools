@@ -14,8 +14,8 @@ Build-Depends:
 	libio-pty-perl
 Standards-Version: 3.9.6
 Homepage: http://samtools.github.io/bcftools/
-#Vcs-Git: git://anonscm.debian.org/collab-maint/bcftools.git
-#Vcs-Browser: http://anonscm.debian.org/?p=collab-maint/bcftools.git;a=summary
+Vcs-Git: git://anonscm.debian.org/debian-med/bcftools.git
+Vcs-Browser: http://anonscm.debian.org/cgit/debian-med/bcftools.git
 
 Package: bcftools
 Architecture: any
