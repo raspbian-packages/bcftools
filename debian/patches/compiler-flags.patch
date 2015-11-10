@@ -1,7 +1,10 @@
 Description: Allow compiler flags to be passed through to build system
+ The development version of the upstream code already supports LDFLAGS,
+ so many parts of this patch will not be needed in the next upstream
+ release
 Author: Afif Elghraoui <afif@ghraoui.name>
-Forwarded: no
-Last-Update: 2015-11-03
+Forwarded: not-needed
+Last-Update: 2015-11-09
 --- bcftools.orig/Makefile
 +++ bcftools/Makefile
 @@ -32,8 +32,8 @@
@@ -29,7 +32,19 @@ Last-Update: 2015-11-03
  
  %.so: %.c version.h version.c
 -	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ version.c $< -lhts
-+	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ version.c $<
++	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared $(LDFLAGS) -o $@ version.c $<
  
  -include $(PLUGINM)
  
+--- bcftools.orig/plugins/fixploidy.mk
++++ bcftools/plugins/fixploidy.mk
+@@ -1,2 +1,2 @@
+ plugins/fixploidy.so: plugins/fixploidy.c version.h version.c ploidy.h ploidy.c
+-	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -lhts
++	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -lhts $(LDFLAGS)
+--- bcftools.orig/plugins/vcf2sex.mk
++++ bcftools/plugins/vcf2sex.mk
+@@ -1,2 +1,2 @@
+ plugins/vcf2sex.so: plugins/vcf2sex.c version.h version.c ploidy.h ploidy.c
+-	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -lhts
++	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -lhts $(LDFLAGS)
