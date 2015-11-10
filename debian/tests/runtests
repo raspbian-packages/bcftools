@@ -5,14 +5,7 @@ export HTSDIR=/usr/include
 BGZIP=/usr/bin/bgzip
 TABIX=/usr/bin/tabix
 
-all: test
-
 test: test/test-rbuf bcftools
-	./test/test.pl --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
-
-# This isn't currently set to run; The upstream build system apparently
-# doesn't install the included plugins
-test-plugins: test/test-rbuf bcftools
 	./test/test.pl --plugins --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
 
 bcftools:

@@ -2,3 +2,4 @@ improve-plugin-support.patch
 external-libs.patch
 compiler-flags.patch
 destdir.patch
+tests-pluginpath.patch
