@@ -3,6 +3,7 @@ Depends:
 	@,
 	tabix,
 	perl,
+	build-essential,
 Restrictions:
 	allow-stderr,
 	rw-build-tree,
