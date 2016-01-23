@@ -1,3 +1,8 @@
 Tests: runtests
-Depends: @, tabix, perl
-Restrictions: allow-stderr rw-build-tree
+Depends:
+	@,
+	tabix,
+	perl,
+Restrictions:
+	allow-stderr,
+	rw-build-tree,
