@@ -9,7 +9,7 @@ CFLAGS := $(CPPFLAGS) $(CFLAGS)
 
 export HTSDIR=/usr/include
 export USE_GPL=1
-export pluginpath=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
+export plugindir=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
 
 %:
 	dh $@ --parallel

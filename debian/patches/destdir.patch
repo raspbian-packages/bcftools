@@ -13,3 +13,12 @@ Last-Update: 2015-11-03
  exec_prefix = $(prefix)
  bindir      = $(exec_prefix)/bin
  libdir      = $(exec_prefix)/lib
+@@ -65,7 +65,7 @@
+ mandir      = $(prefix)/share/man
+ man1dir     = $(mandir)/man1
+ 
+-plugindir   = $(libexecdir)/bcftools
++plugindir   ?= $(libexecdir)/bcftools
+ pluginpath  = $(plugindir)
+ 
+ MKDIR_P = mkdir -p
