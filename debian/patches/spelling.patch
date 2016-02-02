@@ -4,8 +4,8 @@ Forwarded: no
 Last-Update: 2015-11-09
 --- bcftools.orig/doc/bcftools.1
 +++ bcftools/doc/bcftools.1
-@@ -465,7 +465,7 @@
- .\}
+@@ -546,7 +546,7 @@
+ .RE
  .SS "bcftools annotate \fI[OPTIONS]\fR \fIFILE\fR"
  .sp
 -This command allows to add or remove annotations\&.
@@ -13,7 +13,7 @@ Last-Update: 2015-11-09
  .PP
  \fB\-a, \-\-annotations\fR \fIfile\fR
  .RS 4
-@@ -779,7 +779,7 @@
+@@ -1041,7 +1041,7 @@
  likelihood of novel mutation for constrained
  \fB\-C\fR
  \fItrio\fR
@@ -22,7 +22,7 @@ Last-Update: 2015-11-09
  .RE
  .PP
  \fB\-p, \-\-pval\-threshold\fR \fIfloat\fR
-@@ -2123,7 +2123,7 @@
+@@ -2512,7 +2512,7 @@
  // Longer description used by \*(Aqbcftools +name \-h\*(Aq
  const char *usage(void);
  
@@ -31,23 +31,3 @@ Last-Update: 2015-11-09
  // Return 1 to suppress normal VCF/BCF header output, \-1 on critical
  // errors, 0 otherwise\&.
  int init(int argc, char **argv, bcf_hdr_t *in_hdr, bcf_hdr_t *out_hdr);
---- bcftools.orig/vcfcall.c
-+++ bcftools/vcfcall.c
-@@ -169,7 +169,7 @@
-         sam = add_sample(sam, &n, &max, col_ends[0]+1, ploidy, &j);
-         if ( strcmp(col_ends[1]+1,"0") )    // father
-         {
--            if ( fam->sample[CHILD]>=0 ) error("Multiple childs in %s [%s,%s]\n", str.s, sam[j],sam[fam->sample[CHILD]]);
-+            if ( fam->sample[CHILD]>=0 ) error("Multiple children in %s [%s,%s]\n", str.s, sam[j],sam[fam->sample[CHILD]]);
-             fam->sample[CHILD] = j;
-             if ( fam->sample[FATHER]>=0 ) error("Two fathers in %s?\n", str.s);
-             sam = add_sample(sam, &n, &max, col_ends[1]+1, call->flag & (CALL_CHR_X|CALL_CHR_Y) ? 1 : 2, &fam->sample[FATHER]);
-@@ -189,7 +189,7 @@
-     }
-     assert( n==_n );
-     for (i=0; i<call->nfams; i++)
--        assert( call->fams[i].sample[0]>=0 && call->fams[i].sample[1]>=0 && call->fams[i].sample[2]>=0 ); // multiple childs, not a trio
-+        assert( call->fams[i].sample[0]>=0 && call->fams[i].sample[1]>=0 && call->fams[i].sample[2]>=0 ); // multiple children, not a trio
- 
-     return sam;
- }

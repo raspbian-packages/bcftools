@@ -4,7 +4,7 @@ Forwarded: not-needed
 Last-Update: 2015-11-03
 --- bcftools.orig/Makefile
 +++ bcftools/Makefile
-@@ -29,11 +29,8 @@
+@@ -29,17 +29,14 @@
  all: $(PROG) $(TEST_PROG)
  
  # Adjust $(HTSDIR) to point to your top-level htslib directory
@@ -17,19 +17,27 @@ Last-Update: 2015-11-03
 +TABIX  = /usr/bin/tabix
  
  CC       = gcc
+ CPPFLAGS =
  CFLAGS   = -g -Wall -Wc++-compat -O2
-@@ -52,7 +49,7 @@
+-LDFLAGS  =
+-LIBS     =
++LDFLAGS  ?=
++LIBS     += $(LDFLAGS) -lhts
+ 
+ OBJS     = main.o vcfindex.o tabix.o \
+            vcfstats.o vcfisec.o vcfmerge.o vcfquery.o vcffilter.o filter.o vcfsom.o \
+@@ -57,7 +54,7 @@
  ifdef USE_GPL
-     CFLAGS += -DUSE_GPL
-     OBJS   += polysomy.o
--    LDLIBS  = -lgsl -lcblas
-+    LDLIBS  = -lgsl -lgslcblas
+     EXTRA_CPPFLAGS += -DUSE_GPL
+     OBJS += polysomy.o peakfit.o
+-    GSL_LIBS = -lgsl -lcblas
++    GSL_LIBS = -lgsl -lgslcblas
  endif
  
  prefix      = /usr/local
-@@ -90,10 +87,10 @@
+@@ -101,10 +98,10 @@
  .c.o:
- 	$(CC) -c $(CFLAGS) $(DFLAGS) $(INCLUDES) $< -o $@
+ 	$(CC) $(CFLAGS) $(EXTRA_CPPFLAGS) $(CPPFLAGS) -c -o $@ $<
  
 -test: $(PROG) plugins test/test-rbuf $(BGZIP) $(TABIX)
 +test: $(PROG) plugins test/test-rbuf
@@ -40,39 +48,14 @@ Last-Update: 2015-11-03
  	./test/test.pl --plugins --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
  
  
-@@ -102,8 +99,8 @@
- PLUGINS = $(PLUGINC:.c=.so)
- PLUGINM = $(PLUGINC:.c=.mk)
- 
--%.so: %.c version.h version.c $(HTSDIR)/libhts.so
--	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ version.c $< -L$(HTSDIR) -lhts
-+%.so: %.c version.h version.c
-+	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ version.c $< -lhts
- 
- -include $(PLUGINM)
- 
-@@ -158,8 +155,8 @@
+@@ -180,8 +177,8 @@
  test/test-rbuf: test/test-rbuf.o
- 	$(CC) $(CFLAGS) -o $@ -lm -ldl $<
+ 	$(CC) $(LDFLAGS) -o $@ $^ -lm $(LIBS)
  
 -bcftools: $(HTSLIB) $(OBJS)
--	$(CC) $(CFLAGS) -o $@ $(OBJS) $(HTSLIB) -lpthread -lz -lm -ldl $(LDLIBS)
+-	$(CC) -rdynamic $(LDFLAGS) -o $@ $(OBJS) $(HTSLIB) -lpthread -lz -lm -ldl $(GSL_LIBS) $(LIBS)
 +bcftools: $(OBJS)
-+	$(CC) $(CFLAGS) -o $@ $(OBJS) -lpthread -lz -lm -ldl -lhts $(LDLIBS)
++	$(CC) -rdynamic $(LDFLAGS) -o $@ $(OBJS) -lpthread -lz -lm -ldl $(GSL_LIBS) $(LIBS)
  
  doc/bcftools.1: doc/bcftools.txt
  	cd doc && a2x -adate="$(DOC_DATE)" -aversion=$(DOC_VERSION) --doctype manpage --format manpage bcftools.txt
---- bcftools.orig/plugins/fixploidy.mk
-+++ bcftools/plugins/fixploidy.mk
-@@ -1,2 +1,2 @@
--plugins/fixploidy.so: plugins/fixploidy.c version.h version.c ploidy.h ploidy.c $(HTSDIR)/libhts.so
--	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -L$(HTSDIR) -lhts
-+plugins/fixploidy.so: plugins/fixploidy.c version.h version.c ploidy.h ploidy.c
-+	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -lhts
---- bcftools.orig/plugins/vcf2sex.mk
-+++ bcftools/plugins/vcf2sex.mk
-@@ -1,2 +1,2 @@
--plugins/vcf2sex.so: plugins/vcf2sex.c version.h version.c ploidy.h ploidy.c $(HTSDIR)/libhts.so
--	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -L$(HTSDIR) -lhts
-+plugins/vcf2sex.so: plugins/vcf2sex.c version.h version.c ploidy.h ploidy.c
-+	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -shared -o $@ ploidy.c version.c $< -lhts

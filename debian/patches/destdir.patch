@@ -4,21 +4,12 @@ Forwarded: not-needed
 Last-Update: 2015-11-03
 --- bcftools.orig/Makefile
 +++ bcftools/Makefile
-@@ -33,7 +33,7 @@
- TABIX  = /usr/bin/tabix
- 
- CC       ?= gcc
--CFLAGS   += -g -Wall -Wc++-compat -O2
-+CFLAGS   += -g -Wall -Wc++-compat -O2 -DPLUGINPATH=\"$(pluginpath)\"
- DFLAGS   =
- OBJS     = main.o vcfindex.o tabix.o \
-            vcfstats.o vcfisec.o vcfmerge.o vcfquery.o vcffilter.o filter.o vcfsom.o \
-@@ -54,7 +54,7 @@
- 
- LDLIBS += $(LDFLAGS)
+@@ -57,7 +57,7 @@
+     GSL_LIBS = -lgsl -lgslcblas
+ endif
  
 -prefix      = /usr/local
 +prefix      = /usr
  exec_prefix = $(prefix)
  bindir      = $(exec_prefix)/bin
- mandir      = $(prefix)/share/man
+ libdir      = $(exec_prefix)/lib
