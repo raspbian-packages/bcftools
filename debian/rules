@@ -4,7 +4,7 @@
 #include /usr/share/dpkg/default.mk
 
 export HTSDIR=/usr/include
-export USE_GPL=1
+#export USE_GPL=1
 export plugindir=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
 
 %:
