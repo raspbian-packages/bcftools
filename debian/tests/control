@@ -4,6 +4,7 @@ Depends:
 	tabix,
 	perl,
 	build-essential,
+	libhts-dev,
 Restrictions:
 	allow-stderr,
 	rw-build-tree,
