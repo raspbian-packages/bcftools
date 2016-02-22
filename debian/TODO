@@ -1,6 +1,0 @@
-
-Fix build problem with GSL2 for optional plugin. The issue seems to be the API change
-described in http://git.savannah.gnu.org/cgit/gsl.git/tree/NEWS#n55
-
-The build problem is similar to that in #805842. I've reported it upstream:
-https://github.com/samtools/bcftools/issues/378

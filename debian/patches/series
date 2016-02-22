@@ -3,3 +3,4 @@ compiler-flags.patch
 destdir.patch
 tests-pluginpath.patch
 spelling.patch
+peakfit-gsl2.patch
