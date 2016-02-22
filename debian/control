@@ -12,7 +12,7 @@ Build-Depends:
 # Test-Depends:
 	tabix,
 	libio-pty-perl
-Standards-Version: 3.9.6
+Standards-Version: 3.9.7
 Homepage: http://samtools.github.io/bcftools/
 Vcs-Git: git://anonscm.debian.org/debian-med/bcftools.git
 Vcs-Browser: http://anonscm.debian.org/cgit/debian-med/bcftools.git
