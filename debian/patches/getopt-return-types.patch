@@ -1,0 +1,98 @@
+From afecb4e96c3abc188e7fc155e35720e01aa13a81 Mon Sep 17 00:00:00 2001
+From: John Marshall <jm18@sanger.ac.uk>
+Date: Tue, 15 Mar 2016 16:15:48 +0000
+Subject: [PATCH] getopt_long() returns int, not char
+
+Much like fgetc() returning EOF, we need to store getopt_long()'s
+result in an int so that we can reliably check the -1 return value.
+Hat tip @daviesrob; fixes the usage errors part of #389.
+---
+ consensus.c          | 2 +-
+ plugins/GTisec.c     | 2 +-
+ plugins/color-chrs.c | 2 +-
+ plugins/fill-tags.c  | 2 +-
+ plugins/mendelian.c  | 2 +-
+ plugins/tag2tag.c    | 2 +-
+ plugins/vcf2sex.c    | 3 ++-
+ polysomy.c           | 3 ++-
+ 8 files changed, 10 insertions(+), 8 deletions(-)
+
+--- bcftools.orig/consensus.c
++++ bcftools/consensus.c
+@@ -623,7 +623,7 @@
+         {"chain",1,0,'c'},
+         {0,0,0,0}
+     };
+-    char c;
++    int c;
+     while ((c = getopt_long(argc, argv, "h?s:1iH:f:o:m:c:",loptions,NULL)) >= 0) 
+     {
+         switch (c) 
+--- bcftools.orig/plugins/color-chrs.c
++++ bcftools/plugins/color-chrs.c
+@@ -159,7 +159,7 @@
+         {"unrelated",1,0,'u'},
+         {0,0,0,0}
+     };
+-    char c;
++    int c;
+     while ((c = getopt_long(argc, argv, "?ht:u:p:",loptions,NULL)) >= 0)
+     {
+         switch (c) 
+--- bcftools.orig/plugins/fill-tags.c
++++ bcftools/plugins/fill-tags.c
+@@ -112,7 +112,7 @@
+         {"tags",1,0,'t'},
+         {0,0,0,0}
+     };
+-    char c;
++    int c;
+     while ((c = getopt_long(argc, argv, "?ht:T:l:cd",loptions,NULL)) >= 0)
+     {
+         switch (c) 
+--- bcftools.orig/plugins/mendelian.c
++++ bcftools/plugins/mendelian.c
+@@ -100,7 +100,7 @@
+         {"count",0,0,'c'},
+         {0,0,0,0}
+     };
+-    char c;
++    int c;
+     while ((c = getopt_long(argc, argv, "?ht:T:l:cd",loptions,NULL)) >= 0)
+     {
+         switch (c) 
+--- bcftools.orig/plugins/tag2tag.c
++++ bcftools/plugins/tag2tag.c
+@@ -83,7 +83,7 @@
+         {"gl-to-pl",0,0,2},
+         {0,0,0,0}
+     };
+-    char c;
++    int c;
+     while ((c = getopt_long(argc, argv, "?hr",loptions,NULL)) >= 0)
+     {
+         switch (c) 
+--- bcftools.orig/plugins/vcf2sex.c
++++ bcftools/plugins/vcf2sex.c
+@@ -389,7 +389,8 @@
+         {"background",1,0,'b'},
+         {0,0,0,0}
+     };
+-    char c, *tmp, *ploidy_fname = NULL;
++    char *tmp, *ploidy_fname = NULL;
++    int c;
+     while ((c = getopt_long(argc, argv, "p:n:g:m:vb:",loptions,NULL)) >= 0)
+     {
+         switch (c) {
+--- bcftools.orig/polysomy.c
++++ bcftools/polysomy.c
+@@ -675,7 +675,8 @@
+         {"regions-file",1,0,'R'},
+         {0,0,0,0}
+     };
+-    char c, *tmp;
++    char *tmp;
++    int c;
+     while ((c = getopt_long(argc, argv, "h?o:vt:T:r:R:s:f:p:c:im:b:n:S:",loptions,NULL)) >= 0)
+     {
+         switch (c)

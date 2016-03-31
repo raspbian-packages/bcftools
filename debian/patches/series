@@ -4,3 +4,4 @@ destdir.patch
 tests-pluginpath.patch
 spelling.patch
 peakfit-gsl2.patch
+getopt-return-types.patch
