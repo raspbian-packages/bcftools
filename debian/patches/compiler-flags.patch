@@ -1,0 +1,22 @@
+Description: Allow compiler flags to be passed through to build system
+ The development version of the upstream code already supports LDFLAGS,
+ so many parts of this patch will not be needed in the next upstream
+ release
+Author: Afif Elghraoui <afif@ghraoui.name>
+Forwarded: not-needed
+Last-Update: 2015-11-09
+--- bcftools.orig/Makefile
++++ bcftools/Makefile
+@@ -32,9 +32,9 @@
+ BGZIP  = /usr/bin/bgzip
+ TABIX  = /usr/bin/tabix
+ 
+-CC       = gcc
+-CPPFLAGS =
+-CFLAGS   = -g -Wall -Wc++-compat -O2
++CC       ?= gcc
++CPPFLAGS ?=
++CFLAGS   += -g -Wall -Wc++-compat -O2
+ LDFLAGS  ?=
+ LIBS     += $(LDFLAGS) -lhts
+ 
