@@ -23,6 +23,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.  */
 
 #include <stdio.h>
+#include <strings.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <ctype.h>
@@ -181,10 +182,12 @@ static void init_data(args_t *args)
         if (args->include_types) {
             args->include = 0;
             for (i = 0; i < n; ++i) {
-                if (strcmp(type_list[i], "snps") == 0) args->include |= VCF_SNP;
-                else if (strcmp(type_list[i], "indels") == 0) args->include |= VCF_INDEL;
-                else if (strcmp(type_list[i], "mnps") == 0) args->include |= VCF_MNP;
-                else if (strcmp(type_list[i], "other") == 0) args->include |= VCF_OTHER;
+                if (strcmp(type_list[i], "snps") == 0) args->include |= VCF_SNP<<1;
+                else if (strcmp(type_list[i], "indels") == 0) args->include |= VCF_INDEL<<1;
+                else if (strcmp(type_list[i], "mnps") == 0) args->include |= VCF_MNP<<1;
+                else if (strcmp(type_list[i], "other") == 0) args->include |= VCF_OTHER<<1;
+                else if (strcmp(type_list[i], "ref") == 0) args->include |= VCF_OTHER<<1;
+                else if (strcmp(type_list[i], "bnd") == 0) args->include |= VCF_BND<<1;
                 else {
                     fprintf(stderr, "[E::%s] unknown type\n", type_list[i]);
                     fprintf(stderr, "Accepted types are snps, indels, mnps, other\n");
@@ -195,10 +198,12 @@ static void init_data(args_t *args)
         if (args->exclude_types) {
             args->exclude = 0;
             for (i = 0; i < n; ++i) {
-                if (strcmp(type_list[i], "snps") == 0) args->exclude |= VCF_SNP;
-                else if (strcmp(type_list[i], "indels") == 0) args->exclude |= VCF_INDEL;
-                else if (strcmp(type_list[i], "mnps") == 0) args->exclude |= VCF_MNP;
-                else if (strcmp(type_list[i], "other") == 0) args->exclude |= VCF_OTHER;
+                if (strcmp(type_list[i], "snps") == 0) args->exclude |= VCF_SNP<<1;
+                else if (strcmp(type_list[i], "indels") == 0) args->exclude |= VCF_INDEL<<1;
+                else if (strcmp(type_list[i], "mnps") == 0) args->exclude |= VCF_MNP<<1;
+                else if (strcmp(type_list[i], "other") == 0) args->exclude |= VCF_OTHER<<1;
+                else if (strcmp(type_list[i], "ref") == 0) args->exclude |= VCF_OTHER<<1;
+                else if (strcmp(type_list[i], "bnd") == 0) args->exclude |= VCF_BND<<1;
                 else {
                     fprintf(stderr, "[E::%s] unknown type\n", type_list[i]);
                     fprintf(stderr, "Accepted types are snps, indels, mnps, other\n");
@@ -220,7 +225,8 @@ static void init_data(args_t *args)
     else if (args->output_type & FT_GZ) strcat(modew,"z");      // compressed VCF
     args->out = hts_open(args->fn_out ? args->fn_out : "-", modew);
     if ( !args->out ) error("%s: %s\n", args->fn_out,strerror(errno));
-    if ( args->n_threads ) hts_set_threads(args->out, args->n_threads);
+    if ( args->n_threads > 0)
+        hts_set_opt(args->out, HTS_OPT_THREAD_POOL, args->files->p);
 
     // headers: hdr=full header, hsub=subset header, hnull=sites only header
     if (args->sites_only){
@@ -315,8 +321,8 @@ int subset_vcf(args_t *args, bcf1_t *line)
     if (args->include || args->exclude)
     {
         int line_type = bcf_get_variant_types(line);
-        if ( args->include && !(line_type&args->include) ) return 0; // include only given variant types
-        if ( args->exclude &&   line_type&args->exclude  ) return 0; // exclude given variant types
+        if ( args->include && !((line_type<<1) & args->include) ) return 0; // include only given variant types
+        if ( args->exclude &&   (line_type<<1) & args->exclude  ) return 0; // exclude given variant types
     }
 
     if ( args->filter )
@@ -398,7 +404,7 @@ int subset_vcf(args_t *args, bcf1_t *line)
         }
     }
 
-    if (args->min_ac)
+    if (args->min_ac!=-1)
     {
         if (args->min_ac_type == ALLELE_NONREF && args->min_ac>non_ref_ac) return 0; // min AC
         else if (args->min_ac_type == ALLELE_MINOR && args->min_ac>minor_ac) return 0; // min minor AC
@@ -406,7 +412,7 @@ int subset_vcf(args_t *args, bcf1_t *line)
         else if (args->min_ac_type == ALLELE_MAJOR && args->min_ac > major_ac) return 0; // min major AC
         else if (args->min_ac_type == ALLELE_NONMAJOR && args->min_ac > an-major_ac) return 0; // min non-major AC
     }
-    if (args->max_ac)
+    if (args->max_ac!=-1)
     {
         if (args->max_ac_type == ALLELE_NONREF && args->max_ac<non_ref_ac) return 0; // max AC
         else if (args->max_ac_type == ALLELE_MINOR && args->max_ac<minor_ac) return 0; // max minor AC
@@ -414,7 +420,7 @@ int subset_vcf(args_t *args, bcf1_t *line)
         else if (args->max_ac_type == ALLELE_MAJOR && args->max_ac < major_ac) return 0; // max major AC
         else if (args->max_ac_type == ALLELE_NONMAJOR && args->max_ac < an-major_ac) return 0; // max non-major AC
     }
-    if (args->min_af)
+    if (args->min_af!=-1)
     {
         if (an == 0) return 0; // freq not defined, skip site
         if (args->min_af_type == ALLELE_NONREF && args->min_af>non_ref_ac/(double)an) return 0; // min AF
@@ -423,7 +429,7 @@ int subset_vcf(args_t *args, bcf1_t *line)
         else if (args->min_af_type == ALLELE_MAJOR && args->min_af > major_ac/(double)an) return 0; // min major AF
         else if (args->min_af_type == ALLELE_NONMAJOR && args->min_af > (an-major_ac)/(double)an) return 0; // min non-major AF
     }
-    if (args->max_af)
+    if (args->max_af!=-1)
     {
         if (an == 0) return 0; // freq not defined, skip site
         if (args->max_af_type == ALLELE_NONREF && args->max_af<non_ref_ac/(double)an) return 0; // max AF
@@ -443,7 +449,7 @@ int subset_vcf(args_t *args, bcf1_t *line)
     if (args->trim_alts)
     {
         int ret = bcf_trim_alleles(args->hsub ? args->hsub : args->hdr, line);
-        if ( ret==-1 ) error("Error: some GT index is out of bounds at %s:%d\n", bcf_seqname(args->hsub ? args->hsub : args->hdr, line), line->pos+1);
+        if ( ret<0 ) error("Error: Could not trim alleles at %s:%d\n", bcf_seqname(args->hsub ? args->hsub : args->hdr, line), line->pos+1);
     }
     if (args->phased) {
         int phased = bcf_all_phased(args->hdr, line);
@@ -494,7 +500,7 @@ static void usage(args_t *args)
     fprintf(stderr, "    -R, --regions-file <file>           restrict to regions listed in a file\n");
     fprintf(stderr, "    -t, --targets [^]<region>           similar to -r but streams rather than index-jumps. Exclude regions with \"^\" prefix\n");
     fprintf(stderr, "    -T, --targets-file [^]<file>        similar to -R but streams rather than index-jumps. Exclude regions with \"^\" prefix\n");
-    fprintf(stderr, "        --threads <int>                 number of extra output compression threads [0]\n");
+    fprintf(stderr, "        --threads <int>                 number of extra (de)compression threads [0]\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Subset options:\n");
     fprintf(stderr, "    -a, --trim-alt-alleles        trim alternate alleles not seen in the subset\n");
@@ -515,7 +521,7 @@ static void usage(args_t *args)
     fprintf(stderr, "    -q/Q, --min-af/--max-af <float>[:<type>]    minimum/maximum frequency for non-reference (nref), 1st alternate (alt1), least frequent\n");
     fprintf(stderr, "                                                   (minor), most frequent (major) or sum of all but most frequent (nonmajor) alleles [nref]\n");
     fprintf(stderr, "    -u/U, --uncalled/--exclude-uncalled         select/exclude sites without a called genotype\n");
-    fprintf(stderr, "    -v/V, --types/--exclude-types <list>        select/exclude comma-separated list of variant types: snps,indels,mnps,other [null]\n");
+    fprintf(stderr, "    -v/V, --types/--exclude-types <list>        select/exclude comma-separated list of variant types: snps,indels,mnps,ref,bnd,other [null]\n");
     fprintf(stderr, "    -x/X, --private/--exclude-private           select/exclude sites where the non-reference alleles are exclusive (private) to the subset samples\n");
     fprintf(stderr, "\n");
     exit(1);
@@ -533,6 +539,7 @@ int main_vcfview(int argc, char *argv[])
     args->output_type = FT_VCF;
     args->n_threads = 0;
     args->record_cmd_line = 1;
+    args->min_ac = args->max_ac = args->min_af = args->max_af = -1;
     int targets_is_file = 0, regions_is_file = 0;
 
     static struct option loptions[] =
@@ -726,6 +733,7 @@ int main_vcfview(int argc, char *argv[])
             error("Failed to read the targets: %s\n", args->targets_list);
     }
 
+    if ( bcf_sr_set_threads(args->files, args->n_threads)<0 ) error("Failed to create threads\n");
     if ( !bcf_sr_add_reader(args->files, fname) ) error("Failed to open %s: %s\n", fname,bcf_sr_strerror(args->files->errnum));
 
     init_data(args);
@@ -734,6 +742,8 @@ int main_vcfview(int argc, char *argv[])
         bcf_hdr_write(args->out, out_hdr);
     else if ( args->output_type & FT_BCF )
         error("BCF output requires header, cannot proceed with -H\n");
+
+    int ret = 0;
     if (!args->header_only)
     {
         while ( bcf_sr_next_line(args->files) )
@@ -743,10 +753,12 @@ int main_vcfview(int argc, char *argv[])
             if ( subset_vcf(args, line) )
                 bcf_write1(args->out, out_hdr, line);
         }
+        ret = args->files->errnum;
+        if ( ret ) fprintf(stderr,"Error: %s\n", bcf_sr_strerror(args->files->errnum));
     }
     hts_close(args->out);
     destroy_data(args);
     bcf_sr_destroy(args->files);
     free(args);
-    return 0;
+    return ret;
 }
