@@ -8,9 +8,9 @@ Description: Set the bcftools plugin path to search system directories
 Author: Afif Elghraoui <afif@ghraoui.name>
 Forwarded: not-needed
 Last-Update: 2015-11-09
---- bcftools.orig/test/test.pl
-+++ bcftools/test/test.pl
-@@ -776,7 +776,7 @@
+--- a/test/test.pl
++++ b/test/test.pl
+@@ -859,7 +859,7 @@ sub test_vcf_plugin
  {
      my ($opts,%args) = @_;
      if ( !$$opts{test_plugins} ) { return; }
@@ -18,4 +18,4 @@ Last-Update: 2015-11-09
 +    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins:";
      if ( !exists($args{args}) ) { $args{args} = ''; }
      $args{args} =~ s/{PATH}/$$opts{path}/g;
-     bgzip_tabix_vcf($opts,"$args{in}");
+     $args{cmd}  =~ s/{PATH}/$$opts{path}/g;
