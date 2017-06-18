@@ -2,6 +2,7 @@ bcftools (1.4.1-1) UNRELEASED; urgency=medium
 
   * Team upload
   * New upstream version
+  * debhelper 10
 
  -- Andreas Tille <tille@debian.org>  Sun, 18 Jun 2017 21:40:24 +0200
 
