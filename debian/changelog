@@ -1,3 +1,11 @@
+bcftools (1.4.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Fix FTBFS on architectures where char is unsigned by default,
+    thanks Adrian Bunk (Closes: #865060)
+
+ -- Graham Inggs <ginggs@debian.org>  Wed, 19 Jul 2017 11:00:08 +0200
+
 bcftools (1.4.1-1) unstable; urgency=medium
 
   * Team upload
