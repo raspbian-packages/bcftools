@@ -12,3 +12,9 @@ export plugindir=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
 
 override_dh_installman:
 	dh_installman --language=C
+
+# clean target tries to include config.mk which does not exist inside clean source tree
+override_dh_auto_clean:
+	dh_auto_clean || true
+	# now it is created but should vanish
+	rm -f config.mk
