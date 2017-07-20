@@ -4,21 +4,23 @@ Forwarded: not-needed
 Last-Update: 2015-11-03
 --- a/Makefile
 +++ b/Makefile
-@@ -70,7 +70,7 @@ ifdef USE_GPL
-     GSL_LIBS = -lgsl -lgslcblas
- endif
+@@ -41,7 +41,7 @@ OBJS     = main.o vcfindex.o tabix.o \
+            mpileup.o bam2bcf.o bam2bcf_indel.o bam_sample.o \
+            ccall.o em.o prob1.o kmin.o # the original samtools calling
  
 -prefix      = /usr/local
 +prefix      = /usr
  exec_prefix = $(prefix)
  bindir      = $(exec_prefix)/bin
  libdir      = $(exec_prefix)/lib
-@@ -78,7 +78,7 @@ libexecdir  = $(exec_prefix)/libexec
- mandir      = $(prefix)/share/man
- man1dir     = $(mandir)/man1
+--- a/config.mk.in
++++ b/config.mk.in
+@@ -47,7 +47,7 @@ GSL_LIBS = -lgsl -lgslcblas
  
--plugindir   = $(libexecdir)/bcftools
-+plugindir   ?= $(libexecdir)/bcftools
- pluginpath  = $(plugindir)
+ PLATFORM   = @PLATFORM@
+ PLUGINS_ENABLED = @enable_bcftools_plugins@
+-plugindir = @bcf_plugindir@
++plugindir ?= @bcf_plugindir@
+ PLUGIN_EXT = @PLUGIN_EXT@
  
- MKDIR_P = mkdir -p
+ @Hsource@BGZIP = /usr/bin/bgzip

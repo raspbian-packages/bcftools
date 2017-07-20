@@ -5,18 +5,18 @@ Description: Allow compiler flags to be passed through to build system
 Author: Afif Elghraoui <afif@ghraoui.name>
 Forwarded: not-needed
 Last-Update: 2015-11-09
---- bcftools.orig/Makefile
-+++ bcftools/Makefile
-@@ -32,9 +32,9 @@
- BGZIP  = /usr/bin/bgzip
- TABIX  = /usr/bin/tabix
+--- a/config.mk.in
++++ b/config.mk.in
+@@ -34,9 +34,9 @@ bindir       = @bindir@
+ datarootdir  = @datarootdir@
+ mandir       = @mandir@
  
--CC       = gcc
--CPPFLAGS =
--CFLAGS   = -g -Wall -Wc++-compat -O2
-+CC       ?= gcc
-+CPPFLAGS ?=
-+CFLAGS   += -g -Wall -Wc++-compat -O2
+-CC       = @CC@
+-CPPFLAGS = @CPPFLAGS@
+-CFLAGS   = @CFLAGS@
++CC       ?= @CC@
++CPPFLAGS ?= 
++CFLAGS   += @CFLAGS@
  LDFLAGS  ?=
- LIBS     += $(LDFLAGS) -lhts
+ LIBS     = $(LDFLAGS) -lhts
  

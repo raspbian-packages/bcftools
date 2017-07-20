@@ -2,64 +2,38 @@ Description: Use packaged libraries
 Author: Afif Elghraoui <afif@ghraoui.name>
 Forwarded: not-needed
 Last-Update: 2015-11-03
---- a/Makefile
-+++ b/Makefile
-@@ -29,20 +29,14 @@ TEST_PROG=  test/test-rbuf test/test-reg
- all: $(PROG) $(TEST_PROG)
- 
- # Adjust $(HTSDIR) to point to your top-level htslib directory
--HTSDIR = ../htslib
--include $(HTSDIR)/htslib.mk
--include $(HTSDIR)/htslib_static.mk
--HTSLIB = $(HTSDIR)/libhts.a
--BGZIP  = $(HTSDIR)/bgzip
--TABIX  = $(HTSDIR)/tabix
--HTSLIB_LDFLAGS = $(HTSLIB_static_LDFLAGS)
--HTSLIB_LIBS = $(HTSLIB_static_LIBS)
-+BGZIP  = /usr/bin/bgzip
-+TABIX  = /usr/bin/tabix
- 
- CC       = gcc
- CPPFLAGS =
- CFLAGS   = -g -Wall -Wc++-compat -O2
--LDFLAGS  =
--LIBS     =
+--- a/config.mk.in
++++ b/config.mk.in
+@@ -37,27 +37,21 @@ mandir       = @mandir@
+ CC       = @CC@
+ CPPFLAGS = @CPPFLAGS@
+ CFLAGS   = @CFLAGS@
+-LDFLAGS  = @LDFLAGS@
+-LIBS     = @LIBS@
 +LDFLAGS  ?=
-+LIBS     += $(LDFLAGS) -lhts
++LIBS     = $(LDFLAGS) -lhts
  
- ifeq "$(shell uname -s)" "Darwin"
- DYNAMIC_FLAGS = -Wl,-export_dynamic
-@@ -73,7 +67,7 @@ GSL_LIBS       =
- ifdef USE_GPL
-     EXTRA_CPPFLAGS += -DUSE_GPL
-     OBJS += polysomy.o peakfit.o
--    GSL_LIBS = -lgsl -lcblas
-+    GSL_LIBS = -lgsl -lgslcblas
- endif
+ DYNAMIC_FLAGS = @CC_RDYNAMIC_OPT@
  
- prefix      = /usr/local
-@@ -123,11 +117,11 @@ force:
- .c.o:
- 	$(CC) $(CFLAGS) $(EXTRA_CPPFLAGS) $(ALL_CPPFLAGS) -c -o $@ $<
+ USE_GPL = @USE_GPL@
+-GSL_LIBS = @GSL_LIBS@
++GSL_LIBS = -lgsl -lgslcblas
  
--test: $(PROG) plugins test/test-rbuf test/test-regidx $(BGZIP) $(TABIX)
-+test: $(PROG) plugins test/test-rbuf test/test-regidx
- 	./test/test-regidx
- 	./test/test.pl --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
+ PLATFORM   = @PLATFORM@
+ PLUGINS_ENABLED = @enable_bcftools_plugins@
+ plugindir = @bcf_plugindir@
+ PLUGIN_EXT = @PLUGIN_EXT@
  
--test-plugins: $(PROG) plugins test/test-rbuf $(BGZIP) $(TABIX)
-+test-plugins: $(PROG) plugins test/test-rbuf
- 	./test/test.pl --plugins --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
- 
- 
-@@ -217,8 +211,8 @@ test/test-regidx.o: test/test-regidx.c r
- test/test-regidx: test/test-regidx.o regidx.o $(HTSLIB)
- 	$(CC) $(ALL_LDFLAGS) -o $@ $^ $(HTSLIB) -lpthread $(HTSLIB_LIBS) $(ALL_LIBS)
- 
--bcftools: $(HTSLIB) $(OBJS)
--	$(CC) $(ALL_LDFLAGS) -o $@ $(OBJS) $(HTSLIB) -lpthread $(HTSLIB_LIBS) $(GSL_LIBS) $(ALL_LIBS)
-+bcftools: $(OBJS)
-+	$(CC) $(ALL_LDFLAGS) -o $@ $(OBJS) -lpthread $(HTSLIB_LIBS) $(GSL_LIBS) $(ALL_LIBS)
- 
- doc/bcftools.1: doc/bcftools.txt
- 	cd doc && a2x -adate="$(DOC_DATE)" -aversion=$(DOC_VERSION) --doctype manpage --format manpage bcftools.txt
+-@Hsource@HTSDIR = @HTSDIR@
+-@Hsource@include $(HTSDIR)/htslib.mk
+-@Hsource@include $(HTSDIR)/htslib_static.mk
+-@Hsource@HTSLIB = $(HTSDIR)/libhts.a
+-@Hsource@HTSLIB_LIB = $(HTSLIB) $(HTSLIB_static_LIBS)
+-@Hsource@HTSLIB_LDFLAGS = $(HTSLIB_static_LDFLAGS)
+-@Hsource@BGZIP = $(HTSDIR)/bgzip
+-@Hsource@TABIX = $(HTSDIR)/tabix
++@Hsource@BGZIP = /usr/bin/bgzip
++@Hsource@TABIX = /usr/bin/tabix
+ HTSLIB_CPPFLAGS = @HTSLIB_CPPFLAGS@
+ @Hinstall@HTSLIB_LDFLAGS = @HTSLIB_LDFLAGS@
+ @Hinstall@HTSLIB_LIB = -lhts
