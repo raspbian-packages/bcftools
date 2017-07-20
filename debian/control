@@ -6,6 +6,7 @@ Uploaders:
 	Afif Elghraoui <afif@debian.org>
 Build-Depends:
 	debhelper (>= 10),
+        autoconf-archive,
 	zlib1g-dev,
 	libhts-dev (>= 1.5),
 	libgsl-dev,

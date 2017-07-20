@@ -18,3 +18,6 @@ override_dh_auto_clean:
 	dh_auto_clean || true
 	# now it is created but should vanish
 	rm -f config.mk
+
+override_dh_auto_configure:
+	dh_auto_configure -- --with-htslib=/usr/lib/htslib
