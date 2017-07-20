@@ -1,0 +1,7 @@
+Registry:
+  - Name: OMICtools
+    Entry: OMIC_13458
+  - Name: RRID
+    Entry: SCR_005227
+  - Name: bio.tools
+    Entry: bcftools
