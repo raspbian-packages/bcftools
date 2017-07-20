@@ -1,3 +1,10 @@
+bcftools (1.5-1) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * New upstream version
+
+ -- Andreas Tille <tille@debian.org>  Thu, 20 Jul 2017 13:17:51 +0200
+
 bcftools (1.4.1-2) unstable; urgency=medium
 
   * Team upload
