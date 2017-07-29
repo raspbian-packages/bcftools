@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+export HTSDIR=/usr/include
+
+BGZIP=/usr/bin/bgzip
+TABIX=/usr/bin/tabix
+
+test: test/test-rbuf bcftools
+	./test/test.pl --plugins --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
+
+bcftools:
+	ln -s /usr/bin/bcftools $@
+
+test/test-rbuf:
+	$(MAKE) $@
