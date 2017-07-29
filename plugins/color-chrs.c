@@ -128,7 +128,8 @@ const char *usage(void)
 {
     return 
         "\n"
-        "About: Color shared chromosomal segments, requires phased GTs.\n"
+        "About: Color shared chromosomal segments, requires phased GTs. The output\n"
+        "       can be visualized using the color-chrs.pl script.\n"
         "Usage: bcftools +color-chrs [General Options] -- [Plugin Options]\n"
         "Options:\n"
         "   run \"bcftools plugin\" for a list of common options\n"
@@ -456,6 +457,7 @@ void flush_viterbi(args_t *args)
         s3 = bcf_hdr_int2id(args->hdr,BCF_DT_SAMPLE,args->ifather);
         s2 = bcf_hdr_int2id(args->hdr,BCF_DT_SAMPLE,args->ichild);
     }
+    else abort();
 
     if ( !args->fp )
     {

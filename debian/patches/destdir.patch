@@ -2,9 +2,9 @@ Description: Set installation prefix
 Author: Afif Elghraoui <afif@ghraoui.name>
 Forwarded: not-needed
 Last-Update: 2015-11-03
---- bcftools.orig/Makefile
-+++ bcftools/Makefile
-@@ -57,7 +57,7 @@
+--- a/Makefile
++++ b/Makefile
+@@ -70,7 +70,7 @@ ifdef USE_GPL
      GSL_LIBS = -lgsl -lgslcblas
  endif
  
@@ -13,7 +13,7 @@ Last-Update: 2015-11-03
  exec_prefix = $(prefix)
  bindir      = $(exec_prefix)/bin
  libdir      = $(exec_prefix)/lib
-@@ -65,7 +65,7 @@
+@@ -78,7 +78,7 @@ libexecdir  = $(exec_prefix)/libexec
  mandir      = $(prefix)/share/man
  man1dir     = $(mandir)/man1
  
