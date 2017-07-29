@@ -57,7 +57,7 @@ ifdef USE_GPL
     GSL_LIBS = -lgsl -lgslcblas
 endif
 
-prefix      = /usr/local
+prefix      = /usr
 exec_prefix = $(prefix)
 bindir      = $(exec_prefix)/bin
 libdir      = $(exec_prefix)/lib
@@ -65,7 +65,7 @@ libexecdir  = $(exec_prefix)/libexec
 mandir      = $(prefix)/share/man
 man1dir     = $(mandir)/man1
 
-plugindir   = $(libexecdir)/bcftools
+plugindir   ?= $(libexecdir)/bcftools
 pluginpath  = $(plugindir)
 
 MKDIR_P = mkdir -p
