@@ -29,20 +29,14 @@ TEST_PROG=  test/test-rbuf test/test-regidx
 all: $(PROG) $(TEST_PROG)
 
 # Adjust $(HTSDIR) to point to your top-level htslib directory
-HTSDIR = ../htslib
-include $(HTSDIR)/htslib.mk
-include $(HTSDIR)/htslib_static.mk
-HTSLIB = $(HTSDIR)/libhts.a
-BGZIP  = $(HTSDIR)/bgzip
-TABIX  = $(HTSDIR)/tabix
-HTSLIB_LDFLAGS = $(HTSLIB_static_LDFLAGS)
-HTSLIB_LIBS = $(HTSLIB_static_LIBS)
+BGZIP  = /usr/bin/bgzip
+TABIX  = /usr/bin/tabix
 
 CC       = gcc
 CPPFLAGS =
 CFLAGS   = -g -Wall -Wc++-compat -O2
-LDFLAGS  =
-LIBS     =
+LDFLAGS  ?=
+LIBS     += $(LDFLAGS) -lhts
 
 ifeq "$(shell uname -s)" "Darwin"
 DYNAMIC_FLAGS = -Wl,-export_dynamic
@@ -73,7 +67,7 @@ GSL_LIBS       =
 ifdef USE_GPL
     EXTRA_CPPFLAGS += -DUSE_GPL
     OBJS += polysomy.o peakfit.o
-    GSL_LIBS = -lgsl -lcblas
+    GSL_LIBS = -lgsl -lgslcblas
 endif
 
 prefix      = /usr/local
@@ -123,11 +117,11 @@ force:
 .c.o:
 	$(CC) $(CFLAGS) $(EXTRA_CPPFLAGS) $(ALL_CPPFLAGS) -c -o $@ $<
 
-test: $(PROG) plugins test/test-rbuf test/test-regidx $(BGZIP) $(TABIX)
+test: $(PROG) plugins test/test-rbuf test/test-regidx
 	./test/test-regidx
 	./test/test.pl --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
 
-test-plugins: $(PROG) plugins test/test-rbuf $(BGZIP) $(TABIX)
+test-plugins: $(PROG) plugins test/test-rbuf
 	./test/test.pl --plugins --exec bgzip=$(BGZIP) --exec tabix=$(TABIX)
 
 
@@ -217,8 +211,8 @@ test/test-regidx.o: test/test-regidx.c regidx.h
 test/test-regidx: test/test-regidx.o regidx.o $(HTSLIB)
 	$(CC) $(ALL_LDFLAGS) -o $@ $^ $(HTSLIB) -lpthread $(HTSLIB_LIBS) $(ALL_LIBS)
 
-bcftools: $(HTSLIB) $(OBJS)
-	$(CC) $(ALL_LDFLAGS) -o $@ $(OBJS) $(HTSLIB) -lpthread $(HTSLIB_LIBS) $(GSL_LIBS) $(ALL_LIBS)
+bcftools: $(OBJS)
+	$(CC) $(ALL_LDFLAGS) -o $@ $(OBJS) -lpthread $(HTSLIB_LIBS) $(GSL_LIBS) $(ALL_LIBS)
 
 doc/bcftools.1: doc/bcftools.txt
 	cd doc && a2x -adate="$(DOC_DATE)" -aversion=$(DOC_VERSION) --doctype manpage --format manpage bcftools.txt
