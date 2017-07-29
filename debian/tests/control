@@ -1,0 +1,9 @@
+Tests: runtests
+Depends:
+	@,
+	tabix,
+	perl,
+        @builddeps@
+Restrictions:
+	allow-stderr,
+	rw-build-tree,
