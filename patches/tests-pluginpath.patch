@@ -1,0 +1,21 @@
+Description: Set the bcftools plugin path to search system directories
+ The tests were intended to be run at build time only, so the test
+ script sets the plugins to be searched for /only/ in the build directory.
+ It does so by setting the environment variable BCFTOOLS_PLUGINS. However,
+ as described in the manpage bcftools(1), adding a colon to either side of
+ the path entry in the environment variable also searches the system
+ directories. We need this for autopkgtest to work.
+Author: Afif Elghraoui <afif@ghraoui.name>
+Forwarded: not-needed
+Last-Update: 2015-11-09
+--- bcftools.orig/test/test.pl
++++ bcftools/test/test.pl
+@@ -776,7 +776,7 @@
+ {
+     my ($opts,%args) = @_;
+     if ( !$$opts{test_plugins} ) { return; }
+-    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
++    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins:";
+     if ( !exists($args{args}) ) { $args{args} = ''; }
+     $args{args} =~ s/{PATH}/$$opts{path}/g;
+     bgzip_tabix_vcf($opts,"$args{in}");

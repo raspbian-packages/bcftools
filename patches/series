@@ -1,0 +1,4 @@
+external-libs.patch
+compiler-flags.patch
+destdir.patch
+tests-pluginpath.patch
