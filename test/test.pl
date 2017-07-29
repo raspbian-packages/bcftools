@@ -776,7 +776,7 @@ sub test_vcf_plugin
 {
     my ($opts,%args) = @_;
     if ( !$$opts{test_plugins} ) { return; }
-    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
+    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins:";
     if ( !exists($args{args}) ) { $args{args} = ''; }
     $args{args} =~ s/{PATH}/$$opts{path}/g;
     bgzip_tabix_vcf($opts,"$args{in}");
