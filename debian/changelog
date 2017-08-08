@@ -1,4 +1,4 @@
-bcftools (1.5-1) UNRELEASED; urgency=medium
+bcftools (1.5-1~exp1) experimental; urgency=medium
 
   [ Afif Elghraoui ]
   * Update packaging for new build system
@@ -12,7 +12,7 @@ bcftools (1.5-1) UNRELEASED; urgency=medium
   * [debian/upstream/metadata] Added registry references for
     OMICtools, RRID, bio.tools
 
- -- Afif Elghraoui <afif@debian.org>  Mon, 07 Aug 2017 20:06:52 -0400
+ -- Afif Elghraoui <afif@debian.org>  Tue, 08 Aug 2017 12:35:44 -0400
 
 bcftools (1.4.1-2) unstable; urgency=medium
 
