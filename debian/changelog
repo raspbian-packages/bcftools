@@ -1,13 +1,18 @@
 bcftools (1.5-1) UNRELEASED; urgency=medium
 
-  * Team upload.
+  [ Afif Elghraoui ]
+  * Update packaging for new build system
+
+  [ Andreas Tille ]
   * New upstream version
   * Bump version in Build-Depends libhts-dev from 1.3.1 to 1.5
   * Standards-Version: 4.0.0 (no changes needed)
-  * [debian/upstream/metadata] Added registry references for
-    OMICtools, RRID, bio.tools (Steffen Moeller)
 
- -- Andreas Tille <tille@debian.org>  Thu, 20 Jul 2017 13:17:51 +0200
+  [Steffen Moeller ]
+  * [debian/upstream/metadata] Added registry references for
+    OMICtools, RRID, bio.tools
+
+ -- Afif Elghraoui <afif@debian.org>  Mon, 07 Aug 2017 20:06:52 -0400
 
 bcftools (1.4.1-2) unstable; urgency=medium
 
