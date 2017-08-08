@@ -3,4 +3,3 @@
 # destdir.patch
 tests-pluginpath.patch
 test-regidx-unsigned-char.patch
-fix_config.mk.patch
