@@ -1,0 +1,84 @@
+bcftools (1.4.1-3+rpi1) buster-staging; urgency=medium
+
+ -- Raspbian forward porter <root@raspbian.org>  Wed, 09 Aug 2017 08:51:49 +0000
+
+bcftools (1.4.1-3) unstable; urgency=medium
+
+  * Team upload.
+  * Incorporate patches from Ubuntu to fix FTBFS on some 32-bit archs.
+  * Fix autopkgtests by ensuring presence of all deps.
+
+ -- Sascha Steinbiss <satta@debian.org>  Sat, 29 Jul 2017 10:38:27 +0200
+
+bcftools (1.4.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Fix FTBFS on architectures where char is unsigned by default,
+    thanks Adrian Bunk (Closes: #865060)
+
+ -- Graham Inggs <ginggs@debian.org>  Wed, 19 Jul 2017 11:00:08 +0200
+
+bcftools (1.4.1-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream version
+    Closes: #865006
+  * debhelper 10
+
+ -- Andreas Tille <tille@debian.org>  Sun, 18 Jun 2017 21:41:36 +0200
+
+bcftools (1.3.1-1+rpi1) buster-staging; urgency=medium
+
+  * Disable testsuite.
+
+ -- Peter Michael Green <plugwash@raspbian.org>  Sat, 29 Jul 2017 09:40:04 +0000
+
+bcftools (1.3.1-1) unstable; urgency=medium
+
+  * Imported Upstream version 1.3.1
+  * Remove backported patches
+  * Refresh remaining patches
+  * Bump htslib minimum dependency
+  * Bump Standards-Version to 3.9.8
+  * Add a manpage for the color-chrs command
+
+ -- Afif Elghraoui <afif@debian.org>  Mon, 25 Apr 2016 22:24:50 -0700
+
+bcftools (1.3-3) unstable; urgency=medium
+
+  * Backport upstream patch to fix build on arm64, armel, and ppc64el
+    (Closes: #812268)
+
+ -- Afif Elghraoui <afif@debian.org>  Thu, 31 Mar 2016 00:57:18 -0700
+
+bcftools (1.3-2) unstable; urgency=medium
+
+  * Backport upstream patch to be able to build plugin with GSL2
+  * Bump Standards-Version
+  * Use encrypted protocols for VCS URLs
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Sun, 21 Feb 2016 16:35:44 -0800
+
+bcftools (1.3-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #813465)
+  * Disable building with libgsl until build issue with GSL2 is addressed
+  * Update d/TODO to indicate GSL issue forwarded
+  * Simplify d/rules as a result of improvements to build system
+  * Update htslib minimum dependency
+  * Add libhts-dev dependency for CI tests
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Wed, 03 Feb 2016 23:44:03 -0800
+
+bcftools (1.2-2) unstable; urgency=medium
+
+  * Fix autopkgtest dependencies
+  * Declare conflict with older versions of samtools (Closes: #812328)
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Fri, 22 Jan 2016 18:52:53 -0800
+
+bcftools (1.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #804007)
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Mon, 09 Nov 2015 23:44:39 -0800
