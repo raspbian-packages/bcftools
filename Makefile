@@ -32,9 +32,9 @@ all: $(PROG) $(TEST_PROG)
 BGZIP  = /usr/bin/bgzip
 TABIX  = /usr/bin/tabix
 
-CC       = gcc
-CPPFLAGS =
-CFLAGS   = -g -Wall -Wc++-compat -O2
+CC       ?= gcc
+CPPFLAGS ?=
+CFLAGS   += -g -Wall -Wc++-compat -O2
 LDFLAGS  ?=
 LIBS     += $(LDFLAGS) -lhts
 
