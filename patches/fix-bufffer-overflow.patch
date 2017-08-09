@@ -1,0 +1,16 @@
+Description: Fix buffer overflow
+Origin: upstream, https://github.com/samtools/bcftools/commit/8bfb9d5a94aaab4617bc38cfefa8332729dbd837
+Bug: https://github.com/samtools/bcftools/issues/607
+Bug-Debian: https://bugs.debian.org/868958
+Author: Petr Danecek <pd3@sanger.ac.uk>
+Last-Update: 2017-05-10
+--- a/filter.c
++++ b/filter.c
+@@ -832,6 +832,7 @@
+         {
+             char *se = ss;
+             while ( *se && *se!=',' ) se++;
++            hts_expand(double, i+1, tok->mvalues, tok->values);
+             if ( !*se ) tok->values[i] = strlen(ss);
+             else
+             {
