@@ -1,3 +1,9 @@
+bcftools (1.5-1) unstable; urgency=medium
+
+  * migrate to Unstable
+
+ -- Afif Elghraoui <afif@debian.org>  Sun, 01 Oct 2017 12:39:31 -0400
+
 bcftools (1.5-1~exp1) experimental; urgency=medium
 
   [ Afif Elghraoui ]
