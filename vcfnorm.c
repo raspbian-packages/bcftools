@@ -94,7 +94,7 @@ static inline int replace_iupac_codes(char *seq, int nseq)
 }
 static inline int has_non_acgtn(char *seq, int nseq)
 {
-    char *end = nseq ? seq + nseq : seq + UINT32_MAX;   // arbitrary large number
+    char *end = nseq ? seq + nseq : seq + (UINT32_MAX >> 2);   // arbitrary large number
     while ( *seq && seq<end )
     {
         char c = toupper(*seq);
