@@ -2,6 +2,7 @@ Description: Fix test-regidx argument parsing on archs with unsigned char
  On architectures where char is unsigned "c >= 0" was always true.
 Author: Adrian Bunk <bunk@debian.org>
 Bug-Debian: https://bugs.debian.org/865060
+Forwarded: https://github.com/samtools/bcftools/pull/700
 
 --- a/test/test-regidx.c
 +++ b/test/test-regidx.c
