@@ -1,7 +1,7 @@
 Description: Fix test_vcf_query on 32-bit architectures
  Introduced by upstream commit:
  https://github.com/samtools/bcftools/commit/25d042b833987d32e5de1fc3a109d357c4d0f738
-Forwarded: not-yet
+Forwarded: https://github.com/samtools/bcftools/pull/701
 Bug-Debian: https://bugs.debian.org/868958
 Author: Graham Inggs <ginggs@debian.org>
 Last-Update 2017-07-21
