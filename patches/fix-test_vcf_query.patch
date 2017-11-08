@@ -1,0 +1,18 @@
+Description: Fix test_vcf_query on 32-bit architectures
+ Introduced by upstream commit:
+ https://github.com/samtools/bcftools/commit/25d042b833987d32e5de1fc3a109d357c4d0f738
+Forwarded: https://github.com/samtools/bcftools/pull/701
+Bug-Debian: https://bugs.debian.org/868958
+Author: Graham Inggs <ginggs@debian.org>
+Last-Update 2017-07-21
+--- bcftools.orig/vcfnorm.c
++++ bcftools/vcfnorm.c
+@@ -94,7 +94,7 @@
+ }
+ static inline int has_non_acgtn(char *seq, int nseq)
+ {
+-    char *end = nseq ? seq + nseq : seq + UINT32_MAX;   // arbitrary large number
++    char *end = nseq ? seq + nseq : seq + (UINT32_MAX >> 2);   // arbitrary large number
+     while ( *seq && seq<end )
+     {
+         char c = toupper(*seq);
