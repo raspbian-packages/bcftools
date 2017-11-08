@@ -1,0 +1,3 @@
+# The supposedly unparsable element is "\n?@", which is not getting
+# parsed in lintian either apparently.
+testsuite-dependency-has-unparsable-elements
