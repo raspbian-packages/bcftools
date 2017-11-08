@@ -1,3 +1,11 @@
+bcftools (1.5-3) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * Versioned Build-Depends on htslib to avoid FTBFS on armel, armhf and
+    ppc64el
+
+ -- Andreas Tille <tille@debian.org>  Wed, 08 Nov 2017 08:25:40 +0100
+
 bcftools (1.5-2) unstable; urgency=low
 
   * Incorporate lost changes from 1.4.1-3 (Closes: #868958)
