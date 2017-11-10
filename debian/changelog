@@ -1,5 +1,6 @@
-bcftools (1.5-4) UNRELEASED; urgency=medium
+bcftools (1.5-4) unstable; urgency=medium
 
+  * Team upload.
   * Add debian/clean to fix FTBFSx2
   * Update patches as they were applied upstream
   * Bump versioned Build-Depends on htslib to make sure we pick up
