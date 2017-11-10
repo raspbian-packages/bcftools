@@ -2,6 +2,8 @@ bcftools (1.5-4) UNRELEASED; urgency=medium
 
   * Add debian/clean to fix FTBFSx2
   * Update patches as they were applied upstream
+  * Bump versioned Build-Depends on htslib to make sure we pick up
+    versioned dependency on libhts2 (Closes: #881331)
 
  -- Graham Inggs <ginggs@debian.org>  Fri, 10 Nov 2017 12:41:15 +0000
 
