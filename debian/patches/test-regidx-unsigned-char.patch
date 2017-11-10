@@ -3,6 +3,7 @@ Description: Fix test-regidx argument parsing on archs with unsigned char
 Author: Adrian Bunk <bunk@debian.org>
 Bug-Debian: https://bugs.debian.org/865060
 Forwarded: https://github.com/samtools/bcftools/pull/700
+Applied-Upstream: https://github.com/samtools/bcftools/commit/9d83925bcb1eed867288bcd6441e863a51349c2d
 
 --- a/test/test-regidx.c
 +++ b/test/test-regidx.c
