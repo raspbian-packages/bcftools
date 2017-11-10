@@ -1,3 +1,9 @@
+bcftools (1.5-4) UNRELEASED; urgency=medium
+
+  * Add debian/clean to fix FTBFSx2
+
+ -- Graham Inggs <ginggs@debian.org>  Fri, 10 Nov 2017 12:41:15 +0000
+
 bcftools (1.5-3) unstable; urgency=medium
 
   * Team upload.
