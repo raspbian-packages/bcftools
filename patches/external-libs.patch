@@ -1,0 +1,39 @@
+Description: Use packaged libraries
+Author: Afif Elghraoui <afif@ghraoui.name>
+Forwarded: not-needed
+Last-Update: 2015-11-03
+--- a/config.mk.in
++++ b/config.mk.in
+@@ -37,27 +37,21 @@ mandir       = @mandir@
+ CC       = @CC@
+ CPPFLAGS = @CPPFLAGS@
+ CFLAGS   = @CFLAGS@
+-LDFLAGS  = @LDFLAGS@
+-LIBS     = @LIBS@
++LDFLAGS  ?=
++LIBS     = $(LDFLAGS) -lhts
+ 
+ DYNAMIC_FLAGS = @CC_RDYNAMIC_OPT@
+ 
+ USE_GPL = @USE_GPL@
+-GSL_LIBS = @GSL_LIBS@
++GSL_LIBS = -lgsl -lgslcblas
+ 
+ PLATFORM   = @PLATFORM@
+ PLUGINS_ENABLED = @enable_bcftools_plugins@
+ plugindir = @bcf_plugindir@
+ PLUGIN_EXT = @PLUGIN_EXT@
+ 
+-@Hsource@HTSDIR = @HTSDIR@
+-@Hsource@include $(HTSDIR)/htslib.mk
+-@Hsource@include $(HTSDIR)/htslib_static.mk
+-@Hsource@HTSLIB = $(HTSDIR)/libhts.a
+-@Hsource@HTSLIB_LIB = $(HTSLIB) $(HTSLIB_static_LIBS)
+-@Hsource@HTSLIB_LDFLAGS = $(HTSLIB_static_LDFLAGS)
+-@Hsource@BGZIP = $(HTSDIR)/bgzip
+-@Hsource@TABIX = $(HTSDIR)/tabix
++@Hsource@BGZIP = /usr/bin/bgzip
++@Hsource@TABIX = /usr/bin/tabix
+ HTSLIB_CPPFLAGS = @HTSLIB_CPPFLAGS@
+ @Hinstall@HTSLIB_LDFLAGS = @HTSLIB_LDFLAGS@
+ @Hinstall@HTSLIB_LIB = -lhts
