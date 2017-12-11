@@ -1,6 +1,3 @@
-# external-libs.patch
-# compiler-flags.patch
-# destdir.patch
 tests-pluginpath.patch
 test-regidx-unsigned-char.patch
 fix-test_vcf_query.patch
