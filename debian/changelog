@@ -1,10 +1,10 @@
-bcftools (1.6-1) UNRELEASED; urgency=medium
+bcftools (1.6-1) experimental; urgency=medium
 
   * Team upload.
   * New upstream version
   * Standards-Version: 4.1.2
 
- -- Andreas Tille <tille@debian.org>  Mon, 11 Dec 2017 13:26:17 +0100
+ -- Andreas Tille <tille@debian.org>  Mon, 11 Dec 2017 13:28:56 +0100
 
 bcftools (1.5-4) unstable; urgency=medium
 
