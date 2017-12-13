@@ -1,10 +1,10 @@
-bcftools (1.6-2) UNRELEASED; urgency=medium
+bcftools (1.6-2) experimental; urgency=medium
 
   * Team upload
   * Apply patch from upstream to reduce failing tests on different
     architectures.  Addresses bug #870060
 
- -- Andreas Tille <tille@debian.org>  Wed, 13 Dec 2017 15:54:52 +0100
+ -- Andreas Tille <tille@debian.org>  Wed, 13 Dec 2017 15:57:03 +0100
 
 bcftools (1.6-1) experimental; urgency=medium
 
