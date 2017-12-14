@@ -1,0 +1,13 @@
+Test-Command:
+	ln -s /usr/bin/bcftools bcftools &&
+	./test/test.pl
+	--plugins
+	--exec bgzip=/usr/bin/bgzip
+	--exec tabix=/usr/bin/tabix
+Depends:
+	@,
+	tabix,
+	perl,
+Restrictions:
+	allow-stderr,
+	rw-build-tree,

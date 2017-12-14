@@ -1,0 +1,656 @@
+From: Petr Danecek <pd3@sanger.ac.uk>
+Date: Wed, 13 Dec 2017 12:58:37 +0000
+Subject: Make the test cases conform to VCF specification
+Origin: https://github.com/samtools/bcftools/commit/9a38c20d536b8893df6ac7e6cca845f205dda85e.patch
+Bug-Debian: https://bugs.debian.org/870060
+Bug-Upstream: https://github.com/samtools/bcftools/issues/720
+
+Most of these are cosmetic, but some are likely to fix at least some of the
+platform-dependant test failures reported in #720. Specifically the merging
+code relies on the correct number of fields in the FORMAT/Number=G tags.
+---
+ test/aa.out                      |  1 +
+ test/aa.vcf                      |  1 +
+ test/ad-bias.vcf                 |  1 +
+ test/annotate.out                |  2 +-
+ test/annotate.vcf                |  2 +-
+ test/annotate2.out               |  2 +-
+ test/annotate3.out               |  2 +-
+ test/annots.vcf                  |  2 +-
+ test/check.vcf                   |  5 +++--
+ test/consensus.vcf               |  3 +++
+ test/consensus2.vcf              |  5 +++++
+ test/convert.gt.vcf              |  1 +
+ test/convert.gvcf.out            |  1 +
+ test/convert.gvcf.vcf            |  1 +
+ test/convert.vcf                 |  1 +
+ test/csq.vcf                     |  3 ++-
+ test/empty.vcf                   |  1 +
+ test/ex2.vcf                     |  4 ++--
+ test/fill-tags.2.out             |  2 +-
+ test/fill-tags.3.out             |  2 +-
+ test/filter-missing-floats.vcf   |  1 +
+ test/filter.10.out               |  1 +
+ test/filter.4.vcf                |  1 +
+ test/fixref.2.out                |  1 +
+ test/fixref.2a.vcf               |  1 +
+ test/fixref.2b.vcf               |  1 +
+ test/fixref.vcf                  |  1 +
+ test/gvcf.merge.1.out            |  5 ++---
+ test/gvcf.merge.1.vcf            |  4 ++--
+ test/gvcf.merge.2.vcf            |  4 ++--
+ test/gvcf.merge.3.vcf            |  4 ++--
+ test/idx.vcf                     |  1 +
+ test/isec.a.vcf                  |  6 +++++-
+ test/isec.tab.out                | 10 +++++-----
+ test/many.alleles.trim.out       |  1 +
+ test/many.alleles.vcf            |  1 +
+ test/merge.2.a.vcf               |  2 +-
+ test/merge.2.b.vcf               |  4 ++--
+ test/merge.4.a.vcf               |  4 ++--
+ test/merge.4.out                 |  4 ++--
+ test/merge.gvcf.2.a.vcf          |  2 +-
+ test/merge.gvcf.2.out            |  2 +-
+ test/plugin-missing2ref.out.vcf  |  2 +-
+ test/regions.vcf                 | 14 +++++++-------
+ test/view.10.out                 |  2 +-
+ test/view.6.out                  |  2 +-
+ test/view.GL.vcf                 |  2 +-
+ test/view.GTsubset.NA1NA2NA3.out |  2 +-
+ test/view.PL.vcf                 |  2 +-
+ test/view.exclude.out            |  2 +-
+ test/view.vcf                    |  2 +-
+ 51 files changed, 82 insertions(+), 51 deletions(-)
+
+--- a/test/aa.out
++++ b/test/aa.out
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.2
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##contig=<ID=1,length=2147483647>
+ ##contig=<ID=2,length=2147483647>
+ ##contig=<ID=3,length=2147483647>
+--- a/test/aa.vcf
++++ b/test/aa.vcf
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.2
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##contig=<ID=1,length=2147483647>
+ ##contig=<ID=2,length=2147483647>
+ ##contig=<ID=3,length=2147483647>
+--- a/test/ad-bias.vcf
++++ b/test/ad-bias.vcf
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.2
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##contig=<ID=22,length=51304566>
+ ##FORMAT=<ID=AD,Number=R,Type=Integer,Description="Allelic depths">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+--- a/test/annotate.out
++++ b/test/annotate.out
+@@ -39,5 +39,5 @@
+ 2	3199812	indel_3199812	G	GTT,GT	82.7	PASS	AN=4;AC=2,2;INDEL	GT:GQ:DP	1/2:322:26	1/2:322:26
+ 3	3212016	indel_3212016	CTT	C,CT	79	PASS	AN=4;AC=2,2;INDEL	GT:GQ:DP	1/2:91:26	1/2:91:26
+ 4	3258448	indel_3258448	TACACACAC	T	59.9	PASS	AN=4;AC=2;INDEL	GT:GQ:DP	0/1:325:31	0/1:325:31
+-4	4000000	id1	T	A,C	59.9	PASS	AN=4;AC=2;INDEL	GT:GQ:DP	0/1:325:31	0/1:325:31
++4	4000000	id1	T	A,C	59.9	PASS	AN=4;AC=2,0;INDEL	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	4000001	id2	T	A	59.9	PASS	AN=4;AC=2;INDEL	GT:GQ:DP	0/1:325:31	0/1:325:31
+--- a/test/annotate.vcf
++++ b/test/annotate.vcf
+@@ -35,5 +35,5 @@
+ 2	3199812	.	G	GTT,GT	82.7	PASS	AN=4;AC=2,2	GT:GQ:DP	1/2:322:26	1/2:322:26
+ 3	3212016	.	CTT	C,CT	79	PASS	AN=4;AC=2,2	GT:GQ:DP	1/2:91:26	1/2:91:26
+ 4	3258448	.	TACACACAC	T	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+-4	4000000	.	T	A,C	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
++4	4000000	.	T	A,C	59.9	PASS	AN=4;AC=2,0	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	4000001	.	T	A	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+--- a/test/annotate2.out
++++ b/test/annotate2.out
+@@ -39,5 +39,5 @@
+ 2	3199812	.	G	GTT,GT	82.7	PASS	AN=4;AC=2,2	GT:GQ:DP	1/2:322:26	1/2:322:26
+ 3	3212016	.	CTT	C,CT	79	PASS	AN=4;AC=2,2	GT:GQ:DP	1/2:91:26	1/2:91:26
+ 4	3258448	.	TACACACAC	T	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+-4	4000000	.	T	A,C	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
++4	4000000	.	T	A,C	59.9	PASS	AN=4;AC=2,0	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	4000001	.	T	A	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+--- a/test/annotate3.out
++++ b/test/annotate3.out
+@@ -36,5 +36,5 @@
+ 2	3199812	id11	G	GTT,GT	99	PASS	AN=4;AC=2,2;STR=id11	GT:GQ:DP	1/2:322:26	1/2:322:26
+ 3	3212016	id12	CTT	C,CT	99	PASS	AN=4;AC=2,2;STR=id12	GT:GQ:DP	1/2:91:26	1/2:91:26
+ 4	3258448	id13	TACACACAC	T	99	PASS	AN=4;AC=2;STR=id13	GT:GQ:DP	0/1:325:31	0/1:325:31
+-4	4000000	.	T	A,C	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
++4	4000000	.	T	A,C	59.9	PASS	AN=4;AC=2,0	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	4000001	.	T	A	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+--- a/test/annots.vcf
++++ b/test/annots.vcf
+@@ -27,7 +27,7 @@
+ 1	3062915	idSNP	G	T,C	99	PASS	STR=testSNP;TEST=5;DP4=1,2,3,4;AN=3;AC=0,0	GT:TT:GQ:DP:GL	0|0:9,9:999:99:-99,-9,-99,-99,-9,-99	0:9,9:999:99:-99,-9,-99
+ 1	3106154	id4	CAAA	C	99	PASS	STR=id4;AN=4;AC=0	GT:GQ:DP	0|0:999:99	0|0:999:99
+ 1	3106154	id5	C	CT	99	PASS	STR=id5;AN=4;AC=0	GT:GQ:DP	0|0:999:99	0|0:999:99
+-1	3157410	id6	GA	GC,G	99	PASS	STR=id6;AN=4;AC=0	GT:GQ:DP	0|0:99:99	0|0:99:99
++1	3157410	id6	GA	GC,G	99	PASS	STR=id6;AN=4;AC=0,0	GT:GQ:DP	0|0:99:99	0|0:99:99
+ 1	3162006	id7	GAA	GG	99	PASS	STR=id7;AN=4;AC=0	GT:GQ:DP	0|0:999:99	0|0:999:99
+ 1	3177144	id8	G	T	99	PASS	STR=id8;AN=4;AC=0	GT:GQ:DP	0|0:999:99	0|0:999:99
+ 1	3177144	id9	G	.	99	PASS	STR=id9;AN=4;AC=0	GT:GQ:DP	0|0:999:99	0|0:999:99
+--- a/test/check.vcf
++++ b/test/check.vcf
+@@ -12,6 +12,7 @@
+ ##contig=<ID=1,assembly=b37,length=249250621>
+ ##contig=<ID=3,assembly=b37,length=198022430>
+ ##contig=<ID=4,assembly=b37,length=191154276>
++##contig=<ID=2,assembly=b37,length=191154276>
+ ##reference=file:///lustre/scratch105/projects/g1k/ref/main_project/human_g1k_v37.fasta
+ ##readme=AAAAAA
+ ##readme=BBBBBB
+@@ -29,8 +30,8 @@
+ 2	3199812	.	G	GTT,GT	82.7	PASS	AN=4;AC=2,2	GT:GQ:DP	1/2:322:26	1/2:322:26
+ 3	3212016	.	CTT	C,CT	79	PASS	AN=4;AC=2,2	GT:GQ:DP	1/2:91:26	1/2:91:26
+ 4	3258448	.	TACACACAC	T	59.9	PASS	DP=62;AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+-4	3258449	.	GCAAA	GA,G	59.9	PASS	DP=62;AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+-4	3258450	.	AAAAGAAAAAG	A,AAAAAAG	59.9	PASS	DP=60;AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
++4	3258449	.	GCAAA	GA,G	59.9	PASS	DP=62;AN=4;AC=2,0	GT:GQ:DP	0/1:325:31	0/1:325:31
++4	3258450	.	AAAAGAAAAAG	A,AAAAAAG	59.9	PASS	DP=60;AN=4;AC=2,0	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	3258451	.	AAA	AGT	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	3258452	.	AAA	AGA	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+ 4	3258453	.	AACA	AGA	59.9	PASS	AN=4;AC=2	GT:GQ:DP	0/1:325:31	0/1:325:31
+--- a/test/consensus.vcf
++++ b/test/consensus.vcf
+@@ -1,7 +1,10 @@
+ ##fileformat=VCFv4.2
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant described in this record">
+ ##ALT=<ID=DEL,Description="Deletion">
++##contig=<ID=1,assembly=b37,length=249250621>
++##contig=<ID=2,assembly=b37,length=249250621>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA001
+ 1	5	.	C	a	.	PASS	.	GT	0/1
+ 1	5	.	C	t	.	PASS	.	GT	0/1
+--- a/test/consensus2.vcf
++++ b/test/consensus2.vcf
+@@ -2,6 +2,11 @@
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the variant described in this record">
+ ##ALT=<ID=DEL,Description="Deletion">
++##reference=file://some/path/human_g1k_v37.fasta
++##contig=<ID=1,assembly=b37,length=249250621>
++##contig=<ID=2,assembly=b37,length=249250621>
++##contig=<ID=3,assembly=b37,length=249250621>
++##contig=<ID=4,assembly=b37,length=249250621>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA001
+ 1	59	.	C	a,Caa	.	PASS	.	GT	1|2
+ 2	60	.	C	a,Caa	.	PASS	.	GT	1|2
+--- a/test/convert.gt.vcf
++++ b/test/convert.gt.vcf
+@@ -1,6 +1,7 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##contig=<ID=X,assembly=b37,length=155270560>
+ ##bcftools_normVersion=1.2+htslib-1.2.1
+ ##bcftools_normCommand=norm -m - convert.vcf
+--- a/test/convert.gvcf.out
++++ b/test/convert.gvcf.out
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##FORMAT=<ID=GQX,Number=1,Type=Integer,Description="Minimum of {Genotype quality assuming variant position,Genotype quality assuming non-variant position}">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=GQ,Number=1,Type=Float,Description="Genotype Quality">
+--- a/test/convert.gvcf.vcf
++++ b/test/convert.gvcf.vcf
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##FORMAT=<ID=GQX,Number=1,Type=Integer,Description="Minimum of {Genotype quality assuming variant position,Genotype quality assuming non-variant position}">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=GQ,Number=1,Type=Float,Description="Genotype Quality">
+--- a/test/convert.vcf
++++ b/test/convert.vcf
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file://some/path/human_g1k_v37.fasta
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=PL,Number=G,Type=Integer,Description="List of Phred-scaled genotype likelihoods">
+ ##FORMAT=<ID=GP,Number=G,Type=Float,Description="Estimated Genotype Probability">
+--- a/test/csq.vcf
++++ b/test/csq.vcf
+@@ -1,6 +1,7 @@
+ ##fileformat=VCFv4.2
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+-##INFO=<ID=EXP,Number=1,Type=String,Description="Expected consequence">
++##reference=file://some/path/human_g1k_v37.fasta
++##INFO=<ID=EXP,Number=.,Type=String,Description="Expected consequence">
+ ##contig=<ID=1,length=2147483647>
+ ##contig=<ID=2,length=2147483647>
+ ##contig=<ID=3,length=2147483647>
+--- a/test/empty.vcf
++++ b/test/empty.vcf
+@@ -3,4 +3,5 @@
+ ##contig=<ID=20,length=63025520>
+ ##contig=<ID=X,length=155270560>
+ ##contig=<ID=Y,length=59373566>
++##reference=file://some/path/human_g1k_v37.fasta
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+--- a/test/ex2.vcf
++++ b/test/ex2.vcf
+@@ -7,14 +7,14 @@
+ ##INFO=<ID=AA,Number=1,Type=String,Description="Ancestral Allele">
+ ##INFO=<ID=DB,Number=0,Type=Flag,Description="dbSNP membership, build 129">
+ ##INFO=<ID=H2,Number=0,Type=Flag,Description="HapMap2 membership">
+-##INFO=<ID=HOMSEQ,Number=.,Type=String>
++##INFO=<ID=HOMSEQ,Number=.,Type=String,Description="testing">
+ ##FILTER=<ID=q10,Description="Quality below 10">
+ ##FILTER=<ID=s50,Description="Less than 50% of samples have data">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=GQ,Number=1,Type=Integer,Description="Genotype Quality">
+ ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+ ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
+-##FORMAT=<ID=CNL,Number=.,Type=Integer>
++##FORMAT=<ID=CNL,Number=.,Type=Integer,Description="Some description">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+ 20	14370	rs6054257	G	A	29.1	.	NS=3;DP=14;AF=0.5;HOMSEQ;DB	GT:GQ:DP:HQ:CNL	0|0:48:1:25,30:10,20	1|0:48:8:49,51:.	./.:43:5:.,.:1
+ 20	17330	.	T	A	.	q10;s50	NS=3;DP=11;AF=0.017;H2	GT:GQ:DP:HQ	0|0:49:3:58,50	0|1:3:5:65,3	0/0:41:3:4,5
+--- a/test/fill-tags.2.out
++++ b/test/fill-tags.2.out
+@@ -33,7 +33,7 @@
+ ##INFO=<ID=AF,Number=A,Type=Float,Description="Allele frequency">
+ ##INFO=<ID=MAF,Number=A,Type=Float,Description="Minor Allele frequency">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	DP=100223;NS=3;AN=6	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99	0/0:0,255,255:182:99
++11	2343543	.	A	.	999	PASS	DP=100223;NS=3;AN=6	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99	0/0:0:182:99
+ 11	5464562	.	C	T	999	PASS	DP=0;NS=0;AN=0;AC=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.	./.:0,0,0:.:.
+ 20	76962	rs6111385	T	C	999	PASS	DP4=110138,70822,421911,262673;DP=911531;Dels=0;FS=21.447;HWE=0.491006;ICF=-0.01062;MQ0=1;MQ=46;PV4=2.5e-09,0,0,1;QD=22.31;NS=3;AN=6;AF=0.833333;MAF=0.166667;AC=5	GT:PL:DP:GQ	0/1:255,0,255:193:99	1/1:255,255,0:211:99	1/1:255,255,0:182:99
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	DP4=125718,95950,113812,80890;DP=461867;HWE=0.24036;ICF=0.01738;INDEL;IS=374,0.937343;MQ=49;PV4=9e-30,1,0,3.8e-13;QD=0.0172;AN=6;AC=4;NS=3;AF=0.666667;MAF=0.333333	GT:DP:GQ:PL	0/1:117:99:255,0,132	0/1:111:99:255,0,139	1/1:78:99:255,213,0
+--- a/test/fill-tags.3.out
++++ b/test/fill-tags.3.out
+@@ -32,7 +32,7 @@
+ ##INFO=<ID=AC_AB,Number=A,Type=Integer,Description="Allele count in genotypes in AB">
+ ##INFO=<ID=AC_BC,Number=A,Type=Integer,Description="Allele count in genotypes in BC">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99	0/0:0,255,255:182:99
++11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99	0/0:0:182:99
+ 11	5464562	.	C	T	999	PASS	DP=0;AC_AB=0;AC_BC=0;AC=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.	./.:0,0,0:.:.
+ 20	76962	rs6111385	T	C	999	PASS	DP4=110138,70822,421911,262673;DP=911531;Dels=0;FS=21.447;HWE=0.491006;ICF=-0.01062;MQ0=1;MQ=46;PV4=2.5e-09,0,0,1;QD=22.31;AC_AB=3;AC_BC=4;AC=5	GT:PL:DP:GQ	0/1:255,0,255:193:99	1/1:255,255,0:211:99	1/1:255,255,0:182:99
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	DP4=125718,95950,113812,80890;DP=461867;HWE=0.24036;ICF=0.01738;INDEL;IS=374,0.937343;MQ=49;PV4=9e-30,1,0,3.8e-13;QD=0.0172;AN=6;AC=4;AC_AB=2;AC_BC=3	GT:DP:GQ:PL	0/1:117:99:255,0,132	0/1:111:99:255,0,139	1/1:78:99:255,213,0
+--- a/test/filter-missing-floats.vcf
++++ b/test/filter-missing-floats.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.2
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##contig=<ID=1,length=249250621>
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##INFO=<ID=A_AF,Number=A,Type=Float,Description="Allele frequency">
+--- a/test/filter.10.out
++++ b/test/filter.10.out
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##contig=<ID=chr1,length=135006516>
+ ##INFO=<ID=TEST1,Number=1,Type=Integer,Description="Test1">
+ ##INFO=<ID=TEST2,Number=1,Type=Float,Description="Test2">
+--- a/test/filter.4.vcf
++++ b/test/filter.4.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.1
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##contig=<ID=chr1,length=135006516>
+ ##INFO=<ID=TEST1,Number=1,Type=Integer,Description="Test1">
+ ##INFO=<ID=TEST2,Number=1,Type=Float,Description="Test2">
+--- a/test/fixref.2.out
++++ b/test/fixref.2.out
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.2
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##contig=<ID=1,length=2147483647>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	XY00001
+--- a/test/fixref.2a.vcf
++++ b/test/fixref.2a.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.2
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##contig=<ID=1,length=2147483647>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	XY00001
+--- a/test/fixref.2b.vcf
++++ b/test/fixref.2b.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.2
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##contig=<ID=1,length=2147483647>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO
+--- a/test/fixref.vcf
++++ b/test/fixref.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.2
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FILTER=<ID=PASS,Description="All filters passed">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##contig=<ID=1,length=2147483647>
+--- a/test/gvcf.merge.1.out
++++ b/test/gvcf.merge.1.out
+@@ -1,10 +1,10 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FILTER=<ID=LowGQX,Description="Locus GQX is less than 30 or not present">
+ ##FILTER=<ID=HighDPFRatio,Description="The fraction of basecalls filtered out at a site is greater than 0.3">
+ ##FILTER=<ID=nc,Description="No-call">
+-##contig=<ID=chrY,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+-##contig=<ID=chrM,length=16569,assembly=B37,md5=c68f52674c9fb33aef52dcf399755519,species="Homo sapiens">
++##contig=<ID=chr1,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
+ ##FORMAT=<ID=GQX,Number=1,Type=Integer,Description="Minimum of {Genotype quality assuming variant position,Genotype quality assuming non-variant position}">
+@@ -22,7 +22,6 @@
+ ##INFO=<ID=CGA_FI,Number=A,Type=String,Description="Functional impact annotation">
+ ##INFO=<ID=END,Number=1,Type=Integer,Description="End position of the region described in this record">
+ ##INFO=<ID=BLOCKAVG_min30p3a,Number=0,Type=Flag,Description="Non-variant site block. All sites in a block are constrained to be non-variant, have the same filter value, and have all sample values in range [x,y], y <= max(x+3,(x*1.3)). All printed site block sample values are the minimum observed in the region spanned by the block">
+-##contig=<ID=chr1>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	G06	D05	H09
+ chr1	10106	.	C	.	0	LowGQX	BLOCKAVG_min30p3a;AN=2	GT:GQX:DP:DPF	./.:.:.:.	0/0:12:5:0	./.:.:.:.
+ chr1	10107	.	C	.	0	LowGQX;HighDPFRatio	BLOCKAVG_min30p3a;AN=4	GT:GQX:DP:DPF	.:.:0:1	0/0:12:5:0	0/0:5:2:0
+--- a/test/gvcf.merge.1.vcf
++++ b/test/gvcf.merge.1.vcf
+@@ -1,10 +1,10 @@
+ ##fileformat=VCFv4.1
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FILTER=<ID=PASS,Description="All filters passed">
+ ##FILTER=<ID=LowGQX,Description="Locus GQX is less than 30 or not present">
+ ##FILTER=<ID=HighDPFRatio,Description="The fraction of basecalls filtered out at a site is greater than 0.3">
+ ##FILTER=<ID=nc,Description="No-call">
+-##contig=<ID=chrY,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+-##contig=<ID=chrM,length=16569,assembly=B37,md5=c68f52674c9fb33aef52dcf399755519,species="Homo sapiens">
++##contig=<ID=chr1,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
+ ##FORMAT=<ID=GQX,Number=1,Type=Integer,Description="Minimum of {Genotype quality assuming variant position,Genotype quality assuming non-variant position}">
+--- a/test/gvcf.merge.2.vcf
++++ b/test/gvcf.merge.2.vcf
+@@ -1,10 +1,10 @@
+ ##fileformat=VCFv4.1
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FILTER=<ID=PASS,Description="All filters passed">
+ ##FILTER=<ID=LowGQX,Description="Locus GQX is less than 30 or not present">
+ ##FILTER=<ID=HighDPFRatio,Description="The fraction of basecalls filtered out at a site is greater than 0.3">
+ ##FILTER=<ID=nc,Description="No-call">
+-##contig=<ID=chrY,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+-##contig=<ID=chrM,length=16569,assembly=B37,md5=c68f52674c9fb33aef52dcf399755519,species="Homo sapiens">
++##contig=<ID=chr1,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
+ ##FORMAT=<ID=GQX,Number=1,Type=Integer,Description="Minimum of {Genotype quality assuming variant position,Genotype quality assuming non-variant position}">
+--- a/test/gvcf.merge.3.vcf
++++ b/test/gvcf.merge.3.vcf
+@@ -1,10 +1,10 @@
+ ##fileformat=VCFv4.1
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##FILTER=<ID=PASS,Description="All filters passed">
+ ##FILTER=<ID=LowGQX,Description="Locus GQX is less than 30 or not present">
+ ##FILTER=<ID=HighDPFRatio,Description="The fraction of basecalls filtered out at a site is greater than 0.3">
+ ##FILTER=<ID=nc,Description="No-call">
+-##contig=<ID=chrY,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+-##contig=<ID=chrM,length=16569,assembly=B37,md5=c68f52674c9fb33aef52dcf399755519,species="Homo sapiens">
++##contig=<ID=chr1,length=59373566,assembly=B37,md5=1e86411d73e6f00a10590f976be01623,species="Homo sapiens">
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##FORMAT=<ID=HQ,Number=2,Type=Integer,Description="Haplotype Quality">
+ ##FORMAT=<ID=GQX,Number=1,Type=Integer,Description="Minimum of {Genotype quality assuming variant position,Genotype quality assuming non-variant position}">
+--- a/test/idx.vcf
++++ b/test/idx.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.1
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##contig=<ID=1,length=249250621>
+ ##contig=<ID=11,length=135006516>
+ ##contig=<ID=20,length=63025520>
+--- a/test/isec.a.vcf
++++ b/test/isec.a.vcf
+@@ -6,6 +6,10 @@
+ ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+ ##FORMAT=<ID=GL,Number=G,Type=Float,Description="Genotype Likelihood">
+ ##FILTER=<ID=q10,Description="Quality below 10">
++##contig=<ID=1,length=249250621>
++##contig=<ID=2,length=249250621>
++##contig=<ID=3,length=249250621>
++##contig=<ID=4,length=249250621>
+ ##test=<xx=A,yy=B,zz=C>
+ ##reference=file:///lustre/scratch105/projects/g1k/ref/main_project/human_g1k_v37.fasta
+ ##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes">
+@@ -16,7 +20,7 @@
+ 1	3062915	.	GTTT	G	1806	q10	DP=35;DP4=1,2,3,4;AN=2;AC=1	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20
+ 1	3062915	.	G	T	1806	q10	DP=35;DP4=1,2,3,4;AN=2;AC=1	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20
+ 1	3106154	.	CAAA	C	1792	PASS	DP=32;AN=2;AC=1	GT:GQ:DP	0/1:245:32
+-1	3106154	.	C	T,CT	1792	PASS	DP=32;AN=2;AC=1	GT:GQ:DP	0/1:245:32
++1	3106154	.	C	T,CT	1792	PASS	DP=32;AN=2;AC=1,0	GT:GQ:DP	0/1:245:32
+ 1	3157410	.	GA	G	628	q10	DP=21;AN=2;AC=2	GT:GQ:DP	1/1:21:21
+ 1	3162006	.	GAA	G	1016	PASS	DP=22;AN=2;AC=1	GT:GQ:DP	0/1:212:22
+ 1	3177144	.	GT	G	727	PASS	DP=30;AN=2;AC=1	GT:GQ:DP	0/1:150:30
+--- a/test/isec.tab.out
++++ b/test/isec.tab.out
+@@ -7,21 +7,21 @@
+ ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+ ##FORMAT=<ID=GL,Number=G,Type=Float,Description="Genotype Likelihood">
+ ##FILTER=<ID=q10,Description="Quality below 10">
++##contig=<ID=1,length=249250621>
++##contig=<ID=2,length=249250621>
++##contig=<ID=3,length=249250621>
++##contig=<ID=4,length=249250621>
+ ##test=<xx=A,yy=B,zz=C>
+ ##reference=file:///lustre/scratch105/projects/g1k/ref/main_project/human_g1k_v37.fasta
+ ##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes">
+ ##INFO=<ID=AN,Number=1,Type=Integer,Description="Total number of alleles in called genotypes">
+ ##readme=AAAAAA
+ ##readme=BBBBBB
+-##contig=<ID=1>
+-##contig=<ID=2>
+-##contig=<ID=3>
+-##contig=<ID=4>
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	A
+ 1	3062915	.	GTTT	G	1806	q10	DP=35;DP4=1,2,3,4;AN=2;AC=1	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20
+ 1	3062915	.	G	T	1806	q10	DP=35;DP4=1,2,3,4;AN=2;AC=1	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20
+ 1	3106154	.	CAAA	C	1792	PASS	DP=32;AN=2;AC=1	GT:GQ:DP	0/1:245:32
+-1	3106154	.	C	T,CT	1792	PASS	DP=32;AN=2;AC=1	GT:GQ:DP	0/1:245:32
++1	3106154	.	C	T,CT	1792	PASS	DP=32;AN=2;AC=1,0	GT:GQ:DP	0/1:245:32
+ 1	3157410	.	GA	G	628	q10	DP=21;AN=2;AC=2	GT:GQ:DP	1/1:21:21
+ 1	3162006	.	GAA	G	1016	PASS	DP=22;AN=2;AC=1	GT:GQ:DP	0/1:212:22
+ 1	3177144	.	GT	G	727	PASS	DP=30;AN=2;AC=1	GT:GQ:DP	0/1:150:30
+--- a/test/many.alleles.trim.out
++++ b/test/many.alleles.trim.out
+@@ -1,5 +1,6 @@
+ ##fileformat=VCFv4.1
+ ##FILTER=<ID=PASS,Description="All filters passed">
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##contig=<ID=chr7>
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ ##INFO=<ID=AC,Number=A,Type=Integer,Description="Allele count in genotypes">
+--- a/test/many.alleles.vcf
++++ b/test/many.alleles.vcf
+@@ -1,4 +1,5 @@
+ ##fileformat=VCFv4.1
++##reference=file:///some/path/1000GenomesPilot-NCBI36.fasta
+ ##contig=<ID=chr7>
+ ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SRR1528791
+--- a/test/merge.2.a.vcf
++++ b/test/merge.2.a.vcf
+@@ -27,4 +27,4 @@
+ 1	3106154	.	C	A	59.2	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+ 1	3200000	.	C	T	59.2	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+ 1	3200010	.	C	T	59.2	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+-1	3200020	.	C	G,T	59.2	PASS	AN=4;AC=2	GT:GL	./.:1,2,3,4,5,6	.:1,2,3
++1	3200020	.	C	G,T	59.2	PASS	AN=0;AC=0,0	GT:GL	./.:1,2,3,4,5,6	.:1,2,3
+--- a/test/merge.2.b.vcf
++++ b/test/merge.2.b.vcf
+@@ -26,5 +26,5 @@
+ 1	3106154	.	C	CCC	342	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+ 1	3106154	.	C	T	59.2	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+ 1	3200000	.	C	T	59.2	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+-1	3200010	.	c	A,T	59.2	PASS	AN=4;AC=2	GT:GQ:DP	0/1:245:32	0/1:245:32
+-1	3200020	.	C	T,G	59.2	PASS	AN=4;AC=2	GT:GL	./.:1,4,6,2,5,3	.:1,3,2
++1	3200010	.	c	A,T	59.2	PASS	AN=4;AC=2,0	GT:GQ:DP	0/1:245:32	0/1:245:32
++1	3200020	.	C	T,G	59.2	PASS	AN=0;AC=0,0	GT:GL	./.:1,4,6,2,5,3	.:1,3,2
+--- a/test/merge.4.a.vcf
++++ b/test/merge.4.a.vcf
+@@ -29,5 +29,5 @@
+ 1	3000000	id1	C	CCG	59.2	PASS	AN=4;AC=2;TR=1,2;TA=1;TG=1,2,3	GT:GQ:XR:XA:XG	0/1:245:0,1:1:0,1,2	0/1:245:1,2:2:0,1,2
+ 1	3000000	.	C	CCG	59.2	PASS	AN=4;AC=2	GT:GQ:XR:XA:XG	0/1:245:1,2:2:0,1,2	0/1:245:2,3:3:1,2,3
+ 1	3000002	.	C	CCG	59.2	PASS	AN=4;AC=2	GT:GQ	0/1:245	0/1:245
+-1	3000002	id2	C	CCG	59.2	PASS	AN=4;AC=2;TR=1,2;TA=1;TG=1,2,3	GT:GL:XR:XA:XG	0/1:245:.:.:.	0/1:245:.:.:.
+-1	3000002	id3	C	CCG	59.2	PASS	AN=4;AC=2;TR=1,2;TA=1;TG=1,2,3	GT:GL:XR:XA:XG	0/1:245:.:.:.	0/1:245:.
++1	3000002	id2	C	CCG	59.2	PASS	AN=4;AC=2;TR=1,2;TA=1;TG=1,2,3	GT:GL:XR:XA:XG	0/1:245,0,199:.:.:.	0/1:245,0,199:.:.:.
++1	3000002	id3	C	CCG	59.2	PASS	AN=4;AC=2;TR=1,2;TA=1;TG=1,2,3	GT:GL:XR:XA:XG	0/1:245,0,245:.:.:.	0/1:245,0,245:.
+--- a/test/merge.4.out
++++ b/test/merge.4.out
+@@ -30,5 +30,5 @@
+ 1	3000000	id1	C	CCG,A	59.2	PASS	TR=1,2,2;TA=1,1;TG=1,2,3,2,.,3;AN=8;AC=2,2	GT:GQ:XR:XA:XG	0/1:245:0,1,.:1,.:0,1,2,.,.,.	0/1:245:1,2,.:2,.:0,1,2,.,.,.	0/2:245:4,.,5:.,5:3,.,.,4,.,5	0/2:245:6,.,7:.,7:6,.,.,7,.,8
+ 1	3000000	.	C	CCG,A	59.2	PASS	AN=8;AC=2,2	GT:GQ:XR:XA:XG	0/1:245:1,2,.:2,.:0,1,2,.,.,.	0/1:245:2,3,.:3,.:1,2,3,.,.,.	0/2:245:.:.:.	0/2:245:.:.:.
+ 1	3000002	.	C	CCG,A	59.2	PASS	AN=8;AC=2,2	GT:GQ	0/1:245	0/1:245	0/2:245	0/2:245
+-1	3000002	id2	C	CCG,A	59.2	PASS	TR=1,2,2;TA=1,1;TG=1,2,3,2,.,3;AN=8;AC=2,2	GT:GL:XR:XA:XG:GQ	0/1:245,245,-1.56481e-39,.,.,.:.:.:.:.	0/1:245,-1.56481e-39,1.09706e-28,.,.,.:.:.:.:.	0/2:.:.:.:.:245	0/2:.:.:.:.:245
+-1	3000002	id3	C	CCG,A	59.2	PASS	TR=1,2,2;TA=1,1;TG=1,2,3,2,.,3;AN=8;AC=2,2	GT:GL:XR:XA:XG:GQ	0/1:245,245,-1.56481e-39,.,.,.:.:.:.:.	0/1:245,-1.56481e-39,1.09706e-28,.,.,.:.:.:.:.	0/2:.:.:.:.:245	0/2:.:1,.,2:.,2:1,.,.,2,.,3:245
++1	3000002	id2	C	CCG,A	59.2	PASS	TR=1,2,2;TA=1,1;TG=1,2,3,2,.,3;AN=8;AC=2,2	GT:GL:XR:XA:XG:GQ	0/1:245,0,199,.,.,.:.:.:.:.	0/1:245,0,199,.,.,.:.:.:.:.	0/2:.:.:.:.:245	0/2:.:.:.:.:245
++1	3000002	id3	C	CCG,A	59.2	PASS	TR=1,2,2;TA=1,1;TG=1,2,3,2,.,3;AN=8;AC=2,2	GT:GL:XR:XA:XG:GQ	0/1:245,0,245,.,.,.:.:.:.:.	0/1:245,0,245,.,.,.:.:.:.:.	0/2:.:.:.:.:245	0/2:.:1,.,2:.,2:1,.,.,2,.,3:245
+--- a/test/merge.gvcf.2.a.vcf
++++ b/test/merge.gvcf.2.a.vcf
+@@ -24,7 +24,7 @@
+ 3	1	.	C	<*>	0	.	END=10;MinDP=33;QS=0.75,0.25	PL:DP:DV	0,4,10:4:1
+ 1	1619670	.	C	<*>	0	.	END=1619877;MinDP=33;QS=0.75,0.25	PL:DP:DV	0,4,10:4:1
+ 4	20000975	.	C	<*>	0	.	END=20001070;MinDP=33;QS=0.75,0.25	PL:DP:DV	0,4,10:4:1
+-4	20001071	.	T	G,<*>	0	.	.	PL:DP:DV	0,4,10:4:1
++4	20001071	.	T	G,<*>	0	.	.	PL:DP:DV	0,4,10,20,30,40:4:1
+ 5	110285	.	TAACCCC	T	.	.	.	PL	89,6,0
+ 5	1110285	.	T	TAACCCC	.	.	.	PL	89,6,0
+ 6	600	.	T	A	.	.	END=666	PL	66,1,1
+--- a/test/merge.gvcf.2.out
++++ b/test/merge.gvcf.2.out
+@@ -31,7 +31,7 @@
+ 1	1619789	.	N	<*>	0	.	END=1619877;MinDP=33;QS=0.75,0.25	PL:DP:DV	0,4,10:4:1	.:.:.	.:.:.
+ 4	20000975	.	C	<*>	0	.	END=20001021;MinDP=33;QS=0.75,0.25	PL:DP:DV	0,4,10:4:1	.:.:.	.:.:.
+ 4	20001022	.	C	<*>	0	.	END=20001070;MinDP=33;QS=1.5,0.5	PL:DP:DV	0,4,10:4:1	0,4,10:4:1	.:.:.
+-4	20001071	.	T	G,<*>	0	.	QS=0.75,0.25,0	PL:DP:DV	0,4,10:4:1	0,4,10,35,73,113:4:1	.:.:.
++4	20001071	.	T	G,<*>	0	.	QS=0.75,0.25,0	PL:DP:DV	0,4,10,20,30,40:4:1	0,4,10,35,73,113:4:1	.:.:.
+ 5	110285	.	T	C,<*>	.	.	.	PL	.	114,0,15,35,73,113	.
+ 5	110285	.	TAACCCC	T	.	.	.	PL	89,6,0	.	.
+ 5	1110285	.	T	C,<*>	.	.	.	PL	.	114,0,15,35,73,113	.
+--- a/test/plugin-missing2ref.out.vcf
++++ b/test/plugin-missing2ref.out.vcf
+@@ -24,7 +24,7 @@
+ 1	3000150	.	C	T	59.2	PASS	.	GT:GQ	1|1:245	1|1:245	0/1:245	1/1:245
+ 1	3000151	.	C	T	59.2	PASS	.	GT:DP:GQ	0|0:32:245	0|0:32:245	0|0:32:245	0|0:32:245
+ 1	3062915	id3D	GTTT	G	12.9	q10	DP4=1,2,3,4;INDEL;STR=test	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20	0/1:409:35:-20,-5,-20	0/1:409:35:-20,-5,-20	0/1:409:35:-20,-5,-20
+-1	3062915	idSNP	G	T,C	12.6	test	TEST=5;DP4=1,2,3,4	GT:TT:GQ:DP:GL	0/1:0,1:409:35:-20,-5,-20,-20,-5,-20	2:0,1:409:35:-20,-5,-20	2/2:0,1:409:35:-20,-5,-20	2|2:0,1:409:35:-20,-5,-20
++1	3062915	idSNP	G	T,C	12.6	test	TEST=5;DP4=1,2,3,4	GT:TT:GQ:DP:GL	0/1:0,1:409:35:-20,-5,-20,-20,-5,-20	2:0,1:409:35:-20,-5,-20	2/2:0,1:409:35:-20,-5,-20,-20,-5,-20	2|2:0,1:409:35:-20,-5,-20,-20,-5,-20
+ 2	3199812	.	G	GTT,GT	82.7	PASS	.	GT:GQ:DP	0|0:322:26	0|0:322:26	0|0:322:26	0|0:322:26
+ 3	3212016	.	CTT	C,CT	79	PASS	.	GT:GQ:DP	0|0:91:26	0|0:91:26	0|0:91:26	0|0:91:26
+ 4	3258448	.	TACACACAC	T	59.9	PASS	.	GT:GQ:DP	0|0:325:31	0|0:325:31	0|0:325:31	0|0:325:31
+--- a/test/regions.vcf
++++ b/test/regions.vcf
+@@ -17,13 +17,13 @@
+ 1	3062915	.	GTT	G	1806	q10	DP=35;DP4=1,2,3,4;AN=2;AC=1	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20
+ 1	3062915	.	G	T	1806	q10	DP=35;DP4=1,2,3,4;AN=2;AC=1	GT:GQ:DP:GL	0/1:409:35:-20,-5,-20
+ 1	3106154	.	CA	C	1792	PASS	DP=32;AN=2;AC=1	GT:GQ:DP	0/1:245:32
+-1	3106154	.	C	T,CT	1792	PASS	DP=32;AN=2;AC=1	GT:GQ:DP	0/1:245:32
++1	3106154	.	C	T,CT	1792	PASS	DP=32;AN=2;AC=1,0	GT:GQ:DP	0/1:245:32
+ 1	3157410	.	G	A	628	q10	DP=21;AN=2;AC=2	GT:GQ:DP	1/1:21:21
+ 1	3162006	.	G	A	1016	PASS	DP=22;AN=2;AC=1	GT:GQ:DP	0/1:212:22
+ 1	3177144	.	GT	G	727	PASS	DP=30;AN=2;AC=1	GT:GQ:DP	0/1:150:30
+-1	3184885	.	T	TA	246	PASS	DP=10;AN=2;AC=1,1	GT:GQ:DP	1/2:12:10
+-2	3199812	.	G	T	481	PASS	DP=26;AN=2;AC=1,1	GT:GQ:DP	1/2:322:26
+-2	3199815	.	C	T	481	PASS	DP=26;AN=2;AC=1,1	GT:GQ:DP	1/2:322:26
+-3	3212016	.	C	A	565	PASS	DP=26;AN=2;AC=1,1	GT:GQ:DP	1/2:91:26
+-3	3212026	.	C	A	565	PASS	DP=26;AN=2;AC=1,1	GT:GQ:DP	1/2:91:26
+-3	3212036	.	C	A	565	PASS	DP=26;AN=2;AC=1,1	GT:GQ:DP	1/2:91:26
++1	3184885	.	T	TA	246	PASS	DP=10;AN=2;AC=1	GT:GQ:DP	1/2:12:10
++2	3199812	.	G	T	481	PASS	DP=26;AN=2;AC=1	GT:GQ:DP	1/2:322:26
++2	3199815	.	C	T	481	PASS	DP=26;AN=2;AC=1	GT:GQ:DP	1/2:322:26
++3	3212016	.	C	A	565	PASS	DP=26;AN=2;AC=1	GT:GQ:DP	1/2:91:26
++3	3212026	.	C	A	565	PASS	DP=26;AN=2;AC=1	GT:GQ:DP	1/2:91:26
++3	3212036	.	C	A	565	PASS	DP=26;AN=2;AC=1	GT:GQ:DP	1/2:91:26
+--- a/test/view.10.out
++++ b/test/view.10.out
+@@ -30,7 +30,7 @@
+ ##FILTER=<ID=EndDistBias,Description="Min P-value for end distance bias (INFO/PV4) [0.0001]">
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99	0/0:0,255,255:182:99
++11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99	0/0:0:182:99
+ 11	5464562	.	C	T	999	PASS	DP=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.	./.:0,0,0:.:.
+ X	3048719	.	T	C	999	PASS	DP4=13263,27466,40128,48208;DP=146673;Dels=0;FS=43.639;HWE=0.622715;ICF=-0.01176;MQ0=1;MQ=46;PV4=0.65,1,0,1;QD=14.81;AN=4;AC=3	GT:PL:DP:GQ	0:0,255:20:99	1:255,0:33:99	0|1:255,0,157:52:99
+ Y	8657215	.	C	A	999	PASS	DP4=74915,114274,1948,2955;DP=195469;Dels=0;FS=3.181;MQ0=0;MQ=50;PV4=0.86,1,0,1;QD=33.77;AN=2;AC=1	GT:PL:DP:GQ	0:0,255:47:99	1:255,0:64:99	.:.:.:.
+--- a/test/view.6.out
++++ b/test/view.6.out
+@@ -30,7 +30,7 @@
+ ##FILTER=<ID=EndDistBias,Description="Min P-value for end distance bias (INFO/PV4) [0.0001]">
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99	0/0:0,255,255:182:99
++11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99	0/0:0:182:99
+ 11	5464562	.	C	T	999	PASS	DP=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.	./.:0,0,0:.:.
+ 20	76962	rs6111385	T	C	999	PASS	DP4=110138,70822,421911,262673;DP=911531;Dels=0;FS=21.447;HWE=0.491006;ICF=-0.01062;MQ0=1;MQ=46;PV4=2.5e-09,0,0,1;QD=22.31	GT:PL:DP:GQ	0/1:255,0,255:193:99	1/1:255,255,0:211:99	1/1:255,255,0:182:99
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	DP4=125718,95950,113812,80890;DP=461867;HWE=0.24036;ICF=0.01738;INDEL;IS=374,0.937343;MQ=49;PV4=9e-30,1,0,3.8e-13;QD=0.0172;AN=6;AC=4	GT:DP:GQ:PL	0/1:117:99:255,0,132	0/1:111:99:255,0,139	1/1:78:99:255,213,0
+--- a/test/view.GL.vcf
++++ b/test/view.GL.vcf
+@@ -12,7 +12,7 @@
+ ##FILTER=<ID=EndDistBias,Description="Min P-value for end distance bias (INFO/PV4) [0.0001]">
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	.	GL	0,-25.5,-25.5	0,-25.5,-25.5	0,-25.5,-25.5
++11	2343543	.	A	.	999	PASS	.	GL	0	0	0
+ 11	5464562	.	C	T	999	PASS	.	GL	0,0,0	0,0,0	0,0,0
+ 20	76962	rs6111385	T	C	999	PASS	.	GL	-25.5,0,-25.5	-25.5,-25.5,0	-25.5,-25.5,0
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	.	GL	-25.5,0,-13.2	-25.5,0,-13.9	-25.5,-21.3,0
+--- a/test/view.GTsubset.NA1NA2NA3.out
++++ b/test/view.GTsubset.NA1NA2NA3.out
+@@ -30,7 +30,7 @@
+ ##FILTER=<ID=EndDistBias,Description="Min P-value for end distance bias (INFO/PV4) [0.0001]">
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99	0/0:0,255,255:182:99
++11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99	0/0:0:182:99
+ 11	5464562	.	C	T	999	PASS	DP=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.	./.:0,0,0:.:.
+ 20	326891	.	A	AC	999	PASS	DP4=125718,95950,113812,80890;DP=461867;HWE=0.24036;ICF=0.01738;INDEL;IS=374,0.937343;MQ=49;PV4=9e-30,1,0,3.8e-13;QD=0.0172;AN=4;AC=2	GT:DP:GQ:PL	0|1:117:99:255,0,132	0|1:111:99:255,0,139	./.:.:.:.,.,.
+ Y	10011673	rs78249411	G	A	999	MinAB	DP4=47351,30839,178796,279653;DP=550762;Dels=0;FS=41.028;MQ0=37362;MQ=26;PV4=0,0,0,1;QD=17.45;AN=2;AC=2	GT:PL:DP:GQ	1:126,101:146:37	1:95,0:130:99	.:.:.:.
+--- a/test/view.PL.vcf
++++ b/test/view.PL.vcf
+@@ -12,7 +12,7 @@
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ ##FORMAT=<ID=PL,Number=G,Type=Integer,Description="Phred scaled genotype likelihoods">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	.	PL	0,255,255	0,255,255	0,255,255
++11	2343543	.	A	.	999	PASS	.	PL	0	0	0
+ 11	5464562	.	C	T	999	PASS	.	PL	0,0,0	0,0,0	0,0,0
+ 20	76962	rs6111385	T	C	999	PASS	.	PL	255,0,255	255,255,0	255,255,0
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	.	PL	255,0,132	255,0,139	255,213,0
+--- a/test/view.exclude.out
++++ b/test/view.exclude.out
+@@ -30,7 +30,7 @@
+ ##FILTER=<ID=EndDistBias,Description="Min P-value for end distance bias (INFO/PV4) [0.0001]">
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002
+-11	2343543	.	A	.	999	PASS	DP=100223;AN=4	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99
++11	2343543	.	A	.	999	PASS	DP=100223;AN=4	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99
+ 11	5464562	.	C	T	999	PASS	DP=0;AC=0;AN=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.
+ 20	76962	rs6111385	T	C	999	PASS	DP4=110138,70822,421911,262673;DP=911531;Dels=0;FS=21.447;HWE=0.491006;ICF=-0.01062;MQ0=1;MQ=46;PV4=2.5e-09,0,0,1;QD=22.31;AC=3;AN=4	GT:PL:DP:GQ	0/1:255,0,255:193:99	1/1:255,255,0:211:99
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	DP4=125718,95950,113812,80890;DP=461867;HWE=0.24036;ICF=0.01738;INDEL;IS=374,0.937343;MQ=49;PV4=9e-30,1,0,3.8e-13;QD=0.0172;AN=4;AC=2	GT:DP:GQ:PL	0/1:117:99:255,0,132	0/1:111:99:255,0,139
+--- a/test/view.vcf
++++ b/test/view.vcf
+@@ -29,7 +29,7 @@
+ ##FILTER=<ID=EndDistBias,Description="Min P-value for end distance bias (INFO/PV4) [0.0001]">
+ ##FILTER=<ID=MinAB,Description="Minimum number of alternate bases (INFO/DP4) [2]">
+ #CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	NA00001	NA00002	NA00003
+-11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0,255,255:193:99	0/0:0,255,255:211:99	0/0:0,255,255:182:99
++11	2343543	.	A	.	999	PASS	DP=100223	GT:PL:DP:GQ	0/0:0:193:99	0/0:0:211:99	0/0:0:182:99
+ 11	5464562	.	C	T	999	PASS	DP=0	GT:PL:DP:GQ	./.:0,0,0:.:.	./.:0,0,0:.:.	./.:0,0,0:.:.
+ 20	76962	rs6111385	T	C	999	PASS	DP4=110138,70822,421911,262673;DP=911531;Dels=0;FS=21.447;HWE=0.491006;ICF=-0.01062;MQ0=1;MQ=46;PV4=2.5e-09,0,0,1;QD=22.31	GT:PL:DP:GQ	0/1:255,0,255:193:99	1/1:255,255,0:211:99	1/1:255,255,0:182:99
+ 20	126310	.	ACC	A	999	StrandBias;EndDistBias	DP4=125718,95950,113812,80890;DP=461867;HWE=0.24036;ICF=0.01738;INDEL;IS=374,0.937343;MQ=49;PV4=9e-30,1,0,3.8e-13;QD=0.0172;AN=6;AC=4	GT:DP:GQ:PL	0/1:117:99:255,0,132	0/1:111:99:255,0,139	1/1:78:99:255,213,0
