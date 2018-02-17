@@ -1,4 +1,1 @@
 tests-pluginpath.patch
-test-regidx-unsigned-char.patch
-fix-test_vcf_query.patch
-make_the_test_cases_conform_to_VCF_specification.patch

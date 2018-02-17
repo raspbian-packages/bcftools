@@ -10,7 +10,7 @@ Forwarded: not-needed
 Last-Update: 2015-11-09
 --- a/test/test.pl
 +++ b/test/test.pl
-@@ -885,7 +885,7 @@ sub test_vcf_plugin
+@@ -918,7 +918,7 @@ sub test_vcf_plugin
  {
      my ($opts,%args) = @_;
      if ( !$$opts{test_plugins} ) { return; }
