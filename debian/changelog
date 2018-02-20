@@ -1,3 +1,11 @@
+bcftools (1.7-2) unstable; urgency=medium
+
+  * Team upload.
+  * Follow hint of Graham Inggs to skip single test that is new in this version
+    Closes: #890704
+
+ -- Andreas Tille <tille@debian.org>  Tue, 20 Feb 2018 16:32:47 +0100
+
 bcftools (1.7-1) unstable; urgency=medium
 
   * Team upload
