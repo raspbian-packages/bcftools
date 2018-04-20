@@ -1,0 +1,2 @@
+tests-pluginpath.patch
+skip_new_test_failing_on_32bit.patch
