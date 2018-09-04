@@ -2,7 +2,7 @@ bcftools (1.9-1) UNRELEASED; urgency=medium
 
   * Team upload.
   * New upstream version
-  * Standards-Version: 4.1.5
+  * Standards-Version: 4.2.1
 
  -- Andreas Tille <tille@debian.org>  Thu, 02 Aug 2018 04:41:09 +0200
 
