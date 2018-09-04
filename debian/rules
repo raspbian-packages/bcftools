@@ -30,3 +30,10 @@ override_dh_auto_configure:
 	--enable-gsl \
 	--with-cblas=gslcblas \
 	--with-bcf-plugin-dir=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
+
+override_dh_install:
+	dh_install
+	# Fix Perl interpreter PATH
+	for pscript in `grep -Rl '#!/usr/bin/env \+perl' debian/*` ; do \
+	    sed -i '1s?#!/usr/bin/env \+perl?#!/usr/bin/perl?' $${pscript} ; \
+	done
