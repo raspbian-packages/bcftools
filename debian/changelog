@@ -4,8 +4,10 @@ bcftools (1.9-2) UNRELEASED; urgency=medium
   * Remove now-unneeded lintian-override
   * Reduce test failures on i386 from 113 to 18 by compiling with -msse
     and -mfpmath=sse
+  * Remove trailing whitespace in debian/copyright
+  * Standards-Version: 4.3.0, no changes needed
 
- -- Michael R. Crusoe <michael.crusoe@gmail.com>  Wed, 16 Jan 2019 00:44:19 -0800
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Wed, 16 Jan 2019 01:18:22 -0800
 
 bcftools (1.9-1) unstable; urgency=medium
 
