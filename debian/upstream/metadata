@@ -1,7 +1,15 @@
+Reference:
+ - Author: Petr Danecek and Shane A. McCarthy
+   Title: >
+    BCFtools/csq: Haplotype-aware variant consequences
+   Year: 2016
+   Month: 12
+   URL: https://www.biorxiv.org/content/10.1101/090811v1
+   DOI: 10.1101/090811 
 Registry:
-  - Name: OMICtools
-    Entry: OMICS_13458
-  - Name: SciCrunch
-    Entry: SCR_005227
-  - Name: bio.tools
-    Entry: bcftools
+ - Name: OMICtools
+   Entry: OMICS_13458
+ - Name: SciCrunch
+   Entry: SCR_005227
+ - Name: bio.tools
+   Entry: bcftools
