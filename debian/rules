@@ -2,9 +2,6 @@
 
 #export DH_VERBOSE = 1
 #include /usr/share/dpkg/default.mk
-ifneq (,$(filter $(DEB_HOST_ARCH),i386 kfreebsd-i386 hurd-i386))
-  export DEB_CFLAGS_MAINT_APPEND=-msse -mfpmath=sse
-endif
 
 %:
 	dh $@
