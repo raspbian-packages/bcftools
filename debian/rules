@@ -37,3 +37,8 @@ override_dh_install:
 	for pscript in `grep -Rl '#!/usr/bin/env \+perl' debian/*` ; do \
 	    sed -i '1s?#!/usr/bin/env \+perl?#!/usr/bin/perl?' $${pscript} ; \
 	done
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	make test-no-plugins VERBOSE=1
+endif

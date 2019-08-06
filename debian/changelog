@@ -1,12 +1,13 @@
-bcftools (1.9-2) UNRELEASED; urgency=medium
+bcftools (1.9-2) unstable; urgency=medium
 
   * Team upload.
   * Remove now-unneeded lintian-override
   * Remove i386 as libhts/tabix has dropped it
+  * Temporarily disable failing plugins tests
   * Remove trailing whitespace in debian/copyright
   * Standards-Version: 4.3.0, no changes needed
 
- -- Michael R. Crusoe <michael.crusoe@gmail.com>  Wed, 16 Jan 2019 01:18:22 -0800
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Tue, 06 Aug 2019 19:32:16 +0200
 
 bcftools (1.9-1) unstable; urgency=medium
 

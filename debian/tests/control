@@ -1,9 +1,8 @@
 Test-Command:
-	ln -s /usr/bin/bcftools bcftools &&
+	mv -f bcftools bcftools.orig || /bin/true; ln -s /usr/bin/bcftools bcftools &&
 	./test/test.pl
-	--plugins
 	--exec bgzip=/usr/bin/bgzip
-	--exec tabix=/usr/bin/tabix
+	--exec tabix=/usr/bin/tabix  && mv -f bcftools.orig bcftools
 Depends:
 	@,
 	tabix,
