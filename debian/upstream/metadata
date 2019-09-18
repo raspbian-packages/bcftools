@@ -13,3 +13,5 @@ Registry:
    Entry: SCR_005227
  - Name: bio.tools
    Entry: bcftools
+ - Name: conda:bioconda
+   Entry: bcftools
