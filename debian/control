@@ -16,7 +16,7 @@ Vcs-Git: https://salsa.debian.org/med-team/bcftools.git
 Homepage: http://samtools.github.io/bcftools/
 
 Package: bcftools
-Architecture: any-amd64 arm64 armel armhf mips mips64el mipsel ppc64el s390x alpha hppa ia64 m68k powerpc powerpcspe ppc64 riscv64 sh4 sparc64 x32
+Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          ${perl:Depends}
