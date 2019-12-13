@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 11~),
                zlib1g-dev,
                libbz2-dev,
                liblzma-dev,
-               libhts-dev (>= 1.5-3),
+               libhts-dev (>= 1.10),
                libgsl-dev,
                tabix <!nocheck>,
                libio-pty-perl <!nocheck>
