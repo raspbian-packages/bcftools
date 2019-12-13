@@ -9,9 +9,9 @@ Description: Skip single test causing new failures
  .
  FIXME: This workaround needs to be reconsidered in future versions
 
---- a/test/test.pl
-+++ b/test/test.pl
-@@ -132,7 +132,7 @@ test_vcf_query($opts,in=>'view.filter',o
+--- bcftools.orig/test/test.pl
++++ bcftools/test/test.pl
+@@ -143,7 +143,7 @@
  test_vcf_query($opts,in=>'query.filter.3',out=>'query.51.out',args=>q[-f'[\\t%GT\\n]\\n' -i'GT~"1" && GT~"2"']);
  test_vcf_query($opts,in=>'query.filter.3',out=>'query.52.out',args=>q[-f'[\\t%GT\\n]\\n' -i'GT~"1" &  GT~"2"']);
  test_vcf_query($opts,in=>'query.filter.3',out=>'query.53.out',args=>q[-f'%POS[\\t%GT]\\n' -i'COUNT(GT="het")=1']);
