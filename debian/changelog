@@ -1,10 +1,10 @@
-bcftools (1.10-1) UNRELEASED; urgency=medium
+bcftools (1.10-1) unstable; urgency=medium
 
-  * Team upload.
   * New upstream release.
   * Restore i386 as libhts/tabix has restored it.
+  * Add myself as an uploader
 
- -- Michael R. Crusoe <michael.crusoe@gmail.com>  Fri, 13 Dec 2019 08:38:40 +0100
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Mon, 16 Dec 2019 16:17:57 +0100
 
 bcftools (1.9-2) unstable; urgency=medium
 

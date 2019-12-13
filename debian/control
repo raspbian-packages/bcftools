@@ -1,5 +1,6 @@
 Source: bcftools
 Maintainer: Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+Uploaders: Michael R. Crusoe <michael.crusoe@gmail.com>
 Section: science
 Priority: optional
 Build-Depends: debhelper (>= 11~),
