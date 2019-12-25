@@ -3,7 +3,7 @@ Maintainer: Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.
 Uploaders: Michael R. Crusoe <michael.crusoe@gmail.com>
 Section: science
 Priority: optional
-Build-Depends: debhelper (>= 11~),
+Build-Depends: debhelper-compat (= 12),
                zlib1g-dev,
                libbz2-dev,
                liblzma-dev,

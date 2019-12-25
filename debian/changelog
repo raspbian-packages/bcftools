@@ -1,6 +1,7 @@
 bcftools (1.10.2-1) UNRELEASED; urgency=medium
 
   * New upstream version
+  * debhelper-compat 12
 
  -- Michael R. Crusoe <michael.crusoe@gmail.com>  Wed, 25 Dec 2019 17:58:14 +0100
 
