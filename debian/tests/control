@@ -2,7 +2,7 @@ Test-Command:
 	mv -f bcftools bcftools.orig || /bin/true; ln -s /usr/bin/bcftools bcftools &&
 	./test/test.pl
 	--exec bgzip=/usr/bin/bgzip
-	--exec tabix=/usr/bin/tabix  && mv -f bcftools.orig bcftools
+	--exec tabix=/usr/bin/tabix  && mv -f bcftools.orig bcftools || /bin/true
 Depends:
 	@,
 	tabix,
