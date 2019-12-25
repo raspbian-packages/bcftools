@@ -1,3 +1,9 @@
+bcftools (1.10.2-1) UNRELEASED; urgency=medium
+
+  * New upstream version
+
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Wed, 25 Dec 2019 17:58:14 +0100
+
 bcftools (1.10-1) unstable; urgency=medium
 
   * New upstream release.
