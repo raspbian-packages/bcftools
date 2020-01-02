@@ -1,3 +1,9 @@
+bcftools (1.10.2-2) unstable; urgency=medium
+
+  * Fix build on i386 by using SSE2
+
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Thu, 02 Jan 2020 13:58:57 +0100
+
 bcftools (1.10.2-1) unstable; urgency=medium
 
   * New upstream version

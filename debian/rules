@@ -1,7 +1,11 @@
 #!/usr/bin/make -f
 
 #export DH_VERBOSE = 1
-#include /usr/share/dpkg/default.mk
+include /usr/share/dpkg/default.mk
+
+ifneq (,$(filter $(DEB_TARGET_ARCH),i386))
+export DEB_CFLAGS_MAINT_APPEND += -mfpmath=sse -msse2
+endif
 
 %:
 	dh $@

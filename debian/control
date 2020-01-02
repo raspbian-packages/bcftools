@@ -20,7 +20,8 @@ Package: bcftools
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         ${perl:Depends}
+         ${perl:Depends},
+         sse2-support [i386]
 Suggests:
 # These are needed for plot-vcfstats
           python,
