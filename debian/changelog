@@ -1,7 +1,8 @@
-bcftools (1.10.2-3) UNRELEASED; urgency=medium
+bcftools (1.10.2-3) unstable; urgency=medium
 
   * Team upload.
   * Depends on Perl demoted to Recommends
+    Closes: #962834
   * Standards-Version: 4.5.0 (routine-update)
   * debhelper-compat 13 (routine-update)
   * Add salsa-ci file (routine-update)
@@ -10,7 +11,7 @@ bcftools (1.10.2-3) UNRELEASED; urgency=medium
   * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
     Repository-Browse.
 
- -- Andreas Tille <tille@debian.org>  Wed, 17 Jun 2020 11:24:06 +0200
+ -- Andreas Tille <tille@debian.org>  Wed, 17 Jun 2020 11:41:35 +0200
 
 bcftools (1.10.2-2) unstable; urgency=medium
 
