@@ -6,6 +6,7 @@ bcftools (1.10.2-3) UNRELEASED; urgency=medium
   * debhelper-compat 13 (routine-update)
   * Add salsa-ci file (routine-update)
   * Rules-Requires-Root: no (routine-update)
+  * debian/copyright: use spaces rather than tabs to start continuation lines.
 
  -- Andreas Tille <tille@debian.org>  Wed, 17 Jun 2020 11:24:06 +0200
 
