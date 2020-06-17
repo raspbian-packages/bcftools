@@ -1,3 +1,5 @@
+Bug-Database: https://github.com/samtools/bcftools/issues
+Bug-Submit: https://github.com/samtools/bcftools/issues/new
 Reference:
  - Author: Petr Danecek and Shane A. McCarthy
    Title: >
@@ -15,3 +17,5 @@ Registry:
    Entry: bcftools
  - Name: conda:bioconda
    Entry: bcftools
+Repository: https://github.com/samtools/bcftools.git
+Repository-Browse: https://github.com/samtools/bcftools
