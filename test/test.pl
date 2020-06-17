@@ -1170,7 +1170,7 @@ sub test_vcf_plugin
 {
     my ($opts,%args) = @_;
     if ( !$$opts{test_plugins} ) { return; }
-    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
+    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins:";
     if ( !exists($args{args}) ) { $args{args} = ''; }
     my $wpath = $$opts{path}; 
     if ($^O =~ /^msys/) {
