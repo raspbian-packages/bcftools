@@ -15,6 +15,7 @@ Standards-Version: 4.5.0
 Vcs-Browser: https://salsa.debian.org/med-team/bcftools
 Vcs-Git: https://salsa.debian.org/med-team/bcftools.git
 Homepage: http://samtools.github.io/bcftools/
+Rules-Requires-Root: no
 
 Package: bcftools
 Architecture: any
