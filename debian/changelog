@@ -1,3 +1,10 @@
+bcftools (1.10.2-3) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * Depends on Perl demoted to Recommends
+
+ -- Andreas Tille <tille@debian.org>  Wed, 17 Jun 2020 11:24:06 +0200
+
 bcftools (1.10.2-2) unstable; urgency=medium
 
   * Fix build on i386 by using SSE2
