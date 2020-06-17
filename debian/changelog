@@ -3,6 +3,7 @@ bcftools (1.10.2-3) UNRELEASED; urgency=medium
   * Team upload.
   * Depends on Perl demoted to Recommends
   * Standards-Version: 4.5.0 (routine-update)
+  * debhelper-compat 13 (routine-update)
 
  -- Andreas Tille <tille@debian.org>  Wed, 17 Jun 2020 11:24:06 +0200
 
