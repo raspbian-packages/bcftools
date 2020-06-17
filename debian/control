@@ -22,7 +22,7 @@ Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
          sse2-support [i386]
-Recommends: ${perl:Recommends}
+Recommends: perl
 Suggests:
 # These are needed for plot-vcfstats
           python,
