@@ -25,9 +25,9 @@ Depends: ${shlibs:Depends},
 Recommends: perl
 Suggests:
 # These are needed for plot-vcfstats
-          python,
-          python-numpy,
-          python-matplotlib,
+          python3,
+          python3-numpy,
+          python3-matplotlib,
           texlive-latex-recommended
 Breaks: samtools (<< 1.0)
 Replaces: samtools (<< 1.0)
