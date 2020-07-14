@@ -1,0 +1,236 @@
+bcftools (1.10.2-4) unstable; urgency=medium
+
+  * Fix suggested Python packages
+    Closes: #965032
+
+ -- Andreas Tille <tille@debian.org>  Tue, 14 Jul 2020 22:39:24 +0200
+
+bcftools (1.10.2-3) unstable; urgency=medium
+
+  * Team upload.
+  * Depends on Perl demoted to Recommends
+    Closes: #962834
+  * Standards-Version: 4.5.0 (routine-update)
+  * debhelper-compat 13 (routine-update)
+  * Add salsa-ci file (routine-update)
+  * Rules-Requires-Root: no (routine-update)
+  * debian/copyright: use spaces rather than tabs to start continuation lines.
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository,
+    Repository-Browse.
+
+ -- Andreas Tille <tille@debian.org>  Wed, 17 Jun 2020 11:41:35 +0200
+
+bcftools (1.10.2-2) unstable; urgency=medium
+
+  * Fix build on i386 by using SSE2
+
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Thu, 02 Jan 2020 13:58:57 +0100
+
+bcftools (1.10.2-1) unstable; urgency=medium
+
+  * New upstream version
+  * debhelper-compat 12
+
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Wed, 25 Dec 2019 17:58:32 +0100
+
+bcftools (1.10-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Restore i386 as libhts/tabix has restored it.
+  * Add myself as an uploader
+
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Mon, 16 Dec 2019 16:17:57 +0100
+
+bcftools (1.9-2) unstable; urgency=medium
+
+  * Team upload.
+  * Remove now-unneeded lintian-override
+  * Remove i386 as libhts/tabix has dropped it
+  * Temporarily disable failing plugins tests
+  * Remove trailing whitespace in debian/copyright
+  * Standards-Version: 4.3.0, no changes needed
+
+ -- Michael R. Crusoe <michael.crusoe@gmail.com>  Tue, 06 Aug 2019 19:32:16 +0200
+
+bcftools (1.9-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream version
+  * Standards-Version: 4.2.1
+  * Fix Perl interpreter PATH
+
+ -- Andreas Tille <tille@debian.org>  Tue, 04 Sep 2018 16:37:32 +0200
+
+bcftools (1.8-1) unstable; urgency=medium
+
+  * Team upload.
+  * New upstream version
+  * Point Vcs fields to salsa.debian.org
+  * Standards-Version: 4.1.4
+  * debhelper 11
+
+ -- Andreas Tille <tille@debian.org>  Fri, 20 Apr 2018 11:36:02 +0200
+
+bcftools (1.7-2) unstable; urgency=medium
+
+  * Team upload.
+  * Follow hint of Graham Inggs to skip single test that is new in this version
+    Closes: #890704
+
+ -- Andreas Tille <tille@debian.org>  Tue, 20 Feb 2018 16:32:47 +0100
+
+bcftools (1.7-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream version
+  * Standards-Version: 4.1.3
+  * d/rules: drop useless option --parallel
+
+ -- Andreas Tille <tille@debian.org>  Sat, 17 Feb 2018 15:00:09 +0100
+
+bcftools (1.6-3) unstable; urgency=medium
+
+  * Team upload
+  * Upload to unstable
+
+ -- Andreas Tille <tille@debian.org>  Thu, 14 Dec 2017 16:09:29 +0100
+
+bcftools (1.6-2) experimental; urgency=medium
+
+  * Team upload
+  * Apply patch from upstream to reduce failing tests on different
+    architectures.  Addresses bug #870060
+
+ -- Andreas Tille <tille@debian.org>  Wed, 13 Dec 2017 15:57:03 +0100
+
+bcftools (1.6-1) experimental; urgency=medium
+
+  * Team upload.
+  * New upstream version
+  * Standards-Version: 4.1.2
+
+ -- Andreas Tille <tille@debian.org>  Mon, 11 Dec 2017 13:28:56 +0100
+
+bcftools (1.5-4) unstable; urgency=medium
+
+  * Team upload.
+  * Add debian/clean to fix FTBFSx2
+  * Update patches as they were applied upstream
+  * Bump versioned Build-Depends on htslib to make sure we pick up
+    versioned dependency on libhts2 (Closes: #881331)
+
+ -- Graham Inggs <ginggs@debian.org>  Fri, 10 Nov 2017 12:41:15 +0000
+
+bcftools (1.5-3) unstable; urgency=medium
+
+  * Team upload.
+  * Versioned Build-Depends on htslib to avoid FTBFS on armel, armhf and
+    ppc64el
+
+ -- Andreas Tille <tille@debian.org>  Wed, 08 Nov 2017 08:26:51 +0100
+
+bcftools (1.5-2) unstable; urgency=low
+
+  * Incorporate lost changes from 1.4.1-3 (Closes: #868958)
+  * Update Standards-Version to 4.1.1
+  * d/control: use build profiles to mark build-dependencies
+    needed only for running tests
+
+ -- Afif Elghraoui <afif@debian.org>  Thu, 12 Oct 2017 00:14:38 -0400
+
+bcftools (1.5-1) unstable; urgency=medium
+
+  * migrate to Unstable
+
+ -- Afif Elghraoui <afif@debian.org>  Sun, 01 Oct 2017 12:39:31 -0400
+
+bcftools (1.5-1~exp1) experimental; urgency=medium
+
+  [ Afif Elghraoui ]
+  * Update packaging for new build system
+
+  [ Andreas Tille ]
+  * New upstream version
+  * Bump version in Build-Depends libhts-dev from 1.3.1 to 1.5
+  * Standards-Version: 4.0.0 (no changes needed)
+
+  [Steffen Moeller ]
+  * [debian/upstream/metadata] Added registry references for
+    OMICtools, RRID, bio.tools
+
+ -- Afif Elghraoui <afif@debian.org>  Tue, 08 Aug 2017 12:35:44 -0400
+
+bcftools (1.4.1-3) unstable; urgency=medium
+
+  * Team upload.
+  * Incorporate patches from Ubuntu to fix FTBFS on some 32-bit archs.
+  * Fix autopkgtests by ensuring presence of all deps.
+
+ -- Sascha Steinbiss <satta@debian.org>  Sat, 29 Jul 2017 10:38:27 +0200
+
+bcftools (1.4.1-2) unstable; urgency=medium
+
+  * Team upload
+  * Fix FTBFS on architectures where char is unsigned by default,
+    thanks Adrian Bunk (Closes: #865060)
+
+ -- Graham Inggs <ginggs@debian.org>  Wed, 19 Jul 2017 11:00:08 +0200
+
+bcftools (1.4.1-1) unstable; urgency=medium
+
+  * Team upload
+  * New upstream version
+    Closes: #865006
+  * debhelper 10
+
+ -- Andreas Tille <tille@debian.org>  Sun, 18 Jun 2017 21:41:36 +0200
+
+bcftools (1.3.1-1) unstable; urgency=medium
+
+  * Imported Upstream version 1.3.1
+  * Remove backported patches
+  * Refresh remaining patches
+  * Bump htslib minimum dependency
+  * Bump Standards-Version to 3.9.8
+  * Add a manpage for the color-chrs command
+
+ -- Afif Elghraoui <afif@debian.org>  Mon, 25 Apr 2016 22:24:50 -0700
+
+bcftools (1.3-3) unstable; urgency=medium
+
+  * Backport upstream patch to fix build on arm64, armel, and ppc64el
+    (Closes: #812268)
+
+ -- Afif Elghraoui <afif@debian.org>  Thu, 31 Mar 2016 00:57:18 -0700
+
+bcftools (1.3-2) unstable; urgency=medium
+
+  * Backport upstream patch to be able to build plugin with GSL2
+  * Bump Standards-Version
+  * Use encrypted protocols for VCS URLs
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Sun, 21 Feb 2016 16:35:44 -0800
+
+bcftools (1.3-1) unstable; urgency=medium
+
+  * New upstream release (Closes: #813465)
+  * Disable building with libgsl until build issue with GSL2 is addressed
+  * Update d/TODO to indicate GSL issue forwarded
+  * Simplify d/rules as a result of improvements to build system
+  * Update htslib minimum dependency
+  * Add libhts-dev dependency for CI tests
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Wed, 03 Feb 2016 23:44:03 -0800
+
+bcftools (1.2-2) unstable; urgency=medium
+
+  * Fix autopkgtest dependencies
+  * Declare conflict with older versions of samtools (Closes: #812328)
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Fri, 22 Jan 2016 18:52:53 -0800
+
+bcftools (1.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #804007)
+
+ -- Afif Elghraoui <afif@ghraoui.name>  Mon, 09 Nov 2015 23:44:39 -0800
