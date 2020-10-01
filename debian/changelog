@@ -2,12 +2,7 @@ bcftools (1.11-1) UNRELEASED; urgency=medium
 
   * Team upload.
   * New upstream version
-  TODO:
-  vcfmerge.c: In function 'main_vcfmerge':
-  vcfmerge.c:3213:36: error: 'BCF_SR_ALLOW_NO_IDX' undeclared (first use in this function)
-   3213 |         bcf_sr_set_opt(args->files,BCF_SR_ALLOW_NO_IDX);
-        |                                    ^~~~~~~~~~~~~~~~~~~
-  vcfmerge.c:3213:36: note: each undeclared identifier is reported only once for each function it appears in
+  * Versioned Build-Depends: libhts-dev (>= 1.11)
 
  -- Andreas Tille <tille@debian.org>  Thu, 01 Oct 2020 13:24:44 +0200
 
