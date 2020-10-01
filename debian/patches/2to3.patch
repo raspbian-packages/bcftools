@@ -3,8 +3,6 @@ Last-Update: Tue, 14 Jul 2020 22:21:56 +0200
 Bug-Debian: https://bugs.debian.org/965032
 Description: Make sure Python3 is used
 
-diff --git a/misc/guess-ploidy.py b/misc/guess-ploidy.py
-index 6ad3d36..6792498 100755
 --- a/misc/guess-ploidy.py
 +++ b/misc/guess-ploidy.py
 @@ -1,4 +1,4 @@
@@ -22,13 +20,3 @@ index 6ad3d36..6792498 100755
  
  import matplotlib as mpl
  mpl.use('Agg')
-diff --git a/misc/plot-roh.py b/misc/plot-roh.py
-index 90dd63e..210f086 100755
---- a/misc/plot-roh.py
-+++ b/misc/plot-roh.py
-@@ -1,4 +1,4 @@
--#!/usr/bin/env python
-+#!/usr/bin/env python3
- #  
- #  The MIT License
- #  
