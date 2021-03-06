@@ -17,5 +17,7 @@ Registry:
    Entry: bcftools
  - Name: conda:bioconda
    Entry: bcftools
+ - Name: guix
+   Entry: bcftools
 Repository: https://github.com/samtools/bcftools.git
 Repository-Browse: https://github.com/samtools/bcftools
