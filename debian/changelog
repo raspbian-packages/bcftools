@@ -3,6 +3,7 @@ bcftools (1.12-1) UNRELEASED; urgency=medium
   * New upstream version
   * Standards-Version: 4.5.1 (routine-update)
   * No tab in license text (routine-update)
+  * watch file standard 4 (routine-update)
 
  -- steffen <steffen@wurzel.steffen.minirz>  Sun, 16 May 2021 20:34:08 +0200
 
