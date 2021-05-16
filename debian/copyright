@@ -4,17 +4,17 @@ Source: https://github.com/samtools/bcftools
 
 Files: *
 Copyright:
- 	2011-2015 Genome Research Ltd.
- 	2010-2012 Broad Institute
+         2011-2015 Genome Research Ltd.
+         2010-2012 Broad Institute
 License: MIT or GPL-3.0
 Comment:
- 	Dual-licensing is in effect for the default compilation mode.
- 	When linked with the GPL-licensed GNU Scientific Library
- 	(as is done for this Debian package), the
- 	resulting program must be distributed under the GPL.
- 	.
- 	The source distribution simply states "GPL-licensed" without indicating
- 	a version of the GPL, but includes a copy of GPL-3.
+         Dual-licensing is in effect for the default compilation mode.
+         When linked with the GPL-licensed GNU Scientific Library
+         (as is done for this Debian package), the
+         resulting program must be distributed under the GPL.
+         .
+         The source distribution simply states "GPL-licensed" without indicating
+         a version of the GPL, but includes a copy of GPL-3.
 
 Files: kmin.*
 Copyright: 2008,2010 Attractive Chaos <attractor@live.co.uk>
