@@ -8,9 +8,11 @@ Description: Set the bcftools plugin path to search system directories
 Author: Afif Elghraoui <afif@ghraoui.name>
 Forwarded: not-needed
 Last-Update: 2015-11-09
---- a/test/test.pl
-+++ b/test/test.pl
-@@ -1343,7 +1343,7 @@ sub test_vcf_plugin
+Index: bcftools/test/test.pl
+===================================================================
+--- bcftools.orig/test/test.pl
++++ bcftools/test/test.pl
+@@ -1395,7 +1395,7 @@ sub test_vcf_plugin
  {
      my ($opts,%args) = @_;
      if ( !$$opts{test_plugins} ) { return; }
