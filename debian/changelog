@@ -1,3 +1,9 @@
+bcftools (1.12-1) UNRELEASED; urgency=medium
+
+  * New upstream version
+
+ -- steffen <steffen@wurzel.steffen.minirz>  Sun, 16 May 2021 20:34:08 +0200
+
 bcftools (1.11-1) unstable; urgency=medium
 
   * Team upload.
