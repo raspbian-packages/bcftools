@@ -16,6 +16,10 @@ override_dh_installman:
 # clean target tries to include config.mk which does not exist inside clean source tree
 clean: config.mk
 
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f test/mpileup/indel-AD.1.out.new test/view-t.1.out.new test/view-t.2.out.new
+
 config.mk:
 	$(RM) $@ && touch $@
 

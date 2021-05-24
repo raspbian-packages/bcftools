@@ -1,14 +1,13 @@
 bcftools (1.12-1) UNRELEASED; urgency=medium
 
+  * Team upload.
   [ Steffen Moeller ]
   * New upstream version
   * Standards-Version: 4.5.1 (routine-update)
   * No tab in license text (routine-update)
   * watch file standard 4 (routine-update)
 
-  TODO: 8 tests fail, reported as https://github.com/samtools/bcftools/issues/1491
-
- -- steffen <steffen@wurzel.steffen.minirz>  Sun, 16 May 2021 20:37:51 +0200
+ -- Steffen Moeller  <moeller@debian.org>  Sun, 16 May 2021 20:37:51 +0200
 
 bcftools (1.11-1) unstable; urgency=medium
 

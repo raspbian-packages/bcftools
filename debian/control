@@ -7,7 +7,7 @@ Build-Depends: debhelper-compat (= 13),
                zlib1g-dev,
                libbz2-dev,
                liblzma-dev,
-               libhts-dev (>= 1.11),
+               libhts-dev (>= 1.12),
                libgsl-dev,
                tabix <!nocheck>,
                libio-pty-perl <!nocheck>
