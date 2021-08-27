@@ -1,4 +1,4 @@
-bcftools (1.13-1) UNRELEASED; urgency=medium
+bcftools (1.13-1) unstable; urgency=medium
 
   * Team upload.
   [ Steffen Moeller ]
@@ -11,7 +11,7 @@ bcftools (1.13-1) UNRELEASED; urgency=medium
   * Standards-Version: 4.6.0 (routine-update)
   * Use secure URI in Homepage field.
 
- -- Steffen Moeller  <moeller@debian.org>  Sun, 16 May 2021 20:37:51 +0200
+ -- Étienne Mollier <emollier@debian.org>  Fri, 27 Aug 2021 16:36:54 +0200
 
 bcftools (1.11-1) unstable; urgency=medium
 
