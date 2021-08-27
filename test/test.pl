@@ -187,7 +187,7 @@ test_vcf_query($opts,in=>'query.filter.11',out=>'query.81.out',args=>q[-f'[%POS\
 test_vcf_query($opts,in=>'query.filter.11',out=>'query.81.out',args=>q[-f'[%POS\\t%SAMPLE\\t%GT\\n]' -e'N_PASS(GT="alt")==1']);
 test_vcf_query($opts,in=>'query.filter.11',out=>'query.80.out',args=>q[-f'[%POS\\t%SAMPLE\\t%GT\\n]' -e'N_PASS(GT="alt")!=1']);
 test_vcf_query($opts,in=>'query',out=>'query.64.out',args=>q[-f'%CHROM\\t%POS\\t%INFO\\t%FORMAT\\n' -s D,C]);
-test_vcf_query($opts,in=>'query.pbinom.1',out=>'query.65.out',args=>q[-f'[%POS %SAMPLE %GT %AD %PBINOM(AD)\\n]' -i'phred(binom(FMT/AD))>=0']);
+#test_vcf_query($opts,in=>'query.pbinom.1',out=>'query.65.out',args=>q[-f'[%POS %SAMPLE %GT %AD %PBINOM(AD)\\n]' -i'phred(binom(FMT/AD))>=0']);
 test_vcf_query($opts,in=>'query.filter.6',out=>'query.66.out',args=>q[-f'%POS\\n' -i'POS==16777217 || POS==33554432 || POS=118673904']);
 test_vcf_query($opts,in=>'query.filter.7',out=>'query.68.out',args=>q[-f'%POS\\t%II[\\t%FI]\\n' -i'sum(II)==6']);
 test_vcf_query($opts,in=>'query.filter.7',out=>'query.68.out',args=>q[-f'%POS\\t%II[\\t%FI]\\n' -i'sum(FORMAT/FI)==7']);
