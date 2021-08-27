@@ -7,6 +7,9 @@ bcftools (1.13-1) UNRELEASED; urgency=medium
   * No tab in license text (routine-update)
   * watch file standard 4 (routine-update)
 
+  [ Étienne Mollier ]
+  * Standards-Version: 4.6.0 (routine-update)
+
  -- Steffen Moeller  <moeller@debian.org>  Sun, 16 May 2021 20:37:51 +0200
 
 bcftools (1.11-1) unstable; urgency=medium
