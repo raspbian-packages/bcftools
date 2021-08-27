@@ -1,6 +1,5 @@
 bcftools (1.13-1) unstable; urgency=medium
 
-  * Team upload.
   [ Steffen Moeller ]
   * New upstream version
   * Standards-Version: 4.5.1 (routine-update)
@@ -10,6 +9,7 @@ bcftools (1.13-1) unstable; urgency=medium
   [ Étienne Mollier ]
   * Standards-Version: 4.6.0 (routine-update)
   * Use secure URI in Homepage field.
+  * d/control: add myself to uploaders
 
  -- Étienne Mollier <emollier@debian.org>  Fri, 27 Aug 2021 16:36:54 +0200
 
