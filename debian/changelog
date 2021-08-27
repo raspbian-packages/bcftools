@@ -9,6 +9,7 @@ bcftools (1.13-1) UNRELEASED; urgency=medium
 
   [ Étienne Mollier ]
   * Standards-Version: 4.6.0 (routine-update)
+  * Use secure URI in Homepage field.
 
  -- Steffen Moeller  <moeller@debian.org>  Sun, 16 May 2021 20:37:51 +0200
 
