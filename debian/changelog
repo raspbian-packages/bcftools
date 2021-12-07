@@ -1,13 +1,12 @@
-bcftools (1.14-1) UNRELEASED; urgency=medium
+bcftools (1.14-1~exp1) experimental; urgency=medium
 
   * Team upload.
   * New upstream version
-    Closes: #819617
   * Remove unnecessary Breaks/Replaces
   * Bump versioned Build-Depends: libhts-dev (>= 1.14)
   * Add lintian-override for script-with-language-extension
 
- -- Andreas Tille <tille@debian.org>  Tue, 07 Dec 2021 07:56:44 +0100
+ -- Andreas Tille <tille@debian.org>  Tue, 07 Dec 2021 09:08:19 +0100
 
 bcftools (1.13-1) unstable; urgency=medium
 
