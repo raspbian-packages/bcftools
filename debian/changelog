@@ -2,6 +2,7 @@ bcftools (1.14-1) UNRELEASED; urgency=medium
 
   * Team upload.
   * New upstream version
+    Closes: #819617
   * Remove unnecessary Breaks/Replaces
   * Bump versioned Build-Depends: libhts-dev (>= 1.14)
   * Add lintian-override for script-with-language-extension
