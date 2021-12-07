@@ -2,6 +2,7 @@ bcftools (1.14-1) UNRELEASED; urgency=medium
 
   * Team upload.
   * New upstream version
+  * Remove unnecessary Breaks/Replaces
 
  -- Andreas Tille <tille@debian.org>  Tue, 07 Dec 2021 07:56:44 +0100
 
