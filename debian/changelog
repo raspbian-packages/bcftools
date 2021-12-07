@@ -1,3 +1,10 @@
+bcftools (1.14-1) UNRELEASED; urgency=medium
+
+  * Team upload.
+  * New upstream version
+
+ -- Andreas Tille <tille@debian.org>  Tue, 07 Dec 2021 07:56:44 +0100
+
 bcftools (1.13-1) unstable; urgency=medium
 
   [ Steffen Moeller ]
