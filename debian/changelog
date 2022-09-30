@@ -1,10 +1,10 @@
-bcftools (1.16-1) UNRELEASED; urgency=medium
+bcftools (1.16-1) unstable; urgency=medium
 
   * Team upload.
   * Fix watch file
   * Standards-Version: 4.6.1 (routine-update)
 
- -- Andreas Tille <tille@debian.org>  Fri, 30 Sep 2022 11:44:44 +0200
+ -- Andreas Tille <tille@debian.org>  Fri, 30 Sep 2022 11:48:40 +0200
 
 bcftools (1.14-1~exp1) experimental; urgency=medium
 
