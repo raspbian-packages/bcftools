@@ -2,6 +2,7 @@ bcftools (1.16-1) UNRELEASED; urgency=medium
 
   * Team upload.
   * Fix watch file
+  * Standards-Version: 4.6.1 (routine-update)
 
  -- Andreas Tille <tille@debian.org>  Fri, 30 Sep 2022 11:44:44 +0200
 
