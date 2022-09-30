@@ -1,0 +1,36 @@
+Source: bcftools
+Maintainer: Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+Uploaders: Michael R. Crusoe <crusoe@debian.org>,
+           Étienne Mollier <emollier@debian.org>
+Section: science
+Priority: optional
+Build-Depends: debhelper-compat (= 13),
+               zlib1g-dev,
+               libbz2-dev,
+               liblzma-dev,
+               libhts-dev (>= 1.14),
+               libgsl-dev,
+               tabix <!nocheck>,
+               libio-pty-perl <!nocheck>
+Standards-Version: 4.6.1
+Vcs-Browser: https://salsa.debian.org/med-team/bcftools
+Vcs-Git: https://salsa.debian.org/med-team/bcftools.git
+Homepage: https://samtools.github.io/bcftools/
+Rules-Requires-Root: no
+
+Package: bcftools
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         sse2-support [i386]
+Recommends: perl
+Suggests:
+# These are needed for plot-vcfstats
+          python3,
+          python3-numpy,
+          python3-matplotlib,
+          texlive-latex-recommended
+Description: genomic variant calling and manipulation of VCF/BCF files
+ BCFtools is a set of utilities that manipulate variant calls in the
+ Variant Call Format (VCF) and its binary counterpart BCF. All commands work
+ transparently with both VCFs and BCFs, both uncompressed and BGZF-compressed.
