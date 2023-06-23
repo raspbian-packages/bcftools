@@ -1,9 +1,18 @@
-bcftools (1.17-1) UNRELEASED; urgency=medium
+bcftools (1.17-1) unstable; urgency=medium
 
   * New upstream version
   * Standards-Version: 4.6.2 (routine-update)
+  * d/lintian-overrides: update mismatched override.
+  * 2to3.patch: declare forwarding unneeded.
+    Only changes are the shebang and future import, making the initial
+    script somewhat agnistic of the python major version, and the patch
+    enforces use of python3.
+  * skip_new_test_failing_on_32bit.patch: use the Bug field.
+    The patch was initially documenting upstream issue with a Bug-Upstream
+    field instead of using the dedicated Bug field from DEP3, confusing
+    scanners to identify outstanding problems left to forward upstream.
 
- -- Étienne Mollier <emollier@debian.org>  Fri, 23 Jun 2023 18:12:25 +0200
+ -- Étienne Mollier <emollier@debian.org>  Fri, 23 Jun 2023 18:27:42 +0200
 
 bcftools (1.16-1) unstable; urgency=medium
 
