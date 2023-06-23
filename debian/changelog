@@ -1,6 +1,7 @@
 bcftools (1.17-1) UNRELEASED; urgency=medium
 
   * New upstream version
+  * Standards-Version: 4.6.2 (routine-update)
 
  -- Étienne Mollier <emollier@debian.org>  Fri, 23 Jun 2023 18:12:25 +0200
 
