@@ -2,6 +2,7 @@ Author: Andreas Tille <tille@debian.org>
 Last-Update: Tue, 14 Jul 2020 22:21:56 +0200
 Bug-Debian: https://bugs.debian.org/965032
 Description: Make sure Python3 is used
+Forwarded: not-needed
 
 --- a/misc/guess-ploidy.py
 +++ b/misc/guess-ploidy.py
