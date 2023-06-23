@@ -1,7 +1,7 @@
 Author: Graham Inggs <ginggs@debian.org>
 Last-Update: Sun, 18 Feb 2018 12:06:22 +0200
 Bug-Debian: https://bugs.debian.org/890704
-Bug-Upstream: https://github.com/samtools/bcftools/issues/744
+Bug: https://github.com/samtools/bcftools/issues/744
 Description: Skip single test causing new failures
  This is a new test that was added in 1.7, so it is not a regression.
  .
