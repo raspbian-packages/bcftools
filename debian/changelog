@@ -1,9 +1,9 @@
-bcftools (1.18-1) UNRELEASED; urgency=medium
+bcftools (1.18-1) unstable; urgency=medium
 
   * Team upload.
   * New upstream version
 
- -- Andreas Tille <tille@debian.org>  Wed, 18 Oct 2023 15:11:57 +0200
+ -- Andreas Tille <tille@debian.org>  Wed, 08 Nov 2023 09:14:28 +0100
 
 bcftools (1.17-1) unstable; urgency=medium
 
