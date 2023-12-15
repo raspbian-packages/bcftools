@@ -1,0 +1,286 @@
+Description: fix typos caught by lintian.
+Author: Étienne Mollier <emollier@debian.org>
+Forwarded: https://github.com/samtools/bcftools/pull/2059
+Last-Update: 2023-12-15
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+--- bcftools.orig/gff.c
++++ bcftools/gff.c
+@@ -1060,7 +1060,7 @@
+         INC_NWARN(wrong_phase);
+         INC_NWARN(overlapping_cds);
+         if ( nwarn > 0 )
+-            fprintf(stderr,"Warning: %d warnings were supressed, run with `--verbose 2` to see them all\n",nwarn);
++            fprintf(stderr,"Warning: %d warnings were suppressed, run with `--verbose 2` to see them all\n",nwarn);
+     }
+ 
+     if ( gff->dump_fname ) gff_dump(gff, gff->dump_fname);
+--- bcftools.orig/doc/bcftools.1
++++ bcftools/doc/bcftools.1
+@@ -1096,7 +1096,7 @@
+ .sp
+ \fB\-G, \-\-group\-samples\fP \fIFILE\fP|\fI\-\fP
+ .RS 4
+-by default, all samples are assumed to come from a single population. This option allows to group samples
++by default, all samples are assumed to come from a single population. This option allows one to group samples
+ into populations and apply the HWE assumption within but not across the populations. \fIFILE\fP is a tab\-delimited
+ text file with sample names in the first column and group names in the second column. If \fI\-\fP is
+ given instead, no HWE assumption is made at all and single\-sample calling is performed. (Note that
+@@ -2060,7 +2060,7 @@
+ .sp
+ \fB\-\-force\fP
+ .RS 4
+-run even if some sanity checks fail. Currently the option allows to skip
++run even if some sanity checks fail. Currently the option allows one to skip
+ transcripts in malformatted GFFs with incorrect phase
+ .RE
+ .sp
+@@ -2979,7 +2979,7 @@
+ Sites with many alternate alleles can require extremely large storage space which
+ can exceed the 2GB size limit representable by BCF. This is caused
+ by Number=G tags (such as FORMAT/PL) which store a value for each combination of reference
+-and alternate alleles. The \fB\-L, \-\-local\-alleles\fP option allows to replace such tags
++and alternate alleles. The \fB\-L, \-\-local\-alleles\fP option allows one to replace such tags
+ with a localized tag (FORMAT/LPL) which only includes a subset of alternate alleles relevant
+ for that sample. A new FORMAT/LAA tag is added which lists 1\-based indices of the
+ alternate alleles relevant (local) for the current sample. The number \fIINT\fP gives the
+@@ -3016,14 +3016,14 @@
+ alleles, vector fields pertaining to unobserved alleles are set to missing (\fI.\fP) by default.
+ The \fIMETHOD\fP is one of \fI.\fP (the default, use missing values), \fINUMBER\fP (use a constant value, e.g. 0),
+ \fImax\fP (the maximum value observed for other alleles in the sample). When \fB\-\-gvcf\fP option is set,
+-the rule \fB\-M PL:max,AD:0\fP is implied. This can be overriden with providing \fB\-M \-\fP or \fB\-M PL:.,AD:.\fP.
++the rule \fB\-M PL:max,AD:0\fP is implied. This can be overridden with providing \fB\-M \-\fP or \fB\-M PL:.,AD:.\fP.
+ Note that if the unobserved allele is explicitly present as \fI<*>\fP or \fI<NON_REF>\fP, then its corresponding
+ value will be used regardless of \fB\-M\fP settings.
+ .RE
+ .sp
+ \fB\-\-no\-index\fP
+ .RS 4
+-the option allows to merge files without indexing them first. In order for this
++the option allows one to merge files without indexing them first. In order for this
+ option to work, the user must ensure that the input files have chromosomes in
+ the same order and consistent with the order of sequences in the VCF header.
+ .RE
+@@ -6327,4 +6327,4 @@
+ .SH "COPYING"
+ .sp
+ The MIT/Expat License or GPL License, see the LICENSE document for details.
+-Copyright (c) Genome Research Ltd.
+\ No newline at end of file
++Copyright (c) Genome Research Ltd.
+--- bcftools.orig/doc/bcftools.html
++++ bcftools/doc/bcftools.html
+@@ -870,7 +870,7 @@
+ <dl>
+ <dt class="hdlist1"><strong>-G, --group-samples</strong> <em class="TAG:">FILE</em>|<em>-</em></dt>
+ <dd>
+-<p>by default, all samples are assumed to come from a single population. This option allows to group samples
++<p>by default, all samples are assumed to come from a single population. This option allows one to group samples
+ into populations and apply the HWE assumption within but not across the populations. <em>FILE</em> is a tab-delimited
+ text file with sample names in the first column and group names in the second column. If <em>-</em> is
+ given instead, no HWE assumption is made at all and single-sample calling is performed. (Note that
+@@ -1793,7 +1793,7 @@
+ </dd>
+ <dt class="hdlist1"><strong>--force</strong></dt>
+ <dd>
+-<p>run even if some sanity checks fail. Currently the option allows to skip
++<p>run even if some sanity checks fail. Currently the option allows one to skip
+ transcripts in malformatted GFFs with incorrect phase</p>
+ </dd>
+ <dt class="hdlist1"><strong>-g, --gff-annot</strong> <em>FILE</em></dt>
+@@ -2652,7 +2652,7 @@
+ <p>Sites with many alternate alleles can require extremely large storage space which
+ can exceed the 2GB size limit representable by BCF. This is caused
+ by Number=G tags (such as FORMAT/PL) which store a value for each combination of reference
+-and alternate alleles. The <strong>-L, --local-alleles</strong> option allows to replace such tags
++and alternate alleles. The <strong>-L, --local-alleles</strong> option allows one to replace such tags
+ with a localized tag (FORMAT/LPL) which only includes a subset of alternate alleles relevant
+ for that sample. A new FORMAT/LAA tag is added which lists 1-based indices of the
+ alternate alleles relevant (local) for the current sample. The number <em>INT</em> gives the
+@@ -2688,13 +2688,13 @@
+ alleles, vector fields pertaining to unobserved alleles are set to missing (<em>.</em>) by default.
+ The <em>METHOD</em> is one of <em>.</em> (the default, use missing values), <em>NUMBER</em> (use a constant value, e.g. 0),
+ <em>max</em> (the maximum value observed for other alleles in the sample). When <strong>--gvcf</strong> option is set,
+-the rule <strong>-M PL:max,AD:0</strong> is implied. This can be overriden with providing <strong>-M -</strong> or <strong>-M PL:.,AD:.</strong>.
++the rule <strong>-M PL:max,AD:0</strong> is implied. This can be overridden with providing <strong>-M -</strong> or <strong>-M PL:.,AD:.</strong>.
+ Note that if the unobserved allele is explicitly present as <em>&lt;*&gt;</em> or <em>&lt;NON_REF&gt;</em>, then its corresponding
+ value will be used regardless of <strong>-M</strong> settings.</p>
+ </dd>
+ <dt class="hdlist1"><strong>--no-index</strong></dt>
+ <dd>
+-<p>the option allows to merge files without indexing them first. In order for this
++<p>the option allows one to merge files without indexing them first. In order for this
+ option to work, the user must ensure that the input files have chromosomes in
+ the same order and consistent with the order of sequences in the VCF header.</p>
+ </dd>
+@@ -5370,4 +5370,4 @@
+ </div>
+ </div>
+ </body>
+-</html>
+\ No newline at end of file
++</html>
+--- bcftools.orig/doc/bcftools.txt
++++ bcftools/doc/bcftools.txt
+@@ -654,7 +654,7 @@
+ ----
+ 
+ *-G, --group-samples* [TAG:]'FILE'|'-'::
+-    by default, all samples are assumed to come from a single population. This option allows to group samples
++    by default, all samples are assumed to come from a single population. This option allows one to group samples
+     into populations and apply the HWE assumption within but not across the populations. 'FILE' is a tab-delimited
+     text file with sample names in the first column and group names in the second column. If '-' is
+     given instead, no HWE assumption is made at all and single-sample calling is performed. (Note that
+@@ -1321,7 +1321,7 @@
+     reference sequence in fasta format (required)
+ 
+ *--force*::
+-    run even if some sanity checks fail. Currently the option allows to skip
++    run even if some sanity checks fail. Currently the option allows one to skip
+     transcripts in malformatted GFFs with incorrect phase
+ 
+ *-g, --gff-annot* 'FILE'::
+@@ -2006,7 +2006,7 @@
+     Sites with many alternate alleles can require extremely large storage space which
+     can exceed the 2GB size limit representable by BCF. This is caused
+     by Number=G tags (such as FORMAT/PL) which store a value for each combination of reference
+-    and alternate alleles. The *-L, --local-alleles* option allows to replace such tags
++    and alternate alleles. The *-L, --local-alleles* option allows one to replace such tags
+     with a localized tag (FORMAT/LPL) which only includes a subset of alternate alleles relevant
+     for that sample. A new FORMAT/LAA tag is added which lists 1-based indices of the
+     alternate alleles relevant (local) for the current sample. The number 'INT' gives the
+@@ -2034,12 +2034,12 @@
+     alleles, vector fields pertaining to unobserved alleles are set to missing ('.') by default.
+     The 'METHOD' is one of '.' (the default, use missing values), 'NUMBER' (use a constant value, e.g. 0),
+     'max' (the maximum value observed for other alleles in the sample). When *--gvcf* option is set,
+-    the rule *-M PL:max,AD:0* is implied. This can be overriden with providing *-M -* or *-M PL:.,AD:.*.
++    the rule *-M PL:max,AD:0* is implied. This can be overridden with providing *-M -* or *-M PL:.,AD:.*.
+     Note that if the unobserved allele is explicitly present as '<*>' or '<NON_REF>', then its corresponding
+     value will be used regardless of *-M* settings.
+ 
+ *--no-index*::
+-    the option allows to merge files without indexing them first. In order for this
++    the option allows one to merge files without indexing them first. In order for this
+     option to work, the user must ensure that the input files have chromosomes in
+     the same order and consistent with the order of sequences in the VCF header.
+ 
+--- bcftools.orig/NEWS
++++ bcftools/NEWS
+@@ -338,7 +338,7 @@
+ 
+ * bcftools norm
+ 
+-    - New --multi-overlaps option allows to set overlapping alleles either to the
++    - New --multi-overlaps option allows one to set overlapping alleles either to the
+       ref allele (the current default) or to a missing allele (#1764 and #1802)
+ 
+     - Fixed a bug in `-m -` which does not split missing FORMAT values correctly and
+@@ -509,7 +509,7 @@
+     - In addition to `--rename-annots`, which requires a file with name mappings,
+       it is now possible to do the same on the command line `-c NEW_TAG:=OLD_TAG`
+ 
+-    - Add new option --min-overlap which allows to specify the minimum required
++    - Add new option --min-overlap which allows one to specify the minimum required
+       overlap of intersecting regions
+ 
+     - Allow to transfer ALT from VCF with or without replacement using
+@@ -569,7 +569,7 @@
+ * bcftools query
+ 
+     - Make the `--samples` and `--samples-file` options work also in the `--list-samples`
+-      mode. Add a new `--force-samples` option which allows to proceed even when some of
++      mode. Add a new `--force-samples` option which allows one to proceed even when some of
+       the requested samples are not present in the VCF (#1631)
+ 
+ * bcftools +setGT
+@@ -682,7 +682,7 @@
+ 
+ * bcftools mpileup:
+ 
+-    - new --indel-size option which allows to increase the maximum considered
++    - new --indel-size option which allows one to increase the maximum considered
+       indel size considered, large deletions in long read data are otherwise
+       lost.
+ 
+@@ -903,7 +903,7 @@
+ 
+     - New `--rename-annots` option to help fix broken VCFs (#1335)
+ 
+-    - New -C option allows to read a long list of options from a file to
++    - New -C option allows one to read a long list of options from a file to
+       prevent very long command lines.
+ 
+     - New `append-missing` logic allows annotations to be added for each ALT
+@@ -1114,7 +1114,7 @@
+ 
+     - Preserve the case of the genome reference. (#1150)
+ 
+-    - Add new `-a, --absent` option which allows to set positions with no
++    - Add new `-a, --absent` option which allows one to set positions with no
+       supporting evidence to "N" (or any other character). (#848; #940)
+ 
+ * bcftools convert:
+@@ -1162,7 +1162,7 @@
+     - Local alleles merging that produce LAA and LPL when requested, a draft
+       implementation of https://github.com/samtools/hts-specs/pull/434 (#1138)
+ 
+-    - New `--no-index` which allows to merge unindexed files. Requires the input
++    - New `--no-index` which allows one to merge unindexed files. Requires the input
+       files to have chromosomes in th same order and consistent with the order
+       of sequences in the header. (PR #1253; samtools/htslib#1089)
+ 
+--- bcftools.orig/plugins/allele-length.c
++++ bcftools/plugins/allele-length.c
+@@ -70,7 +70,7 @@
+     return 0;
+ }
+ 
+-// Called once at startup, allows to initialize local variables.
++// Called once at startup, allows one to initialize local variables.
+ // Return 1 to suppress VCF/BCF header from printing, 0 otherwise.
+ int init(int argc, char **argv, bcf_hdr_t *in, bcf_hdr_t *out)
+ {
+--- bcftools.orig/plugins/counts.c
++++ bcftools/plugins/counts.c
+@@ -40,7 +40,7 @@
+ }
+ 
+ /*
+-    Called once at startup, allows to initialize local variables.
++    Called once at startup, allows one to initialize local variables.
+     Return 1 to suppress VCF/BCF header from printing, 0 otherwise.
+ */
+ int init(int argc, char **argv, bcf_hdr_t *in, bcf_hdr_t *out)
+--- bcftools.orig/plugins/variantkey-hex.c
++++ bcftools/plugins/variantkey-hex.c
+@@ -63,7 +63,7 @@
+         "\n";
+ }
+ 
+-// Called once at startup, allows to initialize local variables.
++// Called once at startup, allows one to initialize local variables.
+ // Return 1 to suppress VCF/BCF header from printing, 0 otherwise.
+ int init(int argc, char **argv, bcf_hdr_t *in, bcf_hdr_t *out)
+ {
+--- bcftools.orig/variantkey.h
++++ bcftools/variantkey.h
+@@ -35,7 +35,7 @@
+  * @file variantkey.h
+  * @brief VariantKey main functions.
+  *
+- * The functions provided here allows to generate and process a 64 bit Unsigned Integer Keys for Human Genetic Variants.
++ * The functions provided here allows one to generate and process a 64 bit Unsigned Integer Keys for Human Genetic Variants.
+  * The VariantKey is sortable for chromosome and position,
+  * and it is also fully reversible for variants with up to 11 bases between Reference and Alternate alleles.
+  * It can be used to sort, search and match variant-based data easily and very quickly.
+--- bcftools.orig/vcfplugin.c
++++ bcftools/vcfplugin.c
+@@ -66,7 +66,7 @@
+  *      success or non-zero value on error.
+  *
+  *   int init(int argc, char **argv, bcf_hdr_t *in_hdr, bcf_hdr_t *out_hdr)
+- *      - called once at startup, allows to initialize local variables.
++ *      - called once at startup, allows one to initialize local variables.
+  *      Return 1 to suppress normal VCF/BCF header output, -1 on critical
+  *      errors, 0 otherwise.
+  *

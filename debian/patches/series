@@ -1,3 +1,4 @@
 tests-pluginpath.patch
 skip_new_test_failing_on_32bit.patch
 2to3.patch
+typo.patch
