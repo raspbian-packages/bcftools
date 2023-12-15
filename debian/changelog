@@ -1,8 +1,12 @@
-bcftools (1.19-1) UNRELEASED; urgency=medium
+bcftools (1.19-1) unstable; urgency=medium
 
-  * New upstream version
+  * New upstream version 1.19
+  * fix-bus-error-armhf.patch: delete: applied upstream.
+  * skip_new_test_failing_on_32bit.patch: refresh.
+  * tests-pluginpath.patch: refresh.
+  * typo.patch: new: fix typos caught by lintian.
 
- -- Étienne Mollier <emollier@debian.org>  Fri, 15 Dec 2023 11:48:47 +0100
+ -- Étienne Mollier <emollier@debian.org>  Fri, 15 Dec 2023 11:59:02 +0100
 
 bcftools (1.18-2) unstable; urgency=medium
 
