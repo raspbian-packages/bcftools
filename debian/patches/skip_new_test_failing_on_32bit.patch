@@ -11,7 +11,7 @@ Description: Skip single test causing new failures
 
 --- bcftools.orig/test/test.pl
 +++ bcftools/test/test.pl
-@@ -202,7 +202,7 @@
+@@ -206,7 +206,7 @@
  run_test(\&test_vcf_query,$opts,in=>'query.filter.11',out=>'query.81.out',args=>q[-f'[%POS\\t%SAMPLE\\t%GT\\n]' -e'N_PASS(GT="alt")==1']);
  run_test(\&test_vcf_query,$opts,in=>'query.filter.11',out=>'query.80.out',args=>q[-f'[%POS\\t%SAMPLE\\t%GT\\n]' -e'N_PASS(GT="alt")!=1']);
  run_test(\&test_vcf_query,$opts,in=>'query',out=>'query.64.out',args=>q[-f'%CHROM\\t%POS\\t%INFO\\t%FORMAT\\n' -s D,C]);
