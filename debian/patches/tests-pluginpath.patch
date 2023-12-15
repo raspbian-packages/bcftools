@@ -10,7 +10,7 @@ Forwarded: not-needed
 Last-Update: 2015-11-09
 --- bcftools.orig/test/test.pl
 +++ bcftools/test/test.pl
-@@ -1704,7 +1704,7 @@
+@@ -1742,7 +1742,7 @@
  {
      my ($opts,%args) = @_;
      if ( !$$opts{test_plugins} ) { return; }
