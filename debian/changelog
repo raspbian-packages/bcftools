@@ -1,3 +1,9 @@
+bcftools (1.19-1) UNRELEASED; urgency=medium
+
+  * New upstream version
+
+ -- Étienne Mollier <emollier@debian.org>  Fri, 15 Dec 2023 11:48:47 +0100
+
 bcftools (1.18-2) unstable; urgency=medium
 
   * skip_new_test_failing_on_32bit.patch: refresh.
