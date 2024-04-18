@@ -1,0 +1,2 @@
+# see https://lists.debian.org/debian-med/2018/06/msg00043.html
+bcftools: script-with-language-extension [usr/bin/*.*]

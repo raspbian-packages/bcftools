@@ -1,0 +1,52 @@
+#!/usr/bin/make -f
+
+#export DH_VERBOSE = 1
+include /usr/share/dpkg/default.mk
+
+ifneq (,$(filter $(DEB_TARGET_ARCH_CPU),i386))
+export DEB_CFLAGS_MAINT_APPEND += -mfpmath=sse -msse2
+endif
+
+%:
+	dh $@
+
+override_dh_installman:
+	dh_installman --language=C
+
+# clean target tries to include config.mk which does not exist inside clean source tree
+clean: config.mk
+
+override_dh_auto_clean:
+	dh_auto_clean
+	rm -f test/mpileup/indel-AD.1.out.new test/view-t.1.out.new test/view-t.2.out.new
+
+config.mk:
+	$(RM) $@ && touch $@
+
+# m4 calls `make print-version` in configure.ac to set the version string.
+# If `make` is not silent, this string includes logging messages about changing
+# directories due to the way it is invoked, which breaks
+# the C compiler test because it introduces a multiline #define statement with
+# newlines not escaped.
+override_dh_autoreconf: config.mk
+	export MAKEFLAGS="-s"; dh_autoreconf
+
+#override_dh_auto_configure:
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	--with-htslib=system \
+	--enable-gsl \
+	--with-cblas=gslcblas \
+	--with-bcf-plugin-dir=/usr/lib/$(DEB_HOST_MULTIARCH)/bcftools
+
+override_dh_install:
+	dh_install
+	# Fix Perl interpreter PATH
+	for pscript in `grep -Rl '#!/usr/bin/env \+perl' debian/*` ; do \
+	    sed -i '1s?#!/usr/bin/env \+perl?#!/usr/bin/perl?' $${pscript} ; \
+	done
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	make test-no-plugins VERBOSE=1
+endif
