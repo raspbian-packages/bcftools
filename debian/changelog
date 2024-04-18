@@ -1,4 +1,4 @@
-bcftools (1.20-1) UNRELEASED; urgency=medium
+bcftools (1.20-1) unstable; urgency=medium
 
   [ Charles Plessy ]
   * Team upload.
@@ -9,7 +9,7 @@ bcftools (1.20-1) UNRELEASED; urgency=medium
     Closes: #1069234
   * Standards-Version: 4.7.0 (routine-update)
 
- -- Charles Plessy <plessy@debian.org>  Thu, 18 Apr 2024 08:51:21 +0900
+ -- Andreas Tille <tille@debian.org>  Thu, 18 Apr 2024 17:14:39 +0200
 
 bcftools (1.19-1) unstable; urgency=medium
 
