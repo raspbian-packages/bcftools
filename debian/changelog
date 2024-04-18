@@ -7,6 +7,7 @@ bcftools (1.20-1) UNRELEASED; urgency=medium
   [ Andreas Tille ]
   * Add missing Depends
     Closes: #1069234
+  * Standards-Version: 4.7.0 (routine-update)
 
  -- Charles Plessy <plessy@debian.org>  Thu, 18 Apr 2024 08:51:21 +0900
 
