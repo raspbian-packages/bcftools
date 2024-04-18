@@ -1,7 +1,12 @@
 bcftools (1.20-1) UNRELEASED; urgency=medium
 
+  [ Charles Plessy ]
   * Team upload.
   * New upstream version
+
+  [ Andreas Tille ]
+  * Add missing Depends
+    Closes: #1069234
 
  -- Charles Plessy <plessy@debian.org>  Thu, 18 Apr 2024 08:51:21 +0900
 

@@ -22,13 +22,14 @@ Package: bcftools
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         sse2-support [i386]
+         sse2-support [i386],
+         python3-gffutils,
+         python3-matplotlib
 Recommends: perl
 Suggests:
 # These are needed for plot-vcfstats
           python3,
           python3-numpy,
-          python3-matplotlib,
           texlive-latex-recommended
 Description: genomic variant calling and manipulation of VCF/BCF files
  BCFtools is a set of utilities that manipulate variant calls in the
