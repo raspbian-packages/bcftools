@@ -22,10 +22,10 @@ Package: bcftools
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         sse2-support [i386],
+         sse2-support [i386]
+Recommends: perl,
          python3-gffutils,
          python3-matplotlib
-Recommends: perl
 Suggests:
 # These are needed for plot-vcfstats
           python3,
