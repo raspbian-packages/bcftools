@@ -1,3 +1,10 @@
+bcftools (1.20-2) unstable; urgency=medium
+
+  * Team upload
+  * Only recommend python-matplotlib and python3-gffutils
+
+ -- Charles Plessy <plessy@debian.org>  Tue, 25 Jun 2024 08:34:02 +0900
+
 bcftools (1.20-1) unstable; urgency=medium
 
   [ Charles Plessy ]
