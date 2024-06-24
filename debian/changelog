@@ -1,3 +1,23 @@
+bcftools (1.20-2) unstable; urgency=medium
+
+  * Team upload
+  * Only recommend python-matplotlib and python3-gffutils
+
+ -- Charles Plessy <plessy@debian.org>  Tue, 25 Jun 2024 08:34:02 +0900
+
+bcftools (1.20-1) unstable; urgency=medium
+
+  [ Charles Plessy ]
+  * Team upload.
+  * New upstream version
+
+  [ Andreas Tille ]
+  * Add missing Depends
+    Closes: #1069234
+  * Standards-Version: 4.7.0 (routine-update)
+
+ -- Andreas Tille <tille@debian.org>  Thu, 18 Apr 2024 17:14:39 +0200
+
 bcftools (1.19-1) unstable; urgency=medium
 
   * New upstream version 1.19
