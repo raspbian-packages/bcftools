@@ -1,3 +1,220 @@
+## Release 1.21 (12th September 2024)
+
+
+
+Changes affecting the whole of bcftools, or multiple commands:
+
+* Support multiple semicolon-separated strings when filtering by ID using -i/-e (#2190).
+  For example, `-i 'ID="rs123"'` now correctly matches `rs123;rs456`
+
+* The filtering expression ILEN can be positive (insertion), negative (deletion), zero
+  (balanced substitutions), or set to missing value (symbolic alleles).
+
+* bcftools query
+* bcftools +split-vep
+
+    - The columns indices printed by default with `-H` (e.g., "#[1]CHROM") can be now
+      suppressed by giving the option twice `-HH` (#2152)
+
+
+Changes affecting specific commands:
+
+* bcftools annotate
+
+    - Support dynamic variables read from a tab-delimited annotation file (#2151)
+      For example, in the two cases below the field 'STR' from the -a file is required to match
+      the INFO/TAG in VCF. In the first example the alleles REF,ALT must match, in the second
+      example they are ignored. The option -k is required to output also records that were not
+      annotated:
+
+        bcftools annotate -a ann.tsv.gz -c CHROM,POS,REF,ALT,SCORE,~STR -i'TAG={STR}' -k in.vcf
+        bcftools annotate -a ann.tsv.gz -c CHROM,POS,-,-,SCORE,~STR     -i'TAG={STR}' -k in.vcf
+
+    - When adding Type=String annotations from a tab-delimited file, encode characters with
+      special meaning using percent encoding (';', '=' in INFO and ':' in FORMAT) (#2202)
+
+* bcftools consensus
+
+    - Allow to apply a reference allele which overlaps a previous deletion, there is no
+      need to complain about overlapping alleles in such case
+
+    - Fix a bug which required `-s -` to be present even when there were no samples in the VCF
+      (#2260)
+
+* bcftools csq
+
+    - Fix a rare bug where indel combined with a substitution ending at exon boundary is
+      incorrectly predicted to have 'inframe' rather than 'frameshift' consequence (#2212)
+
+* bcftools gtcheck
+
+    - Fix a segfault with --no-HWE-prob. The bug was introduced with the output format change in
+      1.19 which replaced the DC section with DCv2 (#2180)
+
+    - The number of matching genotypes in the DCv2 output was not calculated correctly with
+      non-zero `-E, --error-probability`. Consequently, also the average HWE score was incorrect.
+      The main output, the discordance score, was not affected by the bug
+
+* bcftools +mendelian2
+
+    - Include the number of good cases where at least one of the trio genotypes has an alternate
+      allele (#2204)
+
+    - Fix the error message which would report the wrong sample when non-existent sample is given.
+      Note that bug only affected the error message, the program otherwise assigns the family
+      members correctly (#2242)
+
+* bcftools merge
+
+    - Fix a severe bug in merging of FORMAT fields with Number=R and Number=A values. For example,
+      rows with high-coverage FORMAT/AD values (bigger or equal to 128) could have been assigned
+      to incorrect samples. The bug was introduced in version 1.19. For details see #2244.
+
+* bcftools mpileup
+
+    - Return non-zero error code when the input BAM/CRAM file is truncated (#2177)
+
+    - Add FORMAT/AD annotation by default, disable with `-a -AD`
+
+* bcftools norm
+
+    - Support realignment of symbolic <DUP.*> alleles, similarly to <DEL.*> added previously
+      (#1919,#2145)
+
+    - Fix in reporting reference allele genotypes with `--multi-overlaps .` (#2160)
+
+    - Support of duplicate removal of symbolic alleles of the same type but different SVLEN (#2182)
+
+    - New `-S, --sort` switch to optionally sort output records by allele (#1484)
+
+    - Add the `-i/-e` filtering options to select records for normalization. Note duplicate
+      removal ignores this option.
+
+    - Fix a bug where `--atomize` would not fill GT alleles for atomized SNVs followed by
+      an indel (#2239)
+
+* bcftools +remove-overlaps
+
+    - Revamp the program to allow greater flexibility, with the following new options:
+
+            -M, --mark-tag TAG   Mark -m sites with INFO/TAG
+            -m, --mark EXPR      Mark (if also -M is present) or remove sites [overlap]
+                                    dup       .. all overlapping sites
+                                    overlap   .. overlapping sites
+                                    min(QUAL) .. mark sites with lowest QUAL until overlaps are resolved
+                --missing EXPR   Value to use for missing tags with -m 'min(QUAL)'
+                                    0   .. the default
+                                    DP  .. heuristics, scale maximum QUAL value proportionally to INFO/DP
+                --reverse        Apply the reverse logic, for example preserve duplicates instead of removing
+            -O, --output-type t  t: plain list of sites (chr,pos), tz: compressed list
+
+* bcftools +tag2tag
+
+    - The conversions --LXX-to-XX, --XX-to-LXX were working but specific cases such as --LAD-to-AD were not.
+
+    - Print more informative error message when source tag type violiates VCF specification
+
+* bcftools +trio-dnm2
+
+    - Better handling of the --strictly-novel functionality, especically with respect to chrX inheritance
+
+
+## Release 1.20 (15th April 2024)
+
+
+Changes affecting the whole of bcftools, or multiple commands:
+
+* Add short option -W for --write-index. The option now accepts an optional parameter
+  which allows to choose between TBI and CSI index format.
+
+
+Changes affecting specific commands:
+
+* bcftools consensus
+
+    - Add new --regions-overlap option which allows to take into account overlapping deletions
+      that start out of the fasta file target region.
+
+* bcftools isec
+
+    - Add new option `-l, --file-list` to read the list of file names from a file
+
+* bcftools merge
+
+    - Add new option `--force-single` to support single-file edge case (#2100)
+
+* bcftools mpileup
+
+    - Add new option --indels-cns for an alternative indel calling model, which should increase
+      the speed on long read data (thanks to using edlib) and the precision (thanks to a number
+      of heuristics).
+
+* bcftools norm
+
+    - Change the order of atomization and multiallelic splitting (when both -a,-m are given)
+      from "atomize first, then split" to "split first, then atomize". This usually results
+      in a simpler VCF representation. The previous behaviour can be achieved by explicitly
+      streaming the output of the --atomize command into the --multiallelics splitting command.
+
+    - Fix Type=String multiallelic splitting for Number=A,R,G tags with incorrect number
+      of values.
+
+    - Merging into multiallelic sites with `bcftools norm -m +indels` did not work. This is
+      now fixed and the merging is now more strict about variant types, for example complex
+      events, such as AC>TGA, are not considered as indels anymore (#2084)
+
+* bcftools reheader
+
+    - Allow reading the input file from a stream with --fai (#2088)
+
+* bcftools +setGT
+
+    - Support for custom genotypes based on the allele with higher depth, such
+      as `--new-gt c:0/X` custom genotypes (#2065)
+
+* bcftools +split-vep
+
+    - When only one of the tags is present, automatically choose INFO/BCSQ (the default
+      tag name produced by `bcftools csq`) or INFO/CSQ (produced by VEP). When both
+      tags are present, use the default INFO/CSQ.
+
+    - Transcript selection by MANE, PICK, and user-defined transcripts, for example
+
+        --select CANONICAL=YES
+        --select MANE_SELECT!=""
+        --select PolyPhen~probably_damaging
+
+    - Select all matching transcripts via --select, not just one
+
+    - Change automatic type parsing of VEP fields DNA_position, CDS_position, and Protein_position
+      from Integer to String, as it can be of the form "8586-8599/9231". The type Integer can be
+      still enforced with `-c cDNA_position:int,CDS_position:int,Protein_position:int`.
+
+    - Recognize `-c field:str`, not just `-c field:string`, as advertised in the usage page
+
+    - Fix a bug which made filtering expression containing missing values crash (#2098)
+
+* bcftools stats
+
+    - When GT is missing but AD is present, the program determines the alternate allele from AD.
+      However, if the AD tag has incorrect number of values, the program would exit with an error
+      printing "Requested allele outside valid range". This is now fixed by taking into account
+      the actual number of ALT alleles.
+
+* bcftools +tag2tag
+
+    - Support for conversion from tags using localized alleles (e.g. LPL, LAD) to the family of
+      standard tags (PL, AD)
+
+* bcftools +trio-dnm2
+
+    - Extend --strictly-novel to exclude cases where the non-Mendelian allele
+      is the reference allele. The change is motivated by the observation that
+      this class of variants is enriched for errors (especially for indels),
+      and better corresponds with the option name.
+
+
+
 ## Release 1.19 (12th December 2023)
 
 
@@ -338,7 +555,7 @@ Changes affecting specific commands:
 
 * bcftools norm
 
-    - New --multi-overlaps option allows to set overlapping alleles either to the
+    - New --multi-overlaps option allows setting overlapping alleles either to the
       ref allele (the current default) or to a missing allele (#1764 and #1802)
 
     - Fixed a bug in `-m -` which does not split missing FORMAT values correctly and
@@ -509,7 +726,7 @@ Changes affecting specific commands:
     - In addition to `--rename-annots`, which requires a file with name mappings,
       it is now possible to do the same on the command line `-c NEW_TAG:=OLD_TAG`
 
-    - Add new option --min-overlap which allows to specify the minimum required
+    - Add new option --min-overlap to specify the minimum required
       overlap of intersecting regions
 
     - Allow to transfer ALT from VCF with or without replacement using
@@ -569,7 +786,7 @@ Changes affecting specific commands:
 * bcftools query
 
     - Make the `--samples` and `--samples-file` options work also in the `--list-samples`
-      mode. Add a new `--force-samples` option which allows to proceed even when some of
+      mode. Add a new `--force-samples` option which enables proceeding even when some of
       the requested samples are not present in the VCF (#1631)
 
 * bcftools +setGT
@@ -620,7 +837,7 @@ Changes affecting specific commands:
       annotating from a tab-delimited text file, this feature can be invoked
       by using `-c INFO/END`.
 
-    - add a new '.' modifier to control wheter missing values should be carried
+    - add a new '.' modifier to control whether missing values should be carried
       over from a tab-delimited file or not. For example:
 
          -c TAG .. adds TAG if the source value is not missing. If TAG
@@ -682,7 +899,7 @@ Changes affecting specific commands:
 
 * bcftools mpileup:
 
-    - new --indel-size option which allows to increase the maximum considered
+    - new --indel-size option which allows increase of the maximum considered
       indel size considered, large deletions in long read data are otherwise
       lost.
 
@@ -903,7 +1120,7 @@ Changes affecting specific commands:
 
     - New `--rename-annots` option to help fix broken VCFs (#1335)
 
-    - New -C option allows to read a long list of options from a file to
+    - New -C option allows a long list of options to be read from a file to
       prevent very long command lines.
 
     - New `append-missing` logic allows annotations to be added for each ALT
@@ -972,7 +1189,7 @@ Changes affecting specific commands:
 
 * bcftools csq:
 
-    - Fix a bug wich caused incorrect FORMAT/BCSQ formatting at sites with too
+    - Fix a bug which caused incorrect FORMAT/BCSQ formatting at sites with too
       many per-sample consequences
 
     - Fix a bug which incorrectly handled the --ncsq parameter and could clash
@@ -1114,7 +1331,7 @@ Changes affecting specific commands:
 
     - Preserve the case of the genome reference. (#1150)
 
-    - Add new `-a, --absent` option which allows to set positions with no
+    - Add new `-a, --absent` option which allows setting positions with no
       supporting evidence to "N" (or any other character). (#848; #940)
 
 * bcftools convert:
@@ -1162,7 +1379,7 @@ Changes affecting specific commands:
     - Local alleles merging that produce LAA and LPL when requested, a draft
       implementation of https://github.com/samtools/hts-specs/pull/434 (#1138)
 
-    - New `--no-index` which allows to merge unindexed files. Requires the input
+    - New `--no-index` which allows unindexed files to be merged. Requires the input
       files to have chromosomes in th same order and consistent with the order
       of sequences in the header. (PR #1253; samtools/htslib#1089)
 
@@ -1689,7 +1906,7 @@ Updates, improvements and bugfixes for many other commands:
 
 * `roh`: Now possible to process multiple samples at once. This allows
   considerable speedups for files with thousands of samples where the cost of
-  HMM is neglibible compared to I/O and decompressing. In order to fit tens of
+  HMM is negligible compared to I/O and decompressing. In order to fit tens of
   thousands samples in memory, a sliding HMM can be used (new `--buffer-size`
   option). Viterbi training now uses Baum-Welch algorithm, and works much
   better. Support for gVCFs or FORMAT/PL tags. Added `-o, output` and

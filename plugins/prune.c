@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2017-2023 Genome Research Ltd.
+    Copyright (C) 2017-2024 Genome Research Ltd.
 
     Author: Petr Danecek <pd3@sanger.ac.uk>
 
@@ -105,7 +105,7 @@ static const char *usage_text(void)
         "   -t, --targets REGION            Similar to -r but streams rather than index-jumps\n"
         "   -T, --targets-file FILE         Similar to -R but streams rather than index-jumps\n"
         "   -w, --window INT[bp|kb|Mb]      The window size of INT sites or INT bp/kb/Mb for the -n/-l options [100kb]\n"
-        "       --write-index               Automatically index the output files [off]\n"
+        "   -W, --write-index[=FMT]         Automatically index the output files [off]\n"
         "Examples:\n"
         "   # Discard records with r2 bigger than 0.6 in a window of 1000 sites\n"
         "   bcftools +prune -m 0.6 -w 1000 input.bcf -Ob -o output.bcf\n"
@@ -186,27 +186,29 @@ static void init_data(args_t *args)
         }
     }
     if ( bcf_hdr_write(args->out_fh, args->hdr)!=0 ) error("[%s] Error: cannot write to %s\n", __func__,args->output_fname);
-    if ( args->write_index && init_index(args->out_fh,args->hdr,args->output_fname,&args->index_fn)<0 ) error("Error: failed to initialise index for %s\n",args->output_fname);
+    if ( init_index2(args->out_fh,args->hdr,args->output_fname,
+                     &args->index_fn, args->write_index)<0 )
+        error("Error: failed to initialise index for %s\n",args->output_fname);
     args->ld_filter_id = -1;
     if ( args->ld_filter && strcmp(".",args->ld_filter) )
         args->ld_filter_id = bcf_hdr_id2int(args->hdr, BCF_DT_ID, args->ld_filter);
 
     args->vcfbuf = vcfbuf_init(args->hdr, args->ld_win);
-    if ( args->ld_max_set[VCFBUF_LD_IDX_R2] ) vcfbuf_set_opt(args->vcfbuf,double,LD_MAX_R2,args->ld_max[VCFBUF_LD_IDX_R2]);
-    if ( args->ld_max_set[VCFBUF_LD_IDX_LD] ) vcfbuf_set_opt(args->vcfbuf,double,LD_MAX_LD,args->ld_max[VCFBUF_LD_IDX_LD]);
-    if ( args->ld_max_set[VCFBUF_LD_IDX_HD] ) vcfbuf_set_opt(args->vcfbuf,double,LD_MAX_HD,args->ld_max[VCFBUF_LD_IDX_HD]);
+    if ( args->ld_max_set[VCFBUF_LD_IDX_R2] ) vcfbuf_set(args->vcfbuf,LD_MAX_R2,args->ld_max[VCFBUF_LD_IDX_R2]);
+    if ( args->ld_max_set[VCFBUF_LD_IDX_LD] ) vcfbuf_set(args->vcfbuf,LD_MAX_LD,args->ld_max[VCFBUF_LD_IDX_LD]);
+    if ( args->ld_max_set[VCFBUF_LD_IDX_HD] ) vcfbuf_set(args->vcfbuf,LD_MAX_HD,args->ld_max[VCFBUF_LD_IDX_HD]);
     if ( args->rand_missing || (args->nsites_mode && !strcasecmp(args->nsites_mode,"rand")) )
     {
         fprintf(stderr,"Using random seed: %d\n",args->rseed);
         hts_srand48(args->rseed);
     }
-    if ( args->rand_missing ) vcfbuf_set_opt(args->vcfbuf,int,LD_RAND_MISSING,1);
+    if ( args->rand_missing ) vcfbuf_set(args->vcfbuf,LD_RAND_MISSING,1);
     if ( args->nsites )
     {
-        vcfbuf_set_opt(args->vcfbuf,int,VCFBUF_NSITES,args->nsites);
-        vcfbuf_set_opt(args->vcfbuf,char*,VCFBUF_NSITES_MODE,args->nsites_mode);
+        vcfbuf_set(args->vcfbuf,PRUNE_NSITES,args->nsites);
+        vcfbuf_set(args->vcfbuf,PRUNE_NSITES_MODE,args->nsites_mode);
     }
-    if ( args->af_tag ) vcfbuf_set_opt(args->vcfbuf,char*,VCFBUF_AF_TAG,args->af_tag);
+    if ( args->af_tag ) vcfbuf_set(args->vcfbuf,PRUNE_AF_TAG,args->af_tag);
 
     if ( args->filter_str )
         args->filter = filter_init(args->hdr, args->filter_str);
@@ -283,7 +285,7 @@ static void process(args_t *args)
             }
         }
     }
-    if ( filter ) vcfbuf_set_opt(args->vcfbuf,int,LD_FILTER1,1);
+    if ( filter ) vcfbuf_set(args->vcfbuf,LD_FILTER1,1);
     sr->buffer[0] = vcfbuf_push(args->vcfbuf, rec);
     flush(args,0);
 }
@@ -316,12 +318,12 @@ int run(int argc, char **argv)
         {"nsites-per-win",required_argument,NULL,'n'},
         {"nsites-per-win-mode",required_argument,NULL,'N'},
         {"window",required_argument,NULL,'w'},
-        {"write-index",no_argument,NULL,4},
+        {"write-index",optional_argument,NULL,'W'},
         {NULL,0,NULL,0}
     };
     int c;
     char *tmp;
-    while ((c = getopt_long(argc, argv, "vr:R:t:T:m:o:O:a:f:i:e:n:N:w:k",loptions,NULL)) >= 0)
+    while ((c = getopt_long(argc, argv, "vr:R:t:T:m:o:O:a:f:i:e:n:N:w:kW::",loptions,NULL)) >= 0)
     {
         switch (c)
         {
@@ -331,7 +333,10 @@ int run(int argc, char **argv)
                 args->rseed = strtol(optarg,&tmp,10);
                 if ( tmp==optarg || *tmp ) error("Could not parse: --random-seed %s\n", optarg);
                 break;
-            case  4 : args->write_index = 1; break;
+            case 'W':
+                if (!(args->write_index = write_index_parse(optarg)))
+                    error("Unsupported index format '%s'\n", optarg);
+                break;
             case 'k': args->keep_sites = 1; break;
             case 'e':
                 if ( args->filter_str ) error("Error: only one -i or -e expression can be given, and they cannot be combined\n");

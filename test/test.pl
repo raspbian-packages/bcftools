@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 #
-#   Copyright (C) 2012-2023 Genome Research Ltd.
+#   Copyright (C) 2012-2024 Genome Research Ltd.
 #
 #   Author: Petr Danecek <pd3@sanger.ac.uk>
 #
@@ -59,7 +59,9 @@ run_test(\&test_vcf_isec,$opts,in=>['isec-miss.1.1','isec-miss.1.2','isec-miss.1
 run_test(\&test_vcf_isec,$opts,in=>['isec-miss.1.1','isec-miss.1.2','isec-miss.1.3'],out=>'isec-miss.1.1.out',args=>'-R {PATH}/isec-miss.1.regs.txt -n +1');
 run_test(\&test_vcf_isec,$opts,in=>['isec-miss.2.1','isec-miss.2.2','isec-miss.2.3'],out=>'isec-miss.2.1.out',args=>'-n +1 -r 20:100,20:140,12:55,20:140,20:100');
 run_test(\&test_vcf_isec,$opts,in=>['isec-miss.2.1','isec-miss.2.2','isec-miss.2.3'],out=>'isec-miss.2.1.out',args=>'-R {PATH}/isec-miss.1.regs.txt -n +1');
+run_test(\&test_vcf_merge,$opts,in=>['merge.11.a','merge.11.b'],out=>'merge.11.1.out',args=>'');
 run_test(\&test_vcf_merge,$opts,in=>['merge.join.a','merge.join.b'],out=>'merge.join.1.out',args=>'-i AF:join');
+run_test(\&test_vcf_merge,$opts,in=>['merge.LPL.a'],out=>'merge.LPL.0.out',args=>'--force-single');
 run_test(\&test_vcf_merge,$opts,in=>['merge.LPL.a','merge.LPL.b','merge.LPL.c'],out=>'merge.LPL.1.out',args=>'--force-samples');
 run_test(\&test_vcf_merge,$opts,in=>['merge.LPL.a','merge.LPL.b','merge.LPL.c'],out=>'merge.LPL.2.out',args=>'--force-samples -L 1');
 run_test(\&test_vcf_merge,$opts,in=>['merge.LPL.a','merge.LPL.b','merge.LPL.c'],out=>'merge.LPL.3.out',args=>'--force-samples -L 2');
@@ -195,6 +197,11 @@ run_test(\&test_vcf_query,$opts,in=>'query.filter.5',out=>'query.59.out',args=>q
 run_test(\&test_vcf_query,$opts,in=>'query.filter.5',out=>'query.92.out',args=>q[-f'[%POS\\t%GT\\t%SAMPLE\\t%AD\\n]' -i'FMT/AD[GT]==10']);
 run_test(\&test_vcf_query,$opts,in=>'query.filter.5',out=>'query.93.out',args=>q[-f'[%POS\\t%GT\\t%SAMPLE\\t%AD\\n]' -i'sSUM(FMT/AD[GT])==210']);
 run_test(\&test_vcf_query,$opts,in=>'query.filter.5',out=>'query.94.out',args=>q[-f'[%POS\\t%GT\\t%SAMPLE\\t%AD\\n]' -i'FMT/AD[0:GT]==30']);
+run_test(\&test_vcf_query,$opts,in=>'query.gtidx.1',out=>'query.gtidx.1.out',args=>q[-f'[%GT %TC %TS %TI %TF\\n]' -i'FMT/TF[:GT]==1 && FMT/TF[:GT]==2']);
+run_test(\&test_vcf_query,$opts,in=>'query.gtidx.1',out=>'query.gtidx.1.out',args=>q[-f'[%GT %TC %TS %TI %TF\\n]' -i'FMT/TI[:GT]==1 && FMT/TF[:GT]==2']);
+run_test(\&test_vcf_query,$opts,in=>'query.gtidx.1',out=>'query.gtidx.1.out',args=>q[-f'[%GT %TC %TS %TI %TF\\n]' -i'FMT/TS[:GT]=="BB" && FMT/TS[:GT]=="CC"']);
+run_test(\&test_vcf_query,$opts,in=>'query.gtidx.1',out=>'query.gtidx.1.out',args=>q[-f'[%GT %TC %TS %TI %TF\\n]' -i'FMT/TC[:GT]=="B"  && FMT/TC[:GT]=="C"']);
+run_test(\&test_vcf_query,$opts,in=>'query.gtidx.1',out=>'query.gtidx.2.out',args=>q[-f'[%GT %TI\\n]' -i'FMT/TI[:GT]=="."']);
 run_test(\&test_vcf_query,$opts,in=>'query',out=>'query.60.out',args=>q[-f'%CHROM %POS\\n' -i'CHROM="4"']);
 run_test(\&test_vcf_query,$opts,in=>'query.negative',out=>'query.61.out',args=>q[-f'%POS\\t%TAG1\\n' -i'(TAG1>=-129 && TAG1<=-120) || (TAG1>=-32769 && TAG1<=-32760)']);
 run_test(\&test_vcf_query,$opts,in=>'query.negative',out=>'query.61.out',args=>q[-f'%POS\\t%TAGV1\\n' -i'(TAGV1>=-129 && TAGV1<=-120) || (TAGV1>=-32769 && TAGV1<=-32760)']);
@@ -234,6 +241,10 @@ run_test(\&test_vcf_query,$opts,in=>'query.smpl',out=>'query.smpl.5.out',args=>q
 run_test(\&test_vcf_query,$opts,in=>'query.smpl',out=>'query.smpl.6.out',args=>q[-l -S {PATH}/query.smpl.txt]);
 run_test(\&test_vcf_query,$opts,in=>'query.filter.id',out=>'query.filter.id.1.out',args=>q[-f'%ID\\n' -i'ID~"s12"']);
 run_test(\&test_vcf_query,$opts,in=>'query.filter.id',out=>'query.filter.id.2.out',args=>q[-f'%ID\\n' -i'ID="rs123"']);
+run_test(\&test_vcf_query,$opts,in=>'query.filter.id',out=>'query.filter.id.3.out',args=>q[-f'%ID\\n' -i'ID="abc"']);
+run_test(\&test_vcf_query,$opts,in=>'query.filter.id',out=>'query.filter.id.3.out',args=>q[-f'%ID\\n' -i'ID=@].$$opts{path}.q[/query.filter.id.3.txt']);
+run_test(\&test_vcf_query,$opts,in=>'query.filter.id',out=>'query.filter.id.4.out',args=>q[-f'%ID\\n' -i'ID!="abc"']);
+run_test(\&test_vcf_query,$opts,in=>'query.filter.id',out=>'query.filter.id.4.out',args=>q[-f'%ID\\n' -i'ID!=@].$$opts{path}.q[/query.filter.id.3.txt']);
 run_test(\&test_vcf_query,$opts,in=>'filter.12',out=>'query.85.out',args=>q[-i'FILTER="A"' -f'%FILTER\\n']);
 run_test(\&test_vcf_query,$opts,in=>'filter.12',out=>'query.86.out',args=>q[-i'FILTER~"A"' -f'%FILTER\\n']);
 run_test(\&test_vcf_query,$opts,in=>'filter.12',out=>'query.87.out',args=>q[-i'FILTER="A;B"' -f'%FILTER\\n']);
@@ -248,6 +259,14 @@ run_test(\&test_vcf_query,$opts,in=>'query.header',out=>'query.97.out',args=>q[-
 run_test(\&test_vcf_query,$opts,in=>'query.header',out=>'query.97.out',args=>q[-H -f'%CHROM %POS[ %SAMPLE %DP %GT]']);
 run_test(\&test_vcf_query,$opts,in=>'query.header',out=>'query.98.out',args=>q[-H -f'%CHROM %POS[ %SAMPLE][ %DP][ %GT]\\n']);
 run_test(\&test_vcf_query,$opts,in=>'query.header',out=>'query.98.out',args=>q[-H -f'%CHROM %POS[ %SAMPLE][ %DP][ %GT]']);
+run_test(\&test_vcf_query,$opts,in=>'query.header',out=>'query.98.2.out',args=>q[-HH -f'%CHROM %POS[ %SAMPLE][ %DP][ %GT]']);
+run_test(\&test_vcf_query,$opts,in=>'query.filter-or',out=>'query.filter-or.1.out',args=>q[-f'[%SAMPLE %DP\\n]' -i'DP=1 || DP=2']);
+run_test(\&test_vcf_query,$opts,in=>'query.filter-or',out=>'query.filter-or.2.out',args=>q[-f'[%SAMPLE %DP\\n]' -i'DP=1 |  DP=2']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.sort',out=>'norm.sort.1.out',args=>'-m -');
+run_test(\&test_vcf_norm,$opts,in=>'norm.sort',out=>'norm.sort.2.out',args=>'-m - -S lex');
+run_test(\&test_vcf_norm,$opts,in=>'norm.join-missing-ploidy',out=>'norm.join-missing-ploidy.1.out',args=>'-m +both');
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.5',out=>'norm.split.5.1.out',args=>'-m - --multi-overlaps .');
+run_test(\&test_vcf_norm,$opts,in=>'norm.symbolic.3',out=>'norm.symbolic.3.1.out',fai=>'norm.symbolic.3',args=>'');
 run_test(\&test_vcf_norm,$opts,in=>'norm',out=>'norm.out',fai=>'norm',args=>'-cx');
 run_test(\&test_vcf_norm,$opts,in=>'norm.split',out=>'norm.split.out',args=>'-m-');
 run_test(\&test_vcf_norm,$opts,in=>'norm.split.2',out=>'norm.split.2.out',args=>'-m-');
@@ -273,16 +292,24 @@ run_test(\&test_vcf_norm,$opts,in=>'norm.rmdup.2',out=>'norm.rmdup.2.1.out',args
 run_test(\&test_vcf_norm,$opts,in=>'norm.rmdup.2',out=>'norm.rmdup.2.2.out',args=>'-d any');
 run_test(\&test_vcf_norm,$opts,in=>'norm.rmdup.2',out=>'norm.rmdup.2.2.out',args=>'-d both');
 run_test(\&test_vcf_norm,$opts,in=>'norm.rmdup.2',out=>'norm.rmdup.2.2.out',args=>'-d snps');
+run_test(\&test_vcf_norm,$opts,in=>'norm.rmdup.3',fai=>'norm.rmdup.3',out=>'norm.rmdup.3.1.out',args=>'-d exact');
+run_test(\&test_vcf_norm,$opts,in=>'norm.rmdup.3',fai=>'norm.rmdup.3',out=>'norm.rmdup.3.2.out',args=>'-d all');
 run_test(\&test_vcf_norm,$opts,in=>'norm.2',fai=>'norm.2',out=>'norm.2.out',args=>'-c s -a');
 run_test(\&test_vcf_norm,$opts,in=>'norm.iupac',fai=>'norm.iupac',out=>'norm.iupac.out',args=>'-c s');
 run_test(\&test_vcf_norm,$opts,in=>'norm.3',fai=>'norm.3',out=>'norm.3.out',args=>'-c s');
-run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.0.out',args=>'--atomize --old-rec-tag OLD_REC -m -any');
-run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.1.out',args=>'--atomize --old-rec-tag OLD_REC');
+run_test(\&test_vcf_norm,$opts,in=>'norm.3',fai=>'norm.3',out=>'norm.3.2.out',args=>q[-c s -i'alt="N"']);
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.0.out',args=>['-a --old-rec-tag OLD_REC','-m -any --force']);
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.1.out',args=>['-m -any --old-rec-tag OLD_REC --force','-a']);
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.1.out',args=>'-m -any --old-rec-tag OLD_REC --force -a');
 run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.2.out',args=>'--atomize --atom-overlaps . --old-rec-tag OLD_REC');
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.1',out=>'atomize.split.1.3.out',args=>'--atomize --old-rec-tag OLD_REC');
 run_test(\&test_vcf_norm,$opts,in=>'atomize.split.2',out=>'atomize.split.2.1.out',args=>'--atomize --old-rec-tag OLD_REC');
 run_test(\&test_vcf_norm,$opts,in=>'atomize.split.2',out=>'atomize.split.2.2.out',args=>'--atomize --atom-overlaps . --old-rec-tag OLD_REC');
 run_test(\&test_vcf_norm,$opts,in=>'atomize.split.3',out=>'atomize.split.3.1.out',args=>'--atomize --atom-overlaps .');
 run_test(\&test_vcf_norm,$opts,in=>'atomize.split.4',out=>'atomize.split.4.1.out',args=>'--atomize --atom-overlaps . --old-rec-tag OLD_REC');
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.4',out=>'atomize.split.4.2.out',args=>q[--atomize --atom-overlaps . --old-rec-tag OLD_REC -i 'ILEN=0']);
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.5',out=>'atomize.split.5.1.out',args=>q[--atomize --old-rec-tag OLD_REC --atom-overlaps .]);
+run_test(\&test_vcf_norm,$opts,in=>'atomize.split.5',out=>'atomize.split.5.2.out',args=>q[--atomize --old-rec-tag OLD_REC]);
 run_test(\&test_vcf_norm,$opts,in=>'norm.4',out=>'norm.4.1.out',args=>'-m +both');
 run_test(\&test_vcf_norm,$opts,in=>'norm.4',out=>'norm.4.2.out',args=>'-m +any');
 run_test(\&test_vcf_norm,$opts,in=>'norm.5',out=>'norm.5.1.out',args=>'-m - --multi-overlaps 0');
@@ -294,6 +321,18 @@ run_test(\&test_vcf_norm,$opts,in=>'norm.symbolic',fai=>'norm.symbolic',out=>'no
 run_test(\&test_vcf_norm,$opts,in=>'norm.symbolic.2',fai=>'norm.symbolic',out=>'norm.symbolic.2.out',args=>'--old-rec-tag ORI');
 run_test(\&test_vcf_norm,$opts,in=>'norm.right-align',fai=>'norm.right-align',out=>'norm.right-align.1.out',args=>'--old-rec-tag ORI');
 run_test(\&test_vcf_norm,$opts,in=>'norm.right-align',fai=>'norm.right-align',out=>'norm.right-align.2.out',args=>'--old-rec-tag ORI -g {PATH}/norm.right-align.gff');
+run_test(\&test_vcf_norm,$opts,in=>'norm.atom-split-norm',fai=>'norm.atom-split-norm',out=>'norm.atom-split-norm.1.out',args=>'--old-rec-tag ORI -a -m -any');
+run_test(\&test_vcf_norm,$opts,in=>'norm.string-tags',out=>'norm.string-tags.1.out',args=>'-m -any');
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.merge',out=>'norm.split.merge.1.out',args=>['-m -','-m +both']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.merge',out=>'norm.split.merge.2.out',args=>['-m -','-m +indels']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.merge',out=>'norm.split.merge.3.out',args=>['-m -','-m +snps']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.merge',out=>'norm.split.merge.3.out',args=>['-m -','-m +snps']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.merge',out=>'norm.split.merge.4.out',args=>['-m -','-m +any']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.split.merge',out=>'norm.split.merge.5.out',args=>q[-m - -i 'type="snp"']);
+run_test(\&test_vcf_norm,$opts,in=>'norm.merge.4',out=>'norm.merge.4.1.out',args=>'-m +any');
+run_test(\&test_vcf_norm,$opts,in=>'norm.merge.4',out=>'norm.merge.4.2.out',args=>'-m +both');
+run_test(\&test_vcf_view,$opts,in=>'filter.string.1',out=>'filter.string.1.1.out',args=>q[-i 'INFO/TAG=@{PATH}/filter.string.1.txt']);
+run_test(\&test_vcf_view,$opts,in=>'filter.string.1',out=>'filter.string.1.1.out',args=>q[-i 'FMT/TAG=@{PATH}/filter.string.1.txt']);
 run_test(\&test_vcf_view,$opts,in=>'merge.gvcf.2.a',out=>'merge.gvcf.2.a.1.out',args=>'-HA');
 run_test(\&test_vcf_view,$opts,in=>'merge.gvcf.2.a',out=>'merge.gvcf.2.a.2.out',args=>'-HAA');
 run_test(\&test_vcf_view,$opts,in=>'weird-chr-names',out=>'weird-chr-names.1.out',args=>'',reg=>'-r 1');
@@ -481,6 +520,10 @@ run_test(\&test_vcf_filter,$opts,in=>'filter.1',out=>'filter.43.out',args=>q[--s
 run_test(\&test_vcf_sort,$opts,in=>'sort',out=>'sort.out',args=>q[-m 0],fmt=>'%CHROM\\t%POS\\t%REF,%ALT\\n');
 run_test(\&test_vcf_sort,$opts,in=>'sort',out=>'sort.out',args=>q[-m 1000],fmt=>'%CHROM\\t%POS\\t%REF,%ALT\\n');
 run_test(\&test_vcf_regions,$opts,in=>'regions');
+run_test(\&test_vcf_annotate,$opts,in=>'annotate.escape.1',tab=>'annotate.escape.1',out=>'annotate.escape.1.1.out',args=>q[-c CHROM,POS,ISTR,FMT/FSTR]);
+run_test(\&test_vcf_annotate,$opts,in=>'annotate.match.1',tab=>'annotate.match.1',out=>'annotate.match.1.1.out',args=>q[-c CHROM,POS,-,-,SCORE,~X,-,- -i'STR={X}']);
+run_test(\&test_vcf_annotate,$opts,in=>'annotate.match.1',tab=>'annotate.match.1',out=>'annotate.match.1.2.out',args=>q[-c CHROM,POS,REF,ALT,SCORE,-,~X,- -i'INT={X}']);
+run_test(\&test_vcf_annotate,$opts,in=>'annotate.match.1',tab=>'annotate.match.1',out=>'annotate.match.1.2.out',args=>q[-c CHROM,POS,REF,ALT,SCORE,-,-,~X -i'FLT={X}']);
 run_test(\&test_vcf_annotate,$opts,in=>'annotate',tab=>'annotate',out=>'annotate.out',args=>'-c CHROM,POS,REF,ALT,ID,QUAL,INFO/T_INT,INFO/T_FLOAT,INDEL');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate',tab=>'annotate2',out=>'annotate2.out',args=>'-c CHROM,POS,-,T_STR');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate',tab=>'annotate2',out=>'annotate22.out',args=>'-c CHROM,FROM,TO,T_STR');
@@ -536,7 +579,7 @@ run_test(\&test_vcf_annotate,$opts,in=>'annotate22',vcf=>'annotate22',out=>'anno
 run_test(\&test_vcf_annotate,$opts,in=>'annotate23',tab=>'annotate23',out=>'annotate31.out',args=>'-c CHROM,POS,~ID,REF,ALT,INFO/END');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate24.dst',vcf=>'annotate24.src',out=>'annotate24.1.out',args=>'-c XX');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate25',tab=>'annotate25',out=>'annotate25.1.out',args=>'-c CHROM,POS,ID,REF,ALT,~INFO/END');
-run_test(\&test_vcf_annotate,$opts,in=>'annotate26',tab=>'annotate26',out=>'annotate26.1.out',args=>'-c CHROM,POS,~POS');
+run_test(\&test_vcf_annotate,$opts,in=>'annotate26',tab=>'annotate26',out=>'annotate26.1.out',args=>'-c CHROM,POS,-POS');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate.missing',tab=>'annotate.missing',out=>'annotate.missing.1.out',args=>'-c CHROM,POS,REF,ALT,TSTR,TFLT,TINT');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate.missing',tab=>'annotate.missing',out=>'annotate.missing.2.out',args=>'-c CHROM,POS,REF,ALT,.TSTR,.TFLT,.TINT');
 run_test(\&test_vcf_annotate,$opts,in=>'annotate.missing',tab=>'annotate.missing',out=>'annotate.missing.3.out',args=>'-c CHROM,POS,REF,ALT,.+TSTR,.+TFLT,.+TINT');
@@ -574,6 +617,7 @@ run_test(\&test_vcf_plugin,$opts,in=>'setGT.3',out=>'setGT.3.6.out',cmd=>'+setGT
 run_test(\&test_vcf_plugin,$opts,in=>'setGT.4',out=>'setGT.4.1.out',cmd=>'+setGT --no-version',args=>q[-- -t q -n . -e 'FMT/DP>90']);
 run_test(\&test_vcf_plugin,$opts,in=>'setGT.4',out=>'setGT.4.2.out',cmd=>'+setGT --no-version',args=>q[-- -t q -n . -e 'FMT/DP>100']);
 run_test(\&test_vcf_plugin,$opts,in=>'setGT.5',out=>'setGT.5.1.out',cmd=>'+setGT --no-version',args=>q[-- -t a -n X]);
+run_test(\&test_vcf_plugin,$opts,in=>'setGT.5',out=>'setGT.5.2.out',cmd=>'+setGT --no-version',args=>q[-- -t a -n c:0/X/X]);
 run_test(\&test_vcf_plugin,$opts,in=>'setGT.6',out=>'setGT.6.1.out',cmd=>'+setGT --no-version',args=>q[-- -t ./x -n .]);
 run_test(\&test_vcf_plugin,$opts,in=>'setGT.6',out=>'setGT.6.1.out',cmd=>'+setGT --no-version',args=>q[-- -t . -n .]);
 run_test(\&test_vcf_plugin,$opts,in=>'setGT.6',out=>'setGT.6.2.out',cmd=>'+setGT --no-version',args=>q[-- -t r:0.5 -n .]);
@@ -587,6 +631,9 @@ run_test(\&test_vcf_plugin,$opts,in=>'view.GL',out=>'guess-ploidy.GL.out',cmd=>'
 run_test(\&test_vcf_plugin,$opts,in=>'view.GL',out=>'view.PL.vcf',cmd=>'+tag2tag --no-version',args=>'-- -r --gl-to-pl');
 run_test(\&test_vcf_plugin,$opts,in=>'view.GL',out=>'view.GL-GP.vcf',cmd=>'+tag2tag --no-version',args=>'-- --gl-to-gp');
 run_test(\&test_vcf_plugin,$opts,in=>'view.GP',out=>'view.GT.vcf',cmd=>'+tag2tag --no-version',args=>'-- -r --gp-to-gt -t 0.2');
+run_test(\&test_vcf_plugin,$opts,in=>'tag2tag.LPL.1',out=>'tag2tag.LPL.1.1.vcf',cmd=>'+tag2tag --no-version',args=>'-- --LXX-to-XX');
+run_test(\&test_vcf_plugin,$opts,in=>'tag2tag.LPL.1',out=>'tag2tag.LPL.1.2.vcf',cmd=>'+tag2tag --no-version',args=>'-- --LXX-to-XX -r');
+run_test(\&test_vcf_plugin,$opts,in=>'tag2tag.LPL.1',out=>'tag2tag.LPL.1.3.vcf',cmd=>'+tag2tag --no-version',args=>'-- --LXX-to-XX -r -d AD:0,PL:255 -s 3');
 run_test(\&test_vcf_plugin,$opts,in=>'query.variantkey',out=>'query.add-variantkey.vcf',cmd=>'+add-variantkey',args=>'');
 run_test(\&test_vcf_plugin,$opts,in=>'query.variantkey',out=>'variantkey-hex.out',cmd=>'+variantkey-hex',args=>'test/');
 run_test(\&test_vcf_plugin,$opts,in=>'query.nucleotide',out=>'query.allele-length.tsv',cmd=>'+allele-length',args=>'');
@@ -664,20 +711,32 @@ run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.8',out=>'trio-dnm/trio-d
 run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.9',out=>'trio-dnm/trio-dnm.9.1.out',cmd=>'+trio-dnm2',args=>"-p 1X:proband,father,mother --use-NAIVE | $$opts{bin}/bcftools query -f'[\\t%DNM]\\n'");
 run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.9',out=>'trio-dnm/trio-dnm.9.2.out',cmd=>'+trio-dnm2',args=>"-p 2X:proband,father,mother --use-NAIVE | $$opts{bin}/bcftools query -f'[\\t%DNM]\\n'");
 run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.10',out=>'trio-dnm/trio-dnm.10.1.out',cmd=>'+trio-dnm2',args=>"-p proband,father,mother --with-pAD | $$opts{bin}/bcftools query -f'[\\t%DNM][\\t%VAF]\\n'");
-run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.11',out=>'trio-dnm/trio-dnm.11.1.out',cmd=>'+trio-dnm2',args=>"-p proband,father,mother | $$opts{bin}/bcftools query -f'[\\t%DNM][\\t%VAF]\\n'");
-run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.11',out=>'trio-dnm/trio-dnm.11.2.out',cmd=>'+trio-dnm2',args=>"-p 1X:proband,father,mother --strictly-novel | $$opts{bin}/bcftools query -f'[\\t%DNM][\\t%VAF]\\n'");
+run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.11',out=>'trio-dnm/trio-dnm.11.1.out',cmd=>'+trio-dnm2',args=>"-p proband,father,mother | $$opts{bin}/bcftools query -f'%CHROM:%POS  DNM=[%DNM ]\\tAD=[%AD ]\\tQS=[%QS ]\\tVAF=[%VAF ]\\n'");
+run_test(\&test_vcf_plugin,$opts,in=>'trio-dnm/trio-dnm.11',out=>'trio-dnm/trio-dnm.11.2.out',cmd=>'+trio-dnm2',args=>"-p 1X:proband,father,mother --strictly-novel | $$opts{bin}/bcftools query -f'%CHROM:%POS  DNM=[%DNM ]\\tAD=[%AD ]\\tQS=[%QS ]\\tVAF=[%VAF ]\\n'");
 run_test(\&test_vcf_plugin,$opts,in=>'gvcfz',out=>'gvcfz.1.out',cmd=>'+gvcfz',args=>qq[-g 'PASS:GT!="alt"' -a | $$opts{bin}/bcftools query -f'%POS\\t%REF\\t%ALT\\t%END[\\t%GT][\\t%DP][\\t%GQ][\\t%RGQ]\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'gvcfz',out=>'gvcfz.2.out',cmd=>'+gvcfz',args=>qq[-g 'PASS:GQ>10; FLT:-' -a | $$opts{bin}/bcftools query -f'%POS\\t%REF\\t%ALT\\t%FILTER\\t%END[\\t%GT][\\t%DP][\\t%GQ][\\t%RGQ]\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'gvcfz.2',out=>'gvcfz.2.1.out',cmd=>'+gvcfz',args=>qq[-g 'PASS:GT!="alt"' -a | $$opts{bin}/bcftools query -f'%POS\\t%REF\\t%ALT\\t%FILTER\\t%END[\\t%GT][\\t%DP]\\n']);
-run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps',out=>'remove-overlaps.1.out',cmd=>'+remove-overlaps',args=>'');
-run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps',out=>'remove-overlaps.2.out',cmd=>'+remove-overlaps',args=>'-d');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.1',out=>'remove-overlaps.1.1.out',cmd=>'+remove-overlaps',args=>'-m overlap');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.1',out=>'remove-overlaps.1.2.out',cmd=>'+remove-overlaps',args=>'-m overlap -M overlap');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.1',out=>'remove-overlaps.1.3.out',cmd=>'+remove-overlaps',args=>'-m overlap -O t');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.1',out=>'remove-overlaps.1.4.out',cmd=>'+remove-overlaps',args=>'-m overlap --reverse');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.1',out=>'remove-overlaps.1.5.out',cmd=>'+remove-overlaps',args=>'-m dup -M DUP');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.1',out=>'remove-overlaps.1.6.out',cmd=>'+remove-overlaps',args=>'-m dup -M unique --reverse');
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.2',out=>'remove-overlaps.2.1.out',cmd=>'+remove-overlaps',args=>q[-m 'min(QUAL)' -M rmme]);
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.3',out=>'remove-overlaps.3.1.out',cmd=>'+remove-overlaps',args=>q[-m 'min(QUAL)' -M rmme]);
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.3',out=>'remove-overlaps.3.1.out',cmd=>'+remove-overlaps',args=>q[-m 'min(QUAL)' -M rmme --missing 0]);
+run_test(\&test_vcf_plugin,$opts,in=>'remove-overlaps.3',out=>'remove-overlaps.3.2.out',cmd=>'+remove-overlaps',args=>q[-m 'min(QUAL)' -M rmme --missing DP]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.1.out',cmd=>'+split-vep',args=>qq[-c Consequence -s worst:missense+ | $$opts{bin}/bcftools query -f'%POS\\t%Consequence\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.2.out',cmd=>'+split-vep',args=>qq[-c Consequence -s worst:missense+ | $$opts{bin}/bcftools query -f'%POS\\t%Consequence\\n' -i'Consequence!="."']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.2.out',cmd=>'+split-vep',args=>qq[-s worst:missense+ -f'%POS\\t%Consequence\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.3.out',cmd=>'+split-vep',args=>qq[-s primary:missense+ -f'%POS\\t%Consequence\\n']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.3.out',cmd=>'+split-vep',args=>qq[-s CANONICAL=YES:missense+ -f'%POS\\t%Consequence\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.4.out',cmd=>'+split-vep',args=>qq[-s primary:missense+ -f'%POS\\n']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.4.out',cmd=>'+split-vep',args=>qq[-s CANONICAL=YES:missense+ -f'%POS\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.2',out=>'split-vep.5.out',cmd=>'+split-vep',args=>qq[-s worst -f'%POS\\t%AF\\n']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.2',out=>'split-vep.6.out',cmd=>'+split-vep',args=>qq[-s worst -f'%POS\\t%AF\\n' -a BCSQ]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.2',out=>'split-vep.6.out',cmd=>'+split-vep',args=>qq[-s worst -f'%POS\\t%INFO/AF\\n']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.2',out=>'split-vep.6.out',cmd=>'+split-vep',args=>qq[-s worst -f'%POS\\t%INFO/AF\\n' -a BCSQ]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.3',out=>'split-vep.7.out',cmd=>'+split-vep',args=>qq[-s worst -f'%POS\\t%Consequence\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.3',out=>'split-vep.8.out',cmd=>'+split-vep',args=>qq[-s worst -f'[%POS\\t%SAMPLE\\t%GT\\t%Consequence\\n]' -i'GT="alt"']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.9.out', cmd=>'+split-vep',args=>qq[-t 1:14464 -f '%POS\\t%CANONICAL\\t%Consequence\\n']);
@@ -685,7 +744,9 @@ run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.10.out',cmd=>'+
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.11.out',cmd=>'+split-vep',args=>qq[-t 1:14464 -f '%POS\\t%CSQ\\n' -A tab]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.12.out',cmd=>'+split-vep',args=>qq[-t 1:14464 -f '%POS\\t%CSQ\\n' -A tab -d]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.12.2.out',cmd=>'+split-vep',args=>qq[-t 1:14464 -f '%POS\\t%CSQ\\n' -A tab -d -H]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.12.3.out',cmd=>'+split-vep',args=>qq[-t 1:14464 -f '%POS\\t%CSQ\\n' -A tab -d -HH]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.4',out=>'split-vep.13.out',cmd=>'+split-vep',args=>qq[-f '%POS\\t%BCSQ\\n' -a BCSQ -A tab -d]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.4',out=>'split-vep.13.out',cmd=>'+split-vep',args=>qq[-f '%POS\\t%BCSQ\\n'         -A tab -d]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.14.out',cmd=>'+split-vep',args=>qq[-c gnomAD_NFE_AF:real,ALLELE_NUM:int | $$opts{bin}/bcftools query -f'%POS\\t%gnomAD_NFE_AF\\t%ALLELE_NUM\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.14.out',cmd=>'+split-vep',args=>qq[-c gnomAD_NFE_AF,ALLELE_NUM          | $$opts{bin}/bcftools query -f'%POS\\t%gnomAD_NFE_AF\\t%ALLELE_NUM\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.5',out=>'split-vep.15.out',cmd=>'+split-vep',args=>qq[-s :synonymous    -c Consequence | $$opts{bin}/bcftools query -f'%POS\\t%Consequence\\n']);
@@ -695,11 +756,14 @@ run_test(\&test_vcf_plugin,$opts,in=>'split-vep.6',out=>'split-vep.18.out',cmd=>
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.6',out=>'split-vep.19.out',cmd=>'+split-vep',args=>qq[-c - -s worst | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.7',out=>'split-vep.20.out',cmd=>'+split-vep',args=>qq[--annotation 'ANN' -c IMPACT -i 'INFO/IMPACT[*] ~ "MODIFIER"' | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.8',out=>'split-vep.21.out',cmd=>'+split-vep',args=>qq[-a BCSQ -s worst -c Consequence,amino_acid_change,BCSQ | grep -v ^#]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.8',out=>'split-vep.21.out',cmd=>'+split-vep',args=>qq[        -s worst -c Consequence,amino_acid_change,BCSQ | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.8',out=>'split-vep.22.out',cmd=>'+split-vep',args=>qq[-a BCSQ -s worst -f '%POS\\t%Consequence\\t%amino_acid_change\\t%BCSQ\\n' | grep -v ^#]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.8',out=>'split-vep.22.out',cmd=>'+split-vep',args=>qq[        -s worst -f '%POS\\t%Consequence\\t%amino_acid_change\\t%BCSQ\\n' | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.9',out=>'split-vep.23.out',cmd=>'+split-vep',args=>qq[-a BCSQ -f '%CHROM\\t%POS\\t%REF\\t%ALT\\t%BCSQ\\n' -d -A tab | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.9',out=>'split-vep.24.out',cmd=>'+split-vep',args=>qq[-a BCSQ -f '%xPOS %xConsequence\\n' -p x | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.10',out=>'split-vep.25.out',cmd=>'+split-vep',args=>qq[-a CSQ -f '%M_CAP_pred %M_CAP_score\\n' | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.10',out=>'split-vep.25.out',cmd=>'+split-vep',args=>qq[-a CSQ -f '%xM_CAP_pred %xM_CAP_score\\n' -p x | grep -v ^#]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.10',out=>'split-vep.25.out',cmd=>'+split-vep',args=>qq[       -f '%xM_CAP_pred %xM_CAP_score\\n' -p x | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.gene-list',out=>'split-vep.gene-list.1.out',cmd=>'+split-vep',args=>qq[-d -f '%CHROM:%POS %Gene %Consequence\\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.gene-list',out=>'split-vep.gene-list.2.out',cmd=>'+split-vep',args=>qq[-d -f '%CHROM:%POS %Gene %Consequence\\n' -g {PATH}/split-vep.gene-list.txt]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.gene-list',out=>'split-vep.gene-list.2.out',cmd=>'+split-vep',args=>qq[-d -f '%CHROM:%POS %Gene %Consequence\\n' -g {PATH}/split-vep.mixed-list.txt --gene-list-fields Feature,SYMBOL]);
@@ -711,6 +775,19 @@ run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.26.out',cmd=>'+
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep',out=>'split-vep.27.out',cmd=>'+split-vep',args=>qq[-f'%POS\\t%MAX_AF\\n' -i'MAX_AF>0.999' -c MAX_AF,MAX_AF:float,MAX_AF]);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.filter',out=>'split-vep.filter.1.out',cmd=>'+split-vep',args=>qq[-s worst -i'CSQ~"nonsense"' -f '%POS %Consequence %Feature %BIOTYPE']);
 run_test(\&test_vcf_plugin,$opts,in=>'split-vep.filter',out=>'split-vep.filter.2.out',cmd=>'+split-vep',args=>qq[-s worst -i'CSQ~"nonsense"' -f '%POS %Consequence %Feature %BIOTYPE %CSQ']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.1.out',cmd=>'+split-vep',args=>qq[-f '%POS %CANONICAL %MANE_SELECT %Consequence' -s primary]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.1.out',cmd=>'+split-vep',args=>qq[-f '%POS %CANONICAL %MANE_SELECT %Consequence' -s CANONICAL=YES]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.2.out',cmd=>'+split-vep',args=>qq[-f '%POS %CANONICAL %MANE_SELECT %Consequence' -s CANONICAL!=YES]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.2.out',cmd=>'+split-vep',args=>qq[-f '%POS %CANONICAL %MANE_SELECT %Consequence' -s CANONICAL=]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.1.out',cmd=>'+split-vep',args=>qq[-f '%POS %CANONICAL %MANE_SELECT %Consequence' -s mane]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.1.out',cmd=>'+split-vep',args=>qq[-f '%POS %CANONICAL %MANE_SELECT %Consequence' -s MANE_SELECT!='']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.3.out',cmd=>'+split-vep',args=>qq[-s mane]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.3.out',cmd=>'+split-vep',args=>qq[-s primary]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.select-tr-expr',out=>'select-tr-expr.3.out',cmd=>'+split-vep',args=>qq[-s PolyPhen~damaging]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.types',out=>'split-vep.types.1.out',cmd=>'+split-vep',args=>qq[-f'%cDNA_position %CDS_position %Protein_position']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.types',out=>'split-vep.types.2.out',cmd=>'+split-vep',args=>qq[-f'%cDNA_position %CDS_position %Protein_position' -c cDNA_position:int,CDS_position:int,Protein_position:int]);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.filter-missing-bt2098',out=>'split-vep.filter-missing-bt2098.1.out',cmd=>'+split-vep',args=>qq[-e 'gnomad_genomes_AF >= 0.02' | $$opts{bin}/bcftools query -f'%CHROM %POS \t %gnomad_genomes_AF\n']);
+run_test(\&test_vcf_plugin,$opts,in=>'split-vep.filter-missing-bt2098',out=>'split-vep.filter-missing-bt2098.1.out',cmd=>'+split-vep',args=>qq[-i 'gnomad_genomes_AF < 0.02 || gnomad_genomes_AF=="."' | $$opts{bin}/bcftools query -f'%CHROM %POS \t %gnomad_genomes_AF\n']);
 run_test(\&test_vcf_plugin,$opts,in=>'parental-origin',out=>'parental-origin.1.out',cmd=>'+parental-origin',args=>qq[-r 20:100 -p proband,father,mother -t del | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'parental-origin',out=>'parental-origin.2.out',cmd=>'+parental-origin',args=>qq[-r 20:101 -p proband,father,mother -t del | grep -v ^#]);
 run_test(\&test_vcf_plugin,$opts,in=>'parental-origin',out=>'parental-origin.3.out',cmd=>'+parental-origin',args=>qq[-r 20:102 -p proband,father,mother -t del | grep -v ^#]);
@@ -797,6 +874,11 @@ run_test(\&test_vcf_convert_hs2vcf,$opts,h=>'convert.hs.gt.ids.hap',s=>'convert.
 run_test(\&test_vcf_convert_gvcf,$opts,in=>'convert.gvcf',out=>'convert.gvcf.out',fa=>'gvcf.fa',args=>'--gvcf2vcf -i\'FILTER="PASS"\'');
 run_test(\&test_vcf_convert_tsv2vcf,$opts,in=>'convert.23andme',out=>'convert.23andme.vcf',args=>'-c ID,CHROM,POS,AA -s SAMPLE1',fai=>'23andme');
 run_test(\&test_vcf_convert_tsv2vcf,$opts,in=>'convert.tsv',out=>'convert.tsv.vcf',args=>'-c -,CHROM,POS,REF,ALT',fai=>'23andme');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.overlaps.1',out=>'consensus.overlaps.1.1.out',fa=>'consensus.overlaps.1.fa',args=>'-s A');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.overlaps.1',out=>'consensus.overlaps.1.2.out',fa=>'consensus.overlaps.1.fa',args=>'-s B');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.overlaps.1',out=>'consensus.overlaps.1.3.out',fa=>'consensus.overlaps.1.fa',args=>'-s A -a N');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.overlaps.1',out=>'consensus.overlaps.1.4.out',fa=>'consensus.overlaps.1.fa',args=>'-s B -a N');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.beyond',out=>'consensus.beyond.1.out',fa=>'consensus.beyond.fa',args=>'');
 run_test(\&test_vcf_consensus,$opts,in=>'consensus',out=>'consensus.1.out',fa=>'consensus.fa',mask=>'consensus.tab',args=>'-s -');
 run_test(\&test_vcf_consensus_chain,$opts,in=>'consensus',out=>'consensus.1.chain',chain=>'consensus.1.chain',fa=>'consensus.fa',mask=>'consensus.tab',args=>'-s -');
 run_test(\&test_vcf_consensus,$opts,in=>'consensus',out=>'consensus.2.out',fa=>'consensus.fa',mask=>'consensus.tab',args=>'-H 1');
@@ -850,36 +932,43 @@ run_test(\&test_vcf_consensus,$opts,in=>'consensus.20',out=>'consensus20.2.out',
 run_test(\&test_vcf_consensus,$opts,in=>'consensus.20',out=>'consensus20.3.out',fa=>'consensus.20.fa',args=>'-M . -s b');
 run_test(\&test_vcf_consensus,$opts,in=>'consensus.20',out=>'consensus20.4.out',fa=>'consensus.20.fa',args=>'-M . -s a');
 run_test(\&test_vcf_consensus,$opts,in=>'consensus.21',out=>'consensus21.1.out',fa=>'consensus.21.fa',args=>'');
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.1.out',args=>q[-r17:100-150],test_list=>1);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.2.out',args=>q[-a DP,DV -r17:100-600]); # test files from samtools mpileup test suite
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1)],out=>'mpileup/mpileup.3.out',args=>q[-B --ff 0x14 -r17:1050-1060]); # test file converted to vcf from samtools mpileup test suite
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.4.out',args=>q[-a DP,DPR,DV,DP4,INFO/DPR,SP -r17:100-600]); #test files from samtools mpileup test suite
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.22',out=>'consensus22.1.out',fa=>'consensus.22.fa',args=>'--regions-overlap 0 --mark-del .');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.22',out=>'consensus22.2.out',fa=>'consensus.22.fa',args=>'--regions-overlap 1 --mark-del .');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.22',out=>'consensus22.2.out',fa=>'consensus.22.fa',args=>'--regions-overlap 2 --mark-del .');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.22',out=>'consensus22.1.out',fa=>'consensus.22.fa',args=>'--regions-overlap 0');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.22',out=>'consensus22.3.out',fa=>'consensus.22.fa',args=>'--regions-overlap 1');
+run_test(\&test_vcf_consensus,$opts,in=>'consensus.22',out=>'consensus22.3.out',fa=>'consensus.22.fa',args=>'--regions-overlap 2');
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.1.out',args=>q[-r17:100-150 -a -AD],test_list=>1);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.2.out',args=>q[-a DP,DV -r17:100-600 -a -AD]); # test files from samtools mpileup test suite
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1)],out=>'mpileup/mpileup.3.out',args=>q[-B --ff 0x14 -r17:1050-1060 -a -AD]); # test file converted to vcf from samtools mpileup test suite
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.4.out',args=>q[-a DP,DPR,DV,DP4,INFO/DPR,SP,-AD -r17:100-600]); #test files from samtools mpileup test suite
 run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.5.out',args=>q[-a DP,AD,ADF,ADR,SP,INFO/AD,INFO/ADF,INFO/ADR -r17:100-600]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.6.out',args=>q[-a DP,DV -r17:100-600 --gvcf 0,2,5]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.6.out',args=>q[-a DP,DV -r17:100-200,17:201-300,17:301-400,17:401-500,17:501-600 --gvcf 0,2,5]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.7.out',args=>q[-r17:100-150 -s HG00101,HG00102]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.7.out',args=>q[-r17:100-150 -S {PATH}/mplp.samples]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.8.out',args=>q[-r17:100-150 -s ^HG00101,HG00102]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.8.out',args=>q[-r17:100-150 -S ^{PATH}/mplp.samples]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.9.out',args=>q[-t17:100-150 -S {PATH}/mplp.9.samples]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.10.out',args=>q[-t17:100-150 -G {PATH}/mplp.10.samples]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3)],out=>'mpileup/mpileup.11.out',args=>q[]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-s HG00102]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-s ^HG99999]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-G {PATH}/mplp.11.rgs]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-G {PATH}/mplp.11.rgs]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.6.out',args=>q[-a DP,DV,-AD -r17:100-600 --gvcf 0,2,5]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.6.out',args=>q[-a DP,DV,-AD -r17:100-200,17:201-300,17:301-400,17:401-500,17:501-600 --gvcf 0,2,5]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.7.out',args=>q[-a -AD -r17:100-150 -s HG00101,HG00102]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.7.out',args=>q[-a -AD -r17:100-150 -S {PATH}/mplp.samples]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.8.out',args=>q[-a -AD -r17:100-150 -s ^HG00101,HG00102]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.8.out',args=>q[-a -AD -r17:100-150 -S ^{PATH}/mplp.samples]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.9.out',args=>q[-a -AD -t17:100-150 -S {PATH}/mplp.9.samples]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.1 mpileup.2 mpileup.3)],out=>'mpileup/mpileup.10.out',args=>q[-a -AD -t17:100-150 -G {PATH}/mplp.10.samples]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3)],out=>'mpileup/mpileup.11.out',args=>q[-a -AD]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-a -AD -s HG00102]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-a -AD -s ^HG99999]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-a -AD -G {PATH}/mplp.11.rgs]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup.3 mpileup.4)],out=>'mpileup/mpileup.11.out',args=>q[-a -AD -G {PATH}/mplp.11.rgs]);
 run_test(\&test_mpileup,$opts,in=>[qw(indel-AD.1)],out=>'mpileup/indel-AD.1.out',ref=>'indel-AD.1.fa',args=>q[-a AD]);
+run_test(\&test_mpileup,$opts,in=>[qw(indel-AD.1)],out=>'mpileup/indel-AD.1cns.out',ref=>'indel-AD.1.fa',args=>q[-a AD --indels-cns]);
 run_test(\&test_mpileup,$opts,in=>[qw(indel-AD.2)],out=>'mpileup/indel-AD.2.out',ref=>'indel-AD.2.fa',args=>q[-a AD -r 11:75]);
 run_test(\&test_mpileup,$opts,in=>[qw(indel-AD.2)],out=>'mpileup/indel-AD.3.out',ref=>'indel-AD.2.fa',args=>q[-a AD -r 11:75 --ambig-reads incAD]);
 run_test(\&test_mpileup,$opts,in=>[qw(indel-AD.2)],out=>'mpileup/indel-AD.4.out',ref=>'indel-AD.2.fa',args=>q[-a AD -r 11:75 --ambig-reads incAD0]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup-SCR)],out=>'mpileup/mpileup-SCR.out',ref=>'mpileup-SCR.fa',args=>q[-a INFO/SCR,FMT/SCR]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.1.out',ref=>'mpileup-SCR.fa',args=>q[-t 1:100 --skip-all-set PAIRED,PROPER_PAIR,MREVERSE]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.1.out',ref=>'mpileup-SCR.fa',args=>q[-t 1:100 --skip-any-set READ1]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.2.out',ref=>'mpileup-SCR.fa',args=>q[-t 1:100 --skip-all-unset READ1]);
-run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.2.out',ref=>'mpileup-SCR.fa',args=>q[-t 1:100 --skip-any-unset READ1]);
-run_test(\&test_mpileup,$opts,in=>[qw(annot-NMBZ.1)],ref=>'annot-NMBZ.1.fa',out=>'mpileup/annot-NMBZ.1.1.out',args=>q[-a INFO/NMBZ -r chr19:69-99]);
-run_test(\&test_mpileup,$opts,in=>[qw(annot-NMBZ.2)],ref=>'annot-NMBZ.2.fa',out=>'mpileup/annot-NMBZ.2.1.out',args=>q[-a INFO/NMBZ -r chr6:75]);
-run_test(\&test_mpileup,$opts,in=>[qw(annot-NMBZ.3.1 annot-NMBZ.3.2)],ref=>'annot-NMBZ.3.fa',out=>'mpileup/annot-NMBZ.3.1.out',args=>q[-a INFO/NMBZ -r chr16:75]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup-SCR)],out=>'mpileup/mpileup-SCR.out',ref=>'mpileup-SCR.fa',args=>q[-a -AD,INFO/SCR,FMT/SCR]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.1.out',ref=>'mpileup-SCR.fa',args=>q[-a -AD -t 1:100 --skip-all-set PAIRED,PROPER_PAIR,MREVERSE]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.1.out',ref=>'mpileup-SCR.fa',args=>q[-a -AD -t 1:100 --skip-any-set READ1]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.2.out',ref=>'mpileup-SCR.fa',args=>q[-a -AD -t 1:100 --skip-all-unset READ1]);
+run_test(\&test_mpileup,$opts,in=>[qw(mpileup-filter)],out=>'mpileup/mpileup-filter.2.out',ref=>'mpileup-SCR.fa',args=>q[-a -AD -t 1:100 --skip-any-unset READ1]);
+run_test(\&test_mpileup,$opts,in=>[qw(annot-NMBZ.1)],ref=>'annot-NMBZ.1.fa',out=>'mpileup/annot-NMBZ.1.1.out',args=>q[-a -AD,INFO/NMBZ -r chr19:69-99]);
+run_test(\&test_mpileup,$opts,in=>[qw(annot-NMBZ.2)],ref=>'annot-NMBZ.2.fa',out=>'mpileup/annot-NMBZ.2.1.out',args=>q[-a -AD,INFO/NMBZ -r chr6:75]);
+run_test(\&test_mpileup,$opts,in=>[qw(annot-NMBZ.3.1 annot-NMBZ.3.2)],ref=>'annot-NMBZ.3.fa',out=>'mpileup/annot-NMBZ.3.1.out',args=>q[-a -AD,INFO/NMBZ -r chr16:75]);
 run_test(\&test_csq,$opts,in=>'csq',out=>'csq.1.out',cmd=>'-f {PATH}/csq.fa -g {PATH}/csq.gff3');
 run_test(\&test_csq,$opts,in=>'csq',out=>'csq.1.out',cmd=>'-f {PATH}/csq.fa -g {PATH}/csq.chr.gff3');
 run_test(\&test_csq,$opts,in=>'csq.2',out=>'csq.2.out',cmd=>'-f {PATH}/csq.fa -g {PATH}/csq.2.gff',tbcsq=>1);
@@ -900,6 +989,7 @@ run_test(\&test_roh,$opts,in=>'roh.1',out=>'roh.1.2.out',args=>q[    -G30 --AF-d
 run_test(\&test_roh,$opts,in=>'roh.1',out=>'roh.1.3.out',args=>q[    -G30 --AF-dflt 0.4 -r 1:100174876-100318245 --ignore-homref]);
 run_test(\&test_roh,$opts,in=>'roh.1',out=>'roh.1.3.out',args=>q[    -G30 --AF-dflt 0.4 -r 1:100174876-100318245 --ignore-homref --include-noalt]);
 run_test(\&test_roh,$opts,in=>'roh.1',out=>'roh.1.4.out',args=>q[    -G30 --AF-dflt 0.4 -r 1:100174876-100318245 --include-noalt]);
+run_test(\&test_gtcheck,$opts,in=>'gtcheck.1',gts=>'gtcheck.1.gts',out=>'gtcheck.1.2.out',args=>q[-e 0 --no-HWE-prob]);
 run_test(\&test_gtcheck,$opts,in=>'gtcheck.1',gts=>'gtcheck.1.gts',out=>'gtcheck.1.out',args=>q[-e 0]);
 run_test(\&test_gtcheck,$opts,in=>'gtcheck.1',gts=>'gtcheck.1.gts',out=>'gtcheck.1.out',args=>q[-e 0 -u GT,GT]);
 run_test(\&test_gtcheck,$opts,in=>'gtcheck.1',gts=>'gtcheck.1.gts',out=>'gtcheck.1.out',args=>q[-e 0 -u GT,PL]);
@@ -1451,15 +1541,32 @@ sub test_vcf_norm
 {
     my ($opts,%args) = @_;
     bgzip_tabix_vcf($opts,$args{in});
-    my $params = '';
-    if ( exists($args{args}) )
+    my $cmd;
+    if ( !exists($args{args}) )
+    {
+        $cmd = "$$opts{bin}/bcftools norm --no-version $$opts{tmp}/$args{in}.vcf.gz";
+        if ( exists($args{fai}) ) { $cmd .= " -f $$opts{path}/$args{fai}.fa"; }
+    }
+    elsif ( ref($args{args}) eq 'ARRAY' )
+    {
+        my @cmd = ();
+        for my $args (@{$args{args}})
+        {
+            $args =~ s/{PATH}/$$opts{path}/g;
+            push @cmd, "$$opts{bin}/bcftools norm --no-version $args";
+        }
+        if ( exists($args{fai}) ) { $cmd[0] .= " -f $$opts{path}/$args{fai}.fa"; }
+        $cmd[0] .= " $$opts{tmp}/$args{in}.vcf.gz";
+        $cmd = join(' | ',@cmd);
+    }
+    else
     {
         $args{args} =~ s/{PATH}/$$opts{path}/g;
-        $params .= " $args{args}";
+        $cmd = "$$opts{bin}/bcftools norm --no-version $args{args} $$opts{tmp}/$args{in}.vcf.gz";
+        if ( exists($args{fai}) ) { $cmd .= " -f $$opts{path}/$args{fai}.fa"; }
     }
-    if ( exists($args{fai} ) ) { $params .= " -f $$opts{path}/$args{fai}.fa"; }
-    test_cmd($opts,%args,cmd=>"$$opts{bin}/bcftools norm --no-version $params $$opts{tmp}/$args{in}.vcf.gz",exp_fix=>1);
-    test_cmd($opts,%args,cmd=>"$$opts{bin}/bcftools norm -Ob $params $$opts{tmp}/$args{in}.vcf.gz | $$opts{bin}/bcftools view | grep -v ^##bcftools_",exp_fix=>1);
+    test_cmd($opts,%args,cmd=>$cmd,exp_fix=>1);
+    test_cmd($opts,%args,cmd=>"$cmd -Ou | $$opts{bin}/bcftools view | grep -v ^##bcftools_",exp_fix=>1);
 }
 sub test_vcf_view
 {
@@ -1742,7 +1849,8 @@ sub test_vcf_plugin
 {
     my ($opts,%args) = @_;
     if ( !$$opts{test_plugins} ) { return; }
-    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
+    # Sadly, this does not work:
+    #   $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
     if ( !exists($args{args}) ) { $args{args} = ''; }
     my $wpath = $$opts{path};
     if ($^O =~ /^msys/) {
@@ -1759,11 +1867,11 @@ sub test_vcf_plugin
     {
         for my $file (@{$args{index}}) { bgzip_tabix_vcf($opts,$file); }
     }
-    test_cmd($opts,%args,cmd=>"$$opts{bin}/bcftools $args{cmd} $$opts{tmp}/$args{in}.vcf.gz $args{args} | grep -v ^##bcftools_");
+    test_cmd($opts,%args,cmd=>"export BCFTOOLS_PLUGINS=$$opts{bin}/plugins; $$opts{bin}/bcftools $args{cmd} $$opts{tmp}/$args{in}.vcf.gz $args{args} | grep -v ^##bcftools_");
 
     cmd("$$opts{bin}/bcftools view -Ob $$opts{tmp}/$args{in}.vcf.gz > $$opts{tmp}/$args{in}.bcf");
     cmd("$$opts{bin}/bcftools index -f $$opts{tmp}/$args{in}.bcf");
-    test_cmd($opts,%args,cmd=>"$$opts{bin}/bcftools $args{cmd} $$opts{tmp}/$args{in}.bcf $args{args} | grep -v ^##bcftools_", exp_fix=>1);
+    test_cmd($opts,%args,cmd=>"export BCFTOOLS_PLUGINS=$$opts{bin}/plugins; $$opts{bin}/bcftools $args{cmd} $$opts{tmp}/$args{in}.bcf $args{args} | grep -v ^##bcftools_", exp_fix=>1);
 }
 sub test_vcf_concat
 {
@@ -2025,14 +2133,13 @@ sub test_plugin_split
 {
     my ($opts,%args) = @_;
     if ( !$$opts{test_plugins} ) { return; }
-    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
 
     my ($package, $filename, $line, $test)=caller(0);
     $test =~ s/^.+:://;
     if ( !exists($args{args}) ) { $args{args} = ''; }
     $args{args} =~ s/{PATH}/$$opts{path}/g;
 
-    cmd("$$opts{bin}/bcftools +split $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args}");
+    cmd("export BCFTOOLS_PLUGINS=$$opts{bin}/plugins; $$opts{bin}/bcftools +split $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args}");
 
     opendir(my $dh,"$$opts{tmp}/$args{tmp}") or failed($opts,$test,"Cannot read $$opts{tmp}/$args{tmp}: $!");
     my @files = sort grep { !(/^\./) } readdir($dh);
@@ -2041,7 +2148,7 @@ sub test_plugin_split
     my $files = join(' ',@files);
     test_cmd($opts,%args,
         cmd=>
-            "$$opts{bin}/bcftools +split $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args} " .
+            "export BCFTOOLS_PLUGINS=$$opts{bin}/plugins; $$opts{bin}/bcftools +split $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args} " .
             " && cd $$opts{tmp}/$args{tmp} " .
             " && for f in $files; do echo \$f; $$opts{bin}/bcftools query -l \$f; $$opts{bin}/bcftools view -H \$f; done"
         );
@@ -2050,21 +2157,20 @@ sub test_plugin_scatter
 {
     my ($opts,%args) = @_;
     if ( !$$opts{test_plugins} ) { return; }
-    $ENV{BCFTOOLS_PLUGINS} = "$$opts{bin}/plugins";
 
     my ($package, $filename, $line, $test)=caller(0);
     $test =~ s/^.+:://;
     if ( !exists($args{args}) ) { $args{args} = ''; }
     $args{args} =~ s/{PATH}/$$opts{path}/g;
 
-    cmd("$$opts{bin}/bcftools +scatter $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args}");
+    cmd("export BCFTOOLS_PLUGINS=$$opts{bin}/plugins; $$opts{bin}/bcftools +scatter $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args}");
 
     opendir(my $dh,"$$opts{tmp}/$args{tmp}") or failed($opts,$test,"Cannot read $$opts{tmp}/$args{tmp}: $!");
     my @files = sort grep { !(/^\./) } readdir($dh);
     closedir($dh) or failed($opts,$test,"Close failed: $$opts{tmp}/$args{tmp}");
 
     my $files = join(' ',@files);
-    test_cmd($opts,%args,cmd=>"$$opts{bin}/bcftools +scatter $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args} && cd $$opts{tmp}/$args{tmp} && cat $files | grep -v ^##");
+    test_cmd($opts,%args,cmd=>"export BCFTOOLS_PLUGINS=$$opts{bin}/plugins; $$opts{bin}/bcftools +scatter $$opts{path}/$args{in}.vcf -o $$opts{tmp}/$args{tmp} $args{args} && cd $$opts{tmp}/$args{tmp} && cat $files | grep -v ^##");
 }
 sub test_roh
 {

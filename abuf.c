@@ -1,6 +1,6 @@
 /* The MIT License
 
-   Copyright (c) 2021-2023 Genome Research Ltd.
+   Copyright (c) 2021-2024 Genome Research Ltd.
 
    Author: Petr Danecek <pd3@sanger.ac.uk>
 
@@ -43,6 +43,7 @@ typedef struct
     kstring_t ref, alt;
     int ial;        // the index of the original ALT allele, 1-based
     int beg, end;   // 0-based inclusive offsets to ref,alt
+    int plen;       // the ref,alt prefix length, eg plen=1 for C>CA
 }
 atom_t;
 
@@ -175,8 +176,9 @@ static void _atomize_allele(abuf_t *buf, bcf1_t *rec, int ial)
                 atom->alt.l = 0;
                 kputc(refb, &atom->ref);
                 kputc(refb, &atom->alt);
-                atom->beg = atom->end = i;
-                atom->ial = ial;
+                atom->beg  = atom->end = i;
+                atom->ial  = ial;
+                atom->plen = 1;
             }
             continue;
         }
@@ -201,6 +203,35 @@ static int _atoms_inconsistent(const atom_t *a, const atom_t *b)
     int rcmp = strcasecmp(a->ref.s,b->ref.s);
     if ( rcmp ) return rcmp;
     return strcasecmp(a->alt.s,b->alt.s);
+}
+
+// returns
+//      0 .. identical beg,ref,alt
+//      1 .. non-overlapping variants, but record may overlap (A>AT vs A>C)
+//      2 .. overlapping (conflicting) variants
+static int _atoms_overlap(const atom_t *a, const atom_t *b)
+{
+    if ( a->beg < b->beg ) return 2;
+    if ( a->beg > b->beg ) return 2;
+
+    // consider SNV followed by DEL as not overlapping
+    //      CC > C      a.plen=1 (ref,alt prefix len=1)
+    //      C  > T      b.plen=0 (ref,alt prefix len=0)
+    if ( a->plen && a->plen >= b->ref.l ) return 1;
+    if ( b->plen && b->plen >= a->ref.l ) return 1;
+
+    int rcmp = strcasecmp(a->ref.s,b->ref.s);
+    if ( rcmp ) return 2;
+
+    // consider SNV followed by INS as not overlapping
+    //      A > AT      a.plen=1 (ref,alt prefix len=1)
+    //      A > C       b.plen=0 (ref,alt prefix len=0)
+    if ( a->plen && a->plen >= b->alt.l ) return 1;
+    if ( b->plen && b->plen >= a->alt.l ) return 1;
+
+    rcmp = strcasecmp(a->alt.s,b->alt.s);
+    if ( rcmp ) return 2;
+    return 0;
 }
 /*
     For reproducibility of tests on different platforms, we need to guarantee the same order of identical
@@ -238,7 +269,14 @@ static void _split_table_new(abuf_t *buf, atom_t *atom)
 static void _split_table_overlap(abuf_t *buf, int iout, atom_t *atom)
 {
     uint8_t *ptr = buf->split.tbl + iout*buf->split.nori;
-    ptr[atom->ial-1] = _atoms_inconsistent(atom,buf->split.atoms[iout]) ? 2 : 1;
+    int olap = _atoms_overlap(atom,buf->split.atoms[iout]);
+    ptr[atom->ial-1] =  olap > 1 ? 2 : 1;
+
+    // The test test/atomize.split.5.vcf shows why we sometimes can and sometimes
+    // cannot remove the star allele like this
+    //      buf->split.overlaps[iout] = olap > 1 ? 1 : 0;
+    // I forgot the details of the code, so don't immediately see
+    // if this could be made smarter
     buf->split.overlaps[iout] = 1;
 }
 #if 0
@@ -418,6 +456,14 @@ static void _split_table_set_history(abuf_t *buf)
 {
     int i,j,ret;
     bcf1_t *rec = buf->split.rec;
+
+    // Don't update if the tag already exists. This is to prevent -a from overwriting -m
+    int m = 0;
+    char *tmp = NULL;
+    ret = bcf_get_info_string(buf->hdr,rec,buf->split.info_tag,&tmp,&m);
+    free(tmp);
+    if ( ret>0 ) return;
+
     buf->tmps.l = 0;
     ksprintf(&buf->tmps,"%s|%"PRIhts_pos"|%s|",bcf_seqname(buf->hdr,rec),rec->pos+1,rec->d.allele[0]);
     for (i=1; i<rec->n_allele; i++)
@@ -737,7 +783,7 @@ void _abuf_split(abuf_t *buf, bcf1_t *rec)
     _split_table_init(buf,rec,buf->natoms);
     for (i=0; i<buf->natoms; i++)
     {
-        if ( i && !_atoms_inconsistent(&buf->atoms[i-1],&buf->atoms[i]) ) continue;
+        if ( i && _atoms_inconsistent(&buf->atoms[i-1],&buf->atoms[i])==0 ) continue;
         _split_table_new(buf, &buf->atoms[i]);  // add a new unique output atom
     }
     for (i=0; i<buf->natoms; i++)

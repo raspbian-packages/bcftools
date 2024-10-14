@@ -1,6 +1,6 @@
 /*  vcfmerge.c -- Merge multiple VCF/BCF files to create one multi-sample file.
 
-    Copyright (C) 2012-2023 Genome Research Ltd.
+    Copyright (C) 2012-2024 Genome Research Ltd.
 
     Author: Petr Danecek <pd3@sanger.ac.uk>
 
@@ -174,7 +174,7 @@ typedef struct
     maux_t *maux;
     regidx_t *regs;    // apply regions only after the blocks are expanded
     regitr_t *regs_itr;
-    int header_only, collapse, output_type, force_samples, merge_by_id, do_gvcf, filter_logic, missing_to_ref, no_index;
+    int header_only, collapse, output_type, force_samples, force_single, merge_by_id, do_gvcf, filter_logic, missing_to_ref, no_index;
     char *header_fname, *output_fname, *regions_list, *info_rules, *file_list;
     faidx_t *gvcf_fai;
     info_rule_t *rules;
@@ -2257,9 +2257,8 @@ void merge_format_field(args_t *args, bcf_fmt_t **fmt_map, missing_rule_t *mrule
                 { \
                     tgt = (tgt_type_t *) ma->tmp_arr + (ismpl+j)*nsize; \
                     src = fmt_ori->p + sizeof(src_type_t) * j * fmt_ori->n; \
-                    int tag_missing = src_is_missing && fmt_ori->n==1; \
-                    if (!tag_missing) \
-                    { \
+                    int tag_missing = src_is_missing && fmt_ori->n==1;  \
+                    if ( src_is_missing && fmt_ori->n>1 ) { \
                         src += sizeof(src_type_t); \
                         tag_missing = src_is_vector_end ; \
                     } \
@@ -2345,9 +2344,9 @@ void merge_format_field(args_t *args, bcf_fmt_t **fmt_map, missing_rule_t *mrule
                 for (j=0; j<bcf_hdr_nsamples(hdr); j++) \
                 { \
                     tgt = (tgt_type_t *) ma->tmp_arr + (ismpl+j)*nsize; \
-                    src = fmt_ori->p + sizeof(src_type_t) * j * fmt_ori->size; \
+                    src = fmt_ori->p + j*fmt_ori->size; \
                     int tag_missing = src_is_missing && fmt_ori->n==1;  \
-                    if (!tag_missing) { \
+                    if ( src_is_missing && fmt_ori->n>1 ) { \
                         src += sizeof(src_type_t); \
                         tag_missing = src_is_vector_end ; \
                     } \
@@ -2358,7 +2357,7 @@ void merge_format_field(args_t *args, bcf_fmt_t **fmt_map, missing_rule_t *mrule
                         for (l=1; l<nsize; l++) { tgt++; tgt_set_vector_end; } \
                         continue; \
                     } \
-                    src = fmt_ori->p + sizeof(src_type_t) * j *fmt_ori->size; \
+                    src = fmt_ori->p + j*fmt_ori->size; \
                     if ( ma->buf[i].unkn_allele )  /* Use value from the unknown allele when available */ \
                     { \
                         int iunkn = ma->buf[i].unkn_allele; \
@@ -3401,7 +3400,9 @@ void merge_vcf(args_t *args)
         if ( hts_close(args->out_fh)!=0 ) error("[%s] Error: close failed .. %s\n", __func__,args->output_fname);
         return;
     }
-    else if ( args->write_index && init_index(args->out_fh,args->out_hdr,args->output_fname,&args->index_fn)<0 ) error("Error: failed to initialise index for %s\n",args->output_fname);
+    else if ( init_index2(args->out_fh,args->out_hdr,args->output_fname,
+                          &args->index_fn, args->write_index)<0 )
+        error("Error: failed to initialise index for %s\n",args->output_fname);
 
     args->vcmp = vcmp_init();
     args->maux = maux_init(args);
@@ -3465,7 +3466,9 @@ static void usage(void)
     fprintf(stderr, "Usage:   bcftools merge [options] <A.vcf.gz> <B.vcf.gz> [...]\n");
     fprintf(stderr, "\n");
     fprintf(stderr, "Options:\n");
+    fprintf(stderr, "        --force-no-index              Merge unindexed files, synonymous to --no-index\n");
     fprintf(stderr, "        --force-samples               Resolve duplicate sample names\n");
+    fprintf(stderr, "        --force-single                Run even if there is only one file on input\n");
     fprintf(stderr, "        --print-header                Print only the merged header and exit\n");
     fprintf(stderr, "        --use-header FILE             Use the provided header\n");
     fprintf(stderr, "    -0  --missing-to-ref              Assume genotypes at missing sites are 0/0\n");
@@ -3485,7 +3488,7 @@ static void usage(void)
     fprintf(stderr, "    -R, --regions-file FILE           Restrict to regions listed in a file\n");
     fprintf(stderr, "        --regions-overlap 0|1|2       Include if POS in the region (0), record overlaps (1), variant overlaps (2) [1]\n");
     fprintf(stderr, "        --threads INT                 Use multithreading with INT worker threads [0]\n");
-    fprintf(stderr, "        --write-index                 Automatically index the output files [off]\n");
+    fprintf(stderr, "    -W, --write-index[=FMT]           Automatically index the output files [off]\n");
     fprintf(stderr, "\n");
     exit(1);
 }
@@ -3527,12 +3530,14 @@ int main_vcfmerge(int argc, char *argv[])
         {"missing-rules",required_argument,NULL,'M'},
         {"no-version",no_argument,NULL,8},
         {"no-index",no_argument,NULL,10},
+        {"force-no-index",no_argument,NULL,10},
+        {"force-single",no_argument,NULL,12},
         {"filter-logic",required_argument,NULL,'F'},
-        {"write-index",no_argument,NULL,11},
+        {"write-index",optional_argument,NULL,'W'},
         {NULL,0,NULL,0}
     };
     char *tmp;
-    while ((c = getopt_long(argc, argv, "hm:f:r:R:o:O:i:M:l:g:F:0L:",loptions,NULL)) >= 0) {
+    while ((c = getopt_long(argc, argv, "hm:f:r:R:o:O:i:M:l:g:F:0L:W::",loptions,NULL)) >= 0) {
         switch (c) {
             case 'L':
                 args->local_alleles = strtol(optarg,&tmp,10);
@@ -3607,15 +3612,17 @@ int main_vcfmerge(int argc, char *argv[])
             case  9 : args->n_threads = strtol(optarg, 0, 0); break;
             case  8 : args->record_cmd_line = 0; break;
             case 10 : args->no_index = 1; break;
-            case 11 : args->write_index = 1; break;
+            case 'W':
+                if (!(args->write_index = write_index_parse(optarg)))
+                    error("Unsupported index format '%s'\n", optarg);
+                break;
+            case 12 : args->force_single = 1; break;
             case 'h':
             case '?': usage(); break;
             default: error("Unknown argument: %s\n", optarg);
         }
     }
     if ( argc==optind && !args->file_list ) usage();
-    if ( argc-optind<2 && !args->file_list ) usage();
-
     if ( args->no_index )
     {
         if ( args->regions_list ) error("Error: cannot combine --no-index with -r/-R\n");
@@ -3656,6 +3663,9 @@ int main_vcfmerge(int argc, char *argv[])
         for (i=0; i<nfiles; i++) free(files[i]);
         free(files);
     }
+    if ( !args->files->nreaders ) usage();
+    if ( args->files->nreaders==1 && !args->force_single ) error("Expected two or more files to merge, got only one. Use --force-single to proceed anyway\n");
+
     merge_vcf(args);
     bcf_sr_destroy(args->files);
     if ( args->regs ) regidx_destroy(args->regs);
