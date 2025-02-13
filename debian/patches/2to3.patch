@@ -1,5 +1,5 @@
 Author: Andreas Tille <tille@debian.org>
-Last-Update: Tue, 14 Jul 2020 22:21:56 +0200
+Last-Update: 2020-07-14
 Bug-Debian: https://bugs.debian.org/965032
 Description: Make sure Python3 is used
 Forwarded: not-needed
