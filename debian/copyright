@@ -4,7 +4,7 @@ Source: https://github.com/samtools/bcftools
 
 Files: *
 Copyright:
-         2011-2015 Genome Research Ltd.
+         2011-2024 Genome Research Ltd.
          2010-2012 Broad Institute
 License: MIT or GPL-3.0
 Comment:
