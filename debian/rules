@@ -7,6 +7,8 @@ ifneq (,$(filter $(DEB_TARGET_ARCH_CPU),i386))
 export DEB_CFLAGS_MAINT_APPEND += -mfpmath=sse -msse2
 endif
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
 %:
 	dh $@
 
