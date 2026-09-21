@@ -1,0 +1,7 @@
+---
+include:
+  - https://salsa.debian.org/salsa-ci-team/pipeline/raw/master/recipes/debian.yml
+
+variables:
+# When testing against packages in experimental
+  RELEASE: 'experimental'
